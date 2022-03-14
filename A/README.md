@@ -6,7 +6,7 @@ Arsh came to me and discussed his difficulties with the process. Having seen sim
 
 # Rationale for proposed solution
 
-I am proposing a platform that Arsh can use to achieve all five of the main organisation tasks (registrations, payments, promotion, contacting & tabulation), with data being hosted in one location and most tasks being automated.
+I am proposing a platform that Arsh can use to achieve all five of the main organisation tasks, with data being hosted in one location and most tasks being automated. Organisers will be able to use the platform to host their tournaments with it managing registrations, payments and contacting their participants. During the event, organisers alongside their volunteers will be able to enter and process scores from the debates (tabulation) to generate the tournament's results. For debaters, the platform will serve as a place to discover new tournaments, register for them and then receive all the information about the tournament they need to compete.
 
 Arsh uses a Mac, however, his tournaments' participants use of a range of devices, therefore I have chosen to make the platform web-based.
 
