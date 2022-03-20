@@ -14,6 +14,8 @@ model User {
   scores                Score[]
   replyScores           ReplyScore[]
   adjudicator           Adjudicator[]
+  institutionId         String
+  institution           Institution                       @relation(fields: [institutionId], references: [id])
 }
 
 model UserTeamRelationship {
@@ -24,13 +26,40 @@ model UserTeamRelationship {
   team   Team   @relation(fields: [userId], references: [id])
 }
 
+model AdjudicatorTeamConflictsRelationship {
+  id            String      @id @unique @default(cuid())
+  adjudicatorId String      @unique
+  teamId        String      @unique
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  team          Team        @relation(fields: [teamId], references: [id])
+}
+
+model AdjudicatorInstitutionConflictsRelationship {
+  id            String      @id @unique @default(cuid())
+  adjudicatorId String      @unique
+  institutionId String      @unique
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  institution   Institution @relation(fields: [institutionId], references: [id])
+}
+
+model TeamInstitutionConflictsRelationship {
+  id            String      @id @unique @default(cuid())
+  teamId        String      @unique
+  institutionId String      @unique
+  team          Team        @relation(fields: [teamId], references: [id])
+  institution   Institution @relation(fields: [institutionId], references: [id])
+}
+
 model Adjudicator {
-  id           String                          @id @unique @default(cuid())
-  userId       String
-  user         User                            @relation(fields: [userId], references: [id])
-  tournamentId String
-  tournament   Tournament                      @relation(fields: [tournamentId], references: [id])
-  debates      AdjudicatorDebateRelationship[]
+  id                         String                                        @id @unique @default(cuid())
+  userId                     String
+  user                       User                                          @relation(fields: [userId], references: [id])
+  tournamentId               String
+  tournament                 Tournament                                    @relation(fields: [tournamentId], references: [id])
+  debates                    AdjudicatorDebateRelationship[]
+  priority                   Float
+  conflictedWithTeams        AdjudicatorTeamConflictsRelationship[]
+  conflictedWithInstitutions AdjudicatorInstitutionConflictsRelationship[]
 }
 
 model AdjudicatorDebateRelationship {
@@ -50,12 +79,14 @@ model OrganiserTournamentRelationship {
 }
 
 model Team {
-  id           String                 @id @unique @default(cuid())
-  Name         String
-  Members      UserTeamRelationship[]
-  tournamentId String
-  tournament   Tournament             @relation(fields: [tournamentId], references: [id])
-  checkedIn    Boolean
+  id                         String                                 @id @unique @default(cuid())
+  Name                       String
+  Members                    UserTeamRelationship[]
+  tournamentId               String
+  tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
+  checkedIn                  Boolean
+  conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
+  conflictedWithInstitutions TeamInstitutionConflictsRelationship[]
 }
 
 model Tournament {
@@ -74,6 +105,7 @@ model Tournament {
   emailsSent         Email[]
   rounds             DebateRound[]
   adjudicators       Adjudicator[]
+  rooms              Room[]
 }
 
 model Email {
@@ -134,4 +166,17 @@ model RoomRoundRelationship {
 model Room {
   id           String                  @id @unique @default(cuid())
   availableFor RoomRoundRelationship[]
+  tournamentId String
+  tournament   Tournament              @relation(fields: [tournamentId], references: [id])
+  label        String
+  priority     Float
+}
+
+model Institution {
+  id                         String                                        @id @unique @default(cuid())
+  name                       String
+  shorthand                  String
+  users                      User[]
+  conflictedWithAdjudicators AdjudicatorInstitutionConflictsRelationship[]
+  conflictedWithTeams        TeamInstitutionConflictsRelationship[]
 }
