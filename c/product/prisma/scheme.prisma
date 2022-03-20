@@ -88,10 +88,10 @@ model Email {
 }
 
 model DebateRound {
-  id           String     @id @unique @default(cuid())
-  tournamentId String
-  tournament   Tournament @relation(fields: [tournamentId], references: [id])
-  debates      Debate[]
+  id             String                  @id @unique @default(cuid())
+  tournamentId   String
+  tournament     Tournament              @relation(fields: [tournamentId], references: [id])
+  debates        Debate[]
   availableRooms RoomRoundRelationship[]
 
 }
@@ -123,17 +123,15 @@ model ReplyScore {
   score    Float
 }
 
-
 model RoomRoundRelationship {
-  id     String @id @unique @default(cuid())
-  roomId String @unique
-  roundId String @unique
-  room   Room   @relation(fields: [roomId], references: [id])
-  round   DebateRound   @relation(fields: [roundId], references: [id])
+  id      String      @id @unique @default(cuid())
+  roomId  String      @unique
+  roundId String      @unique
+  room    Room        @relation(fields: [roomId], references: [id])
+  round   DebateRound @relation(fields: [roundId], references: [id])
 }
 
-
 model Room {
-  id String @id @unique @default(cuid())
+  id           String                  @id @unique @default(cuid())
   availableFor RoomRoundRelationship[]
 }
