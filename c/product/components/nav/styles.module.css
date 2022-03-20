@@ -1,0 +1,16 @@
+.nav {
+  background: var(--sunken);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-3);
+  display: flex;
+  align-items: center;
+}
+
+.nav > div {
+  flex-grow: 1;
+}
+
+.nav > img {
+  height: 40px;
+  border-radius: var(--radii-default);
+}

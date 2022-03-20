@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                    String                            @id @unique @default(cuid())
+  firstName             String
+  lastName              String
+  avatarURL             String
+  Teams                 UserTeamRelationship[]
+  organisingTournaments OrganiserTournamentRelationship[]
+  email                 String                            @unique
+  emailsSent            Email[]
+  scores                Score[]
+  replyScores           ReplyScore[]
+  adjudicator           Adjudicator[]
+}
+
+model UserTeamRelationship {
+  id     String @id @unique @default(cuid())
+  userId String @unique
+  teamId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [userId], references: [id])
+}
+
+model Adjudicator {
+  id           String                          @id @unique @default(cuid())
+  userId       String
+  user         User                            @relation(fields: [userId], references: [id])
+  tournamentId String
+  tournament   Tournament                      @relation(fields: [tournamentId], references: [id])
+  debates      AdjudicatorDebateRelationship[]
+}
+
+model AdjudicatorDebateRelationship {
+  id            String      @id @unique @default(cuid())
+  adjudicatorId String
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  debateId      String
+  debate        Debate      @relation(fields: [debateId], references: [id])
+}
+
+model OrganiserTournamentRelationship {
+  id           String     @id @unique @default(cuid())
+  organiserId  String
+  tournamentId String
+  organiser    User       @relation(fields: [organiserId], references: [id])
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
+model Team {
+  id           String                 @id @unique @default(cuid())
+  Name         String
+  Members      UserTeamRelationship[]
+  tournamentId String
+  tournament   Tournament             @relation(fields: [tournamentId], references: [id])
+  checkedIn    Boolean
+}
+
+model Tournament {
+  id                 String                            @id @unique @default(cuid())
+  organisers         OrganiserTournamentRelationship[]
+  participatingTeams Team[]
+  name               String
+  description        String
+  longDesc           String
+  startingDate       DateTime
+  endingDate         DateTime
+  online             Boolean
+  venueAddress       String?
+  joinURL            String?
+  stripeId           String?
+  emailsSent         Email[]
+  rounds             DebateRound[]
+  adjudicators       Adjudicator[]
+}
+
+model Email {
+  id           String     @id @unique @default(cuid())
+  sentAt       DateTime   @default(now())
+  title        String
+  message      String
+  sentById     String
+  sentBy       User       @relation(fields: [sentById], references: [id])
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
+model DebateRound {
+  id           String     @id @unique @default(cuid())
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  debates      Debate[]
+  availableRooms RoomRoundRelationship[]
+
+}
+
+model Debate {
+  id            String                          @id @unique @default(cuid())
+  debateRoundId String
+  round         DebateRound                     @relation(fields: [debateRoundId], references: [id])
+  scores        Score[]
+  replyScores   ReplyScore[]
+  adjudicators  AdjudicatorDebateRelationship[]
+}
+
+model Score {
+  id       String @id @unique @default(cuid())
+  debateId String
+  debate   Debate @relation(fields: [debateId], references: [id])
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  score    Float
+}
+
+model ReplyScore {
+  id       String @id @unique @default(cuid())
+  debateId String
+  debate   Debate @relation(fields: [debateId], references: [id])
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  score    Float
+}
+
+
+model RoomRoundRelationship {
+  id     String @id @unique @default(cuid())
+  roomId String @unique
+  roundId String @unique
+  room   Room   @relation(fields: [roomId], references: [id])
+  round   DebateRound   @relation(fields: [roundId], references: [id])
+}
+
+
+model Room {
+  id String @id @unique @default(cuid())
+  availableFor RoomRoundRelationship[]
+}
