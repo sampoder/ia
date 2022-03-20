@@ -23,7 +23,15 @@ model UserTeamRelationship {
   userId String @unique
   teamId String @unique
   user   User   @relation(fields: [userId], references: [id])
-  team   Team   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model TeamRoundAvailabilityRelationship {
+  id      String      @id @unique @default(cuid())
+  roundId String      @unique
+  teamId  String      @unique
+  round   DebateRound @relation(fields: [roundId], references: [id])
+  team    Team        @relation(fields: [teamId], references: [id])
 }
 
 model AdjudicatorTeamConflictsRelationship {
@@ -87,6 +95,11 @@ model Team {
   checkedIn                  Boolean
   conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
   conflictedWithInstitutions TeamInstitutionConflictsRelationship[]
+  availableForRounds         TeamRoundAvailabilityRelationship[]
+  breakId                    String?
+  break                      Break?                                 @relation(fields: [breakId], references: [id])
+  breakRank                  Int?
+  stillInBreak               Boolean?
 }
 
 model Tournament {
@@ -106,6 +119,7 @@ model Tournament {
   rounds             DebateRound[]
   adjudicators       Adjudicator[]
   rooms              Room[]
+  breaks             Break[]
 }
 
 model Email {
@@ -120,12 +134,13 @@ model Email {
 }
 
 model DebateRound {
-  id             String                  @id @unique @default(cuid())
+  id             String                              @id @unique @default(cuid())
   tournamentId   String
-  tournament     Tournament              @relation(fields: [tournamentId], references: [id])
+  tournament     Tournament                          @relation(fields: [tournamentId], references: [id])
   debates        Debate[]
   availableRooms RoomRoundRelationship[]
-
+  availableTeams TeamRoundAvailabilityRelationship[]
+  breakRound     Boolean                             @default(false)
 }
 
 model Debate {
@@ -179,4 +194,12 @@ model Institution {
   users                      User[]
   conflictedWithAdjudicators AdjudicatorInstitutionConflictsRelationship[]
   conflictedWithTeams        TeamInstitutionConflictsRelationship[]
+}
+
+model Break {
+  id            String     @id @unique @default(cuid())
+  tournamentId  String
+  tournament    Tournament @relation(fields: [tournamentId], references: [id])
+  breakingTeams Team[]
+
 }
