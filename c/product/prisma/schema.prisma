@@ -1,0 +1,242 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id                    String                            @id @default(cuid())
+  firstName             String
+  lastName              String
+  avatarURL             String?
+  Teams                 UserTeamRelationship[]
+  organisingTournaments OrganiserTournamentRelationship[]
+  email                 String                            @unique
+  emailsSent            Email[]
+  scores                Score[]
+  replyScores           ReplyScore[]
+  adjudicator           Adjudicator[]
+  institutionId         String?
+  institution           Institution?                       @relation(fields: [institutionId], references: [id])
+}
+
+model UserTeamRelationship {
+  id     String @id @default(cuid())
+  userId String @unique
+  teamId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model TeamRoundAvailabilityRelationship {
+  id      String      @id @default(cuid())
+  roundId String      @unique
+  teamId  String      @unique
+  round   DebateRound @relation(fields: [roundId], references: [id])
+  team    Team        @relation(fields: [teamId], references: [id])
+}
+
+model AdjudicatorTeamConflictsRelationship {
+  id            String      @id @default(cuid())
+  adjudicatorId String      @unique
+  teamId        String      @unique
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  team          Team        @relation(fields: [teamId], references: [id])
+}
+
+model AdjudicatorInstitutionConflictsRelationship {
+  id            String      @id @default(cuid())
+  adjudicatorId String      @unique
+  institutionId String      @unique
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  institution   Institution @relation(fields: [institutionId], references: [id])
+}
+
+model TeamInstitutionConflictsRelationship {
+  id            String      @id @default(cuid())
+  teamId        String      @unique
+  institutionId String      @unique
+  team          Team        @relation(fields: [teamId], references: [id])
+  institution   Institution @relation(fields: [institutionId], references: [id])
+}
+
+model Adjudicator {
+  id                         String                                        @id @default(cuid())
+  userId                     String
+  user                       User                                          @relation(fields: [userId], references: [id])
+  tournamentId               String
+  tournament                 Tournament                                    @relation(fields: [tournamentId], references: [id])
+  debates                    AdjudicatorDebateRelationship[]
+  priority                   Float
+  conflictedWithTeams        AdjudicatorTeamConflictsRelationship[]
+  conflictedWithInstitutions AdjudicatorInstitutionConflictsRelationship[]
+}
+
+model AdjudicatorDebateRelationship {
+  id            String      @id @default(cuid())
+  adjudicatorId String
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  debateId      String
+  debate        Debate      @relation(fields: [debateId], references: [id])
+}
+
+model OrganiserTournamentRelationship {
+  id           String     @id @default(cuid())
+  organiserId  String
+  tournamentId String
+  organiser    User       @relation(fields: [organiserId], references: [id])
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
+model Team {
+  id                         String                                 @id @default(cuid())
+  Name                       String
+  Members                    UserTeamRelationship[]
+  tournamentId               String
+  tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
+  checkedIn                  Boolean
+  conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
+  conflictedWithInstitutions TeamInstitutionConflictsRelationship[]
+  availableForRounds         TeamRoundAvailabilityRelationship[]
+  breakId                    String?
+  break                      Break?                                 @relation(fields: [breakId], references: [id])
+  stillInBreak               Boolean?
+  propositionDebates         Debate[]                               @relation("proposition")
+  oppositionDebates          Debate[]                               @relation("opposition")
+}
+
+model Tournament {
+  id                 String                            @id @default(cuid())
+  organisers         OrganiserTournamentRelationship[]
+  participatingTeams Team[]
+  name               String
+  description        String
+  longDesc           String
+  startingDate       DateTime
+  endingDate         DateTime
+  online             Boolean
+  venueAddress       String?
+  joinURL            String?
+  stripeId           String?
+  emailsSent         Email[]
+  rounds             DebateRound[]
+  adjudicators       Adjudicator[]
+  rooms              Room[]
+  breaks             Break[]
+}
+
+model Email {
+  id           String     @id @default(cuid())
+  sentAt       DateTime   @default(now())
+  title        String
+  message      String
+  sentById     String
+  sentBy       User       @relation(fields: [sentById], references: [id])
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
+model DebateRound {
+  id             String                              @id @default(cuid())
+  tournamentId   String
+  tournament     Tournament                          @relation(fields: [tournamentId], references: [id])
+  debates        Debate[]
+  availableRooms RoomRoundRelationship[]
+  availableTeams TeamRoundAvailabilityRelationship[]
+  breakRound     Boolean                             @default(false)
+  motions        Motion[]
+}
+
+model Debate {
+  id            String                          @id @default(cuid())
+  debateRoundId String
+  round         DebateRound                     @relation(fields: [debateRoundId], references: [id])
+  scores        Score[]
+  replyScores   ReplyScore[]
+  adjudicators  AdjudicatorDebateRelationship[]
+  propositionId String?
+  proposition   Team?                           @relation("proposition", fields: [propositionId], references: [id])
+  oppositionId  String?
+  opposition    Team?                           @relation("opposition", fields: [oppositionId], references: [id])
+  breakDebate   BreakDebate?
+}
+
+model Score {
+  id       String @id @default(cuid())
+  debateId String
+  debate   Debate @relation(fields: [debateId], references: [id])
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  score    Float
+}
+
+model ReplyScore {
+  id       String @id @default(cuid())
+  debateId String
+  debate   Debate @relation(fields: [debateId], references: [id])
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  score    Float
+}
+
+model RoomRoundRelationship {
+  id      String      @id @default(cuid())
+  roomId  String      @unique
+  roundId String      @unique
+  room    Room        @relation(fields: [roomId], references: [id])
+  round   DebateRound @relation(fields: [roundId], references: [id])
+}
+
+model Room {
+  id           String                  @id @default(cuid())
+  availableFor RoomRoundRelationship[]
+  tournamentId String
+  tournament   Tournament              @relation(fields: [tournamentId], references: [id])
+  label        String
+  priority     Float
+}
+
+model Institution {
+  id                         String                                        @id @default(cuid())
+  name                       String
+  shorthand                  String
+  users                      User[]
+  conflictedWithAdjudicators AdjudicatorInstitutionConflictsRelationship[]
+  conflictedWithTeams        TeamInstitutionConflictsRelationship[]
+}
+
+model Break {
+  id            String        @id @default(cuid())
+  tournamentId  String
+  tournament    Tournament    @relation(fields: [tournamentId], references: [id])
+  breakingTeams Team[]
+  debates       BreakDebate[]
+  motions       Motion[]
+}
+
+model BreakDebate {
+  id             String       @id @default(cuid())
+  previousDebate BreakDebate? @relation("debateLink")
+  nextDebate     BreakDebate  @relation("debateLink", fields: [nextDebateId], references: [id])
+  nextDebateId   String       @unique
+  debateId       String       @unique
+  debate         Debate       @relation(fields: [debateId], references: [id])
+  breakId        String
+  break          Break        @relation(fields: [breakId], references: [id])
+}
+
+model Motion {
+  id      String      @id @default(cuid())
+  roundId String      @unique
+  round   DebateRound @relation(fields: [roundId], references: [id])
+  breakId String?     @unique
+  break   Break?      @relation(fields: [breakId], references: [id])
+  motion  String
+}
