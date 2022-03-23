@@ -93,8 +93,8 @@ model OrganiserTournamentRelationship {
 
 model Team {
   id                         String                                 @id @default(cuid())
-  Name                       String
-  Members                    UserTeamRelationship[]
+  name                       String
+  members                    UserTeamRelationship[]
   tournamentId               String
   tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
   checkedIn                  Boolean
@@ -161,6 +161,7 @@ model Debate {
   proposition   Team?                           @relation("proposition", fields: [propositionId], references: [id])
   oppositionId  String?
   opposition    Team?                           @relation("opposition", fields: [oppositionId], references: [id])
+  carried       Boolean
   breakDebate   BreakDebate?
 }
 

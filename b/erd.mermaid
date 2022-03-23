@@ -1,0 +1,178 @@
+erDiagram
+
+  User {
+    String id
+    String firstName
+    String lastName
+    String avatarURL
+    String email  
+  }
+
+
+  UserTeamRelationship {
+    String id  
+  }
+
+
+  TeamRoundAvailabilityRelationship {
+    String id  
+  }
+
+
+  AdjudicatorTeamConflictsRelationship {
+    String id  
+  }
+
+
+  AdjudicatorInstitutionConflictsRelationship {
+    String id  
+  }
+
+
+  TeamInstitutionConflictsRelationship {
+    String id  
+  }
+
+
+  Adjudicator {
+    String id
+    Float priority  
+  }
+
+
+  AdjudicatorDebateRelationship {
+    String id  
+  }
+
+
+  OrganiserTournamentRelationship {
+    String id  
+  }
+
+
+  Team {
+    String id
+    String name
+    Boolean checkedIn
+    Boolean stillInBreak  
+  }
+
+
+  Tournament {
+    String id
+    String name
+    String description
+    String longDesc
+    DateTime startingDate
+    DateTime endingDate
+    Boolean online
+    String venueAddress
+    String joinURL
+    String stripeId  
+  }
+
+
+  Email {
+    String id
+    DateTime sentAt
+    String title
+    String message  
+  }
+
+
+  DebateRound {
+    String id
+    Boolean breakRound  
+  }
+
+
+  Debate {
+    String id
+    Boolean carried  
+  }
+
+
+  Score {
+    String id
+    Float score  
+  }
+
+
+  ReplyScore {
+    String id
+    Float score  
+  }
+
+
+  RoomRoundRelationship {
+    String id  
+  }
+
+
+  Room {
+    String id
+    String label
+    Float priority  
+  }
+
+
+  Institution {
+    String id
+    String name
+    String shorthand  
+  }
+
+
+  Break {
+    String id  
+  }
+
+
+  BreakDebate {
+    String id  
+  }
+
+
+  Motion {
+    String id
+    String motion  
+  }
+
+  User o{--|| Institution : "institution"
+  UserTeamRelationship o{--|| User : "user"
+  UserTeamRelationship o{--|| Team : "team"
+  TeamRoundAvailabilityRelationship o{--|| DebateRound : "round"
+  TeamRoundAvailabilityRelationship o{--|| Team : "team"
+  AdjudicatorTeamConflictsRelationship o{--|| Adjudicator : "adjudicator"
+  AdjudicatorTeamConflictsRelationship o{--|| Team : "team"
+  AdjudicatorInstitutionConflictsRelationship o{--|| Adjudicator : "adjudicator"
+  AdjudicatorInstitutionConflictsRelationship o{--|| Institution : "institution"
+  TeamInstitutionConflictsRelationship o{--|| Team : "team"
+  TeamInstitutionConflictsRelationship o{--|| Institution : "institution"
+  Adjudicator o{--|| User : "user"
+  Adjudicator o{--|| Tournament : "tournament"
+  AdjudicatorDebateRelationship o{--|| Adjudicator : "adjudicator"
+  AdjudicatorDebateRelationship o{--|| Debate : "debate"
+  OrganiserTournamentRelationship o{--|| User : "organiser"
+  OrganiserTournamentRelationship o{--|| Tournament : "tournament"
+  Team o{--|| Tournament : "tournament"
+  Team o{--|| Break : "break"
+  Email o{--|| User : "sentBy"
+  Email o{--|| Tournament : "tournament"
+  DebateRound o{--|| Tournament : "tournament"
+  Debate o{--|| DebateRound : "round"
+  Debate o{--|| Team : "proposition"
+  Debate o{--|| Team : "opposition"
+  Score o{--|| Debate : "debate"
+  Score o{--|| User : "user"
+  ReplyScore o{--|| Debate : "debate"
+  ReplyScore o{--|| User : "user"
+  RoomRoundRelationship o{--|| Room : "room"
+  RoomRoundRelationship o{--|| DebateRound : "round"
+  Room o{--|| Tournament : "tournament"
+  Break o{--|| Tournament : "tournament"
+  BreakDebate o|--|| BreakDebate : "nextDebate"
+  BreakDebate o|--|| Debate : "debate"
+  BreakDebate o{--|| Break : "break"
+  Motion o{--|| DebateRound : "round"
+  Motion o{--|| Break : "break"

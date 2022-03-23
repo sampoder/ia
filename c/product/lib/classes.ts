@@ -1,7 +1,7 @@
 import { PrismaClient, User as UserType } from "@prisma/client";
 const prisma = new PrismaClient();
 
-class User {
+export class User {
   data: UserType | null;
   constructor(
     id: string,
