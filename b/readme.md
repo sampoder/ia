@@ -13,19 +13,115 @@ View document.
 
 ## Interface Mockups
 
-- [ ] Discovery Page
-- [ ] Event Page
-- [ ] Rankings Page (Tab)
-- [ ] Adjudicator Data Entry
-- [ ] Configure Page
+Discovery Page
+
+![](wireframes/Discovery%20Page.png)
+
+Event Page
+
+![](wireframes/Event%20Page.png)
+
+Rankings Page
+
+![](wireframes/Team%20Tab%20Page.png)
+
+Adjudicator Data Entry
+
+![](wireframes/Data%20Entry%20Page.png)
+
+Configure Page
+
+![](wireframes/Configure%20Landing%20Page.png)
+
 
 ## Pseudocode Algorithms
 
-- [ ] Teams Ranking Algorithm
-- [ ] Teams Matching Algorithm (Swiss System)
-- [ ] Tournament Search
-- [ ] Speaker Ranking Algorithm
+```
+RANK_TEAMS(TEAMS):
+  int I
+  int J
+  int minIndex
+  loop N from 0 to TEAMS.length:
+    maxIndex = N
+    loop X from 0 to TEAMS.length:
+      if TEAMS[N]["WINS"] > TEAMS[X]["WINS"]:
+        maxIndex = X
+      else if TEAMS[N]["SPEAKER_SCORE"] > TEAMS[X]["SPEAKER_SCORE"]:
+        maxIndex = X
+      else if TEAMS[N]["DRAW_STRENGTH"] > TEAMS[X]["DRAW_STRENGTH"]:
+        maxIndex = X
+    int TEMP = TEAMS[maxIndex]
+    TEAMS[maxIndex] = TEAMS[N]
+    TEAMS[N] = TEAMS[maxIndex]
+  return TEAMS
+```
+
+```
+MATCH_TEAMS(TEAMS):
+  PAIRS = []
+  loop N from 0 to TEAMS.length / 2:
+    PAIRS.push([TEAMS[N * 2], TEAMS[(N * 2) + 1]])
+  return PAIRS
+```
+
+```
+SEARCH_TOURNAMENTS(TOURNAMENTS, QUERY):
+  FOUND = false
+  RANKED_TOURNAMENTS = []
+  for TOURNAMENT in TOURNAMENTS:
+    SCORE = 0
+    for WORD in QUERY.split(" "):
+      if TOURNAMENT.NAME.includes(WORD):
+        SCORE += 1
+      else:
+        if TOURNAMENT.LOCATION.includes(WORD):
+          SCORE += 0.5
+    if SCORE > 0:
+      FOUND = true
+      RANKED_TOURNAMENTS.push({ tournament: TOURNAMENT, score: SCORE })
+  loop N from 0 to RANKED_TOURNAMENTS.length:
+    maxIndex = N
+    loop X from 0 to RANKED_TOURNAMENTS.length:
+      if RANKED_TOURNAMENTS[N]["SCORE"] > RANKED_TOURNAMENTS[X]["SCORE"]:
+        maxIndex = X
+    int TEMP = RANKED_TOURNAMENTS[maxIndex]
+    RANKED_TOURNAMENTS[maxIndex] = RANKED_TOURNAMENTS[N]
+    RANKED_TOURNAMENTS[N] = RANKED_TOURNAMENTS[maxIndex] 
+  return RANKED_TOURNAMENTS
+```
+
+```
+RANK_SPEAKERS(SPEAKERS):
+  int I
+  int J
+  int minIndex
+  loop N from 0 to SPEAKERS.length:
+    maxIndex = N
+    loop X from 0 to SPEAKERS.length:
+      if SPEAKERS[N]["SCORE"] > SPEAKERS[X]["SCORE"]:
+        maxIndex = X
+      else if SPEAKERS[N]["STD_DEV"] > SPEAKERS[X]["STD_DEV"]:
+        maxIndex = X
+      else if SPEAKERS[N]["TEAM_WINS"] > SPEAKERS[X]["TEAM_WINS"]:
+        maxIndex = X
+    int TEMP = SPEAKERS[maxIndex]
+    SPEAKERS[maxIndex] = SPEAKERS[N]
+    SPEAKERS[N] = SPEAKERS[maxIndex]
+  return SPEAKERS
+```
 
 ## Testing Plan
 
-Coming soon.
+Potential participants should be able to view a list of upcoming tournaments (hosted using the platform) with key details.
+
+Participants should be able to register and pay for a tournament.
+
+Organisers should be provided with a web-based portal to configure their tournament's format, rules and schedule.
+
+Organisers should be able view details about and contact all the registered participants.
+
+Participants should be provided with the tournament's rules, location and schedule.
+
+Debate adjudicators should be able to enter scores for each debate.
+
+The platform should generate both individual and team breaks for the tournament.

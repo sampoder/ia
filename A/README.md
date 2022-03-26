@@ -22,5 +22,7 @@ To build the platform, I have chosen to use the Next.js framework with React. I 
 - Debate adjudicators should be able to enter scores for each debate.
 - The platform should generate both individual and team breaks for the tournament.
 
+### Things To Add
+
 - Comparison table
 - Language showing we've discussed
