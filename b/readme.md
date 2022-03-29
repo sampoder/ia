@@ -1,11 +1,11 @@
 ## UML
 
-[![](https://mermaid.ink/img/pako:eNqVWNFu3SgQ_RXLT922-YGrqFLam0h3lW6r3LRPeSE2uaG1wQIcbdTtvxeMgQEGJ5uX2HMOeObMMMD91Xaip-2u7Qai1J6RkyTjHW_M32Jpvikq3bt9anbNu6OWjJ-aByaV_oeMFEXN2DpInogm8tvNNYrSkbABRRhXmulZM8EP-4ShqL7y_rz5K4euSQ258J6U0KV1IzOfqD5EH0rwlpJRleZlKnWkXJfYF3kinCkT3q2YJTdech2mcCm46H_MPeuIFmsmgAGoo8P4Q4_yrgZBdDNJJiTTzxjFhP11hb0LKcHGGD5TpezpPdFUVfFPgj8MrNN1Ru7Fotf5f2dnpRhOI_fJ1bS-uKmOnZDRlwS6GIYN9IZOw3OKRzeS79m0N6KwBqGas7MPCwl6HN-X4aDKe9TMw2rKgDLvnvBRiIES3nSPtPtJ-wNPYJNsuCii9ZOnZxCWuQh9lJT8PGqiZwTMKiICn-l4T2UOkL53QGaXdBRPNIVWNYMIhfiIshgI9MXgnqpOssmu-w3WIPhpb5gYZW8UuGUjbZRpOdqwrWGTSHm_QfPZFXxgfMv1J8pnetH3ppDVBu2HYDz0ZJShzL-JHjAV82LKsH1Ur0a5XqWr4UegWo1zGQSrMb4sYtXQ70CpGudvJ1PdTacRisd-D2s-Y3y1cXZsIjbaZEfJmaAXVjnLsqyiN0JUpjdLMLiKEtxaLDiwHd-Imfewsy4GZEHiaNnYcN69DbH6rbL7FLg5BbCB3A80kaNOS5JS0D4LW-aYqm_DFgG8hYLBGasyJU0pTHaocSYpJqHYcmiqccRUp4RNhEjJaA7b7cIBqR71vbe6uUIYq-yAm9LcxF1l1ikuVzEZOLYsHEhwiSrMwJCoTp-YmJUDvKo4l9N_9Wt4S51nCVoOI5s-2bPH_ye4YJcEOcPyWJSe9yZHZ9MRCsydP1U5p1orJe0hsUQgewk4h9ZIbNpwaz5g_YJZ7u7dPiULrkHtZUfKCKY90CFFsFP3ii1XEzPAxx3NodVcCdNZmxzOj8dZj8niOs8q3QUPLjLODAxI78HReGjCcfUopH4kHJ0kOzMU4NEPxhj2uB3vpmBtggJHwsjtZUY9w--d-SYM8GxfAUh9DxB-vULHHd1Z3LOZxrscDBL2-WBNukKwjtiMyjuWtUxbINAF2ApzzAWZW10Y_nbgbP4NqB0X1tY0oHNb5dNZKyD8CIkU5CZcG6WN3dMDnl85S39Aas9f4hbhgYKuRolwXh_sC4PhDyovhV71ta5AdUi8AddnxcFaxl5BfzHYbX_SKCvc9n07UjkS1re79pcdedfqR2qaZLszjz19IPOg79o7_ttQ56k36-yyZ0ardvdABkXft2TW4vjMu2BwrPWnudX6-w-ILYfI)](https://mermaid.ink/img/pako:eNqVWNFu3SgQ_RXLT922-YGrqFLam0h3lW6r3LRPeSE2uaG1wQIcbdTtvxeMgQEGJ5uX2HMOeObMMMD91Xaip-2u7Qai1J6RkyTjHW_M32Jpvikq3bt9anbNu6OWjJ-aByaV_oeMFEXN2DpInogm8tvNNYrSkbABRRhXmulZM8EP-4ShqL7y_rz5K4euSQ258J6U0KV1IzOfqD5EH0rwlpJRleZlKnWkXJfYF3kinCkT3q2YJTdech2mcCm46H_MPeuIFmsmgAGoo8P4Q4_yrgZBdDNJJiTTzxjFhP11hb0LKcHGGD5TpezpPdFUVfFPgj8MrNN1Ru7Fotf5f2dnpRhOI_fJ1bS-uKmOnZDRlwS6GIYN9IZOw3OKRzeS79m0N6KwBqGas7MPCwl6HN-X4aDKe9TMw2rKgDLvnvBRiIES3nSPtPtJ-wNPYJNsuCii9ZOnZxCWuQh9lJT8PGqiZwTMKiICn-l4T2UOkL53QGaXdBRPNIVWNYMIhfiIshgI9MXgnqpOssmu-w3WIPhpb5gYZW8UuGUjbZRpOdqwrWGTSHm_QfPZFXxgfMv1J8pnetH3ppDVBu2HYDz0ZJShzL-JHjAV82LKsH1Ur0a5XqWr4UegWo1zGQSrMb4sYtXQ70CpGudvJ1PdTacRisd-D2s-Y3y1cXZsIjbaZEfJmaAXVjnLsqyiN0JUpjdLMLiKEtxaLDiwHd-Imfewsy4GZEHiaNnYcN69DbH6rbL7FLg5BbCB3A80kaNOS5JS0D4LW-aYqm_DFgG8hYLBGasyJU0pTHaocSYpJqHYcmiqccRUp4RNhEjJaA7b7cIBqR71vbe6uUIYq-yAm9LcxF1l1ikuVzEZOLYsHEhwiSrMwJCoTp-YmJUDvKo4l9N_9Wt4S51nCVoOI5s-2bPH_ye4YJcEOcPyWJSe9yZHZ9MRCsydP1U5p1orJe0hsUQgewk4h9ZIbNpwaz5g_YJZ7u7dPiULrkHtZUfKCKY90CFFsFP3ii1XEzPAxx3NodVcCdNZmxzOj8dZj8niOs8q3QUPLjLODAxI78HReGjCcfUopH4kHJ0kOzMU4NEPxhj2uB3vpmBtggJHwsjtZUY9w--d-SYM8GxfAUh9DxB-vULHHd1Z3LOZxrscDBL2-WBNukKwjtiMyjuWtUxbINAF2ApzzAWZW10Y_nbgbP4NqB0X1tY0oHNb5dNZKyD8CIkU5CZcG6WN3dMDnl85S39Aas9f4hbhgYKuRolwXh_sC4PhDyovhV71ta5AdUi8AddnxcFaxl5BfzHYbX_SKCvc9n07UjkS1re79pcdedfqR2qaZLszjz19IPOg79o7_ttQ56k36-yyZ0ardvdABkXft2TW4vjMu2BwrPWnudX6-w-ILYfI)
+[![](https://mermaid.ink/img/pako:eNqVWNtu3DYQ_RVBT20a_8DCCOBkbWALpwm8Tp_8Qov0molECiRl1Ejz7-VFlyE55Lp-sTTnkJw5wxlS-7PtJGXtru16ovWek5Miw4No7J-3NN80U-HdPTW75o-jUVycmieutPmLDAxF7dgySF6IIerb3S2KsoHwHkW40IabyXApDvuY0WhmbhaPfvs9B29JGbta_MHAa-dOBpyYOWzeYPA9I4PGAD-hPjJhMPSLOhHBtQ33Xk5KWI-FWacJKbmi3yfKO2LknBlgAGqZdfyBorybXhLTjIpLxc0rSnECfJ0JixMpxcW6LlUh7dkjMUxXGJ-keOp5Z2qc1Buv3eW_Fxe5LEGtsOxsml-WyY6dVJtHCXjV91X8jo39a8zYnIlWdVuhkZl1Fa25uPjgSdDv7d0PB1VAUbNYqy0B8n2wED5K2TMimu6ZdT8YPYgYdsmHJQPtn5YhGYjlEYIfFSM_joaYCYWTXQKhz2x4ZCqHCKUByhDFBvnCYnBWdxUlSwaiNAYCvTGYMt0pPrruUGH1Upz2lolR9laHez6wRtvmZCzbGapEJmiFtmRbip6LmusvTEzsilK7sXWF9l1ysfZwlKHtv5EdUBWzzZWh-03BMul2FrDMOAL1yqzrVboy54sXroz_DXQrs_4MstUcDqoVGNsZAWsh43x1UXd8JC726CzKuaBzVli-cCv4nZTFRWyJrk4XKKFWMxZs4ndyEhT2Ym9AChZH80aI8x5doOW1kC6FMOydgvfksWeRLDVilCSE-Fm6UsAUfrceLcBrKBycsyhX1LzWyQ4lzqjkKDX3l7ESR45lynr4EKU4y2B_yAQo1qR2dleO5piA7XjAsNv1DCPs1jIpZG5LDI75koKEkLTMDAxRBtgLl5MOwKIwzhXsH_MWnt_7SbL8habqk7u__H9CCNanKRj8Y7YNF29SdLJdIsPCnVYjc_rW6l7izrJtFcj3IafQHItLHG5NB8wr2AYQ3t1TVH4Nas_7VEKw7YL1MYLd5RcsfP7YIUvkEFjbz420PbfJCemFO-k7SXSXyY4PEoBPpWAGBqQf4eh24cJx_SyVeSYCnyS9byDwcZkA47jr-_YtDOoUbHYklNSe53ZlrGdsemBHjOTkibDyCSGXCobuB3qwhGckgAxQ8FTI0Kh_ZOiArui0D29Jo3WbCToJ22eKBSFSawh0-R4JtuUN-LWVYm0a0O1dfuJZCyBchGwU5Iu8NMpY-0Jf8fSDN_cHJP_yHDcLD2z8YpQI5-3BnhkMf-g5F3rR17ICxSHbl3d5VhwsZewN9LPB1v2Joyxw2_ftwNRAOG137U838qE1z8w21HZnHyl7IlNvHtoH8ctSp5HaOrum3GrV7p5Ir9n7lkxGHl9FtxoCa_7JcLb--g9KraRk)](https://mermaid.live/edit#pako:eNqVWNtu3DYQ_RVBT20a_8DCCOBkbWALpwm8Tp_8Qov0molECiRl1Ejz7-VFlyE55Lp-sTTnkJw5wxlS-7PtJGXtru16ovWek5Miw4No7J-3NN80U-HdPTW75o-jUVycmieutPmLDAxF7dgySF6IIerb3S2KsoHwHkW40IabyXApDvuY0WhmbhaPfvs9B29JGbta_MHAa-dOBpyYOWzeYPA9I4PGAD-hPjJhMPSLOhHBtQ33Xk5KWI-FWacJKbmi3yfKO2LknBlgAGqZdfyBorybXhLTjIpLxc0rSnECfJ0JixMpxcW6LlUh7dkjMUxXGJ-keOp5Z2qc1Buv3eW_Fxe5LEGtsOxsml-WyY6dVJtHCXjV91X8jo39a8zYnIlWdVuhkZl1Fa25uPjgSdDv7d0PB1VAUbNYqy0B8n2wED5K2TMimu6ZdT8YPYgYdsmHJQPtn5YhGYjlEYIfFSM_joaYCYWTXQKhz2x4ZCqHCKUByhDFBvnCYnBWdxUlSwaiNAYCvTGYMt0pPrruUGH1Upz2lolR9laHez6wRtvmZCzbGapEJmiFtmRbip6LmusvTEzsilK7sXWF9l1ysfZwlKHtv5EdUBWzzZWh-03BMul2FrDMOAL1yqzrVboy54sXroz_DXQrs_4MstUcDqoVGNsZAWsh43x1UXd8JC726CzKuaBzVli-cCv4nZTFRWyJrk4XKKFWMxZs4ndyEhT2Ym9AChZH80aI8x5doOW1kC6FMOydgvfksWeRLDVilCSE-Fm6UsAUfrceLcBrKBycsyhX1LzWyQ4lzqjkKDX3l7ESR45lynr4EKU4y2B_yAQo1qR2dleO5piA7XjAsNv1DCPs1jIpZG5LDI75koKEkLTMDAxRBtgLl5MOwKIwzhXsH_MWnt_7SbL8habqk7u__H9CCNanKRj8Y7YNF29SdLJdIsPCnVYjc_rW6l7izrJtFcj3IafQHItLHG5NB8wr2AYQ3t1TVH4Nas_7VEKw7YL1MYLd5RcsfP7YIUvkEFjbz420PbfJCemFO-k7SXSXyY4PEoBPpWAGBqQf4eh24cJx_SyVeSYCnyS9byDwcZkA47jr-_YtDOoUbHYklNSe53ZlrGdsemBHjOTkibDyCSGXCobuB3qwhGckgAxQ8FTI0Kh_ZOiArui0D29Jo3WbCToJ22eKBSFSawh0-R4JtuUN-LWVYm0a0O1dfuJZCyBchGwU5Iu8NMpY-0Jf8fSDN_cHJP_yHDcLD2z8YpQI5-3BnhkMf-g5F3rR17ICxSHbl3d5VhwsZewN9LPB1v2Joyxw2_ftwNRAOG137U838qE1z8w21HZnHyl7IlNvHtoH8ctSp5HaOrum3GrV7p5Ir9n7lkxGHl9FtxoCa_7JcLb--g9KraRk)
 
 
 ## Entity Relationship Diagram
 
-[![](https://mermaid.ink/img/pako:eNqtV9tu4jAQ_ZUoz-0P8AZLV0LaiwTtGy9DPIBbx45sBy2i_ff1JYE4OOSyqz40sc85Ho-PZ8IlzQTBdJaiXFI4SMi3PEneFMrkYp-SZKMl5YeEkuB1T6XSvyDHYJRBZBBOoEG-rX8Eo5gDZUlix7623P75ZV8R8jUy0FRwdaTFXRgtjsOLkpP5yQjCjjKqz2ME5uS9JDQDLdza3wTfM5ppNVFjxZWmurTMSVI2hn_VaITTcYrfmQCdFJIKadLVTV_iDjSOWfu3PACn9iBFKbnxAtdjt__Yefzqr4UQDIEn2RGzDyQrHg6bHDK24guJ8NFe5Rrb0LWqAYIqk7SwuwmNL_hhaeb84NLk7JXmaEIAqc28HWhNISfBRB214IzycNET8hLnhEhUKph4F5S375Uy_wpctfP64q5bfLO3cE1C5jrAGB-yMJrcRAEHbOlXRrEXsWOVeoM7ex4eGJPoYWcgJcU2dZMJiQ-trhwiZK2xYOeJVCF81RnjbUt67DdTv5ANuKGNAjHSwOoopD7CXfL9LenZgAN1HFML-lP0B5d7zI1o51zrEZfn58_PYJuzZJvS2_s2vcHvWkZFd1KWV5qHIQRXfCxBm4ea0N9gKnbzClgRaZ9Gq0RjGNSjKoFm8bc6cHufItcXT2-vmhTWUNUBDhnUUPsM8B_jaSbikVEjuEbbckFeXyOcSOeedBLdOlUhsBLEPdbsvk-A9q5FjR8p0JsOd5xTwL4aWpzrVjXEN9F2-LZrLs5RTO-izZoxjjOo6oTQq7sLKQqhaNOVHUhRtIG-X_ZZIEBF7d1ovn1i99C4YrQnVwzXe31-RD6I8TCxTm7ogXk3jULXx_F5s2MjPRz_6GWQogipM50B9qHfqyY-JCEhNKKXPqU5SnM5iPmx6T4LzOaPaD5PUh_iHkrmkvBloGVBzFovhJoKlM72wBQ-pVBqsTnz7DrgUdXv1mr06y8KVw6G)](https://mermaid.ink/img/pako:eNqtV9tu4jAQ_ZUoz-0P8AZLV0LaiwTtGy9DPIBbx45sBy2i_ff1JYE4OOSyqz40sc85Ho-PZ8IlzQTBdJaiXFI4SMi3PEneFMrkYp-SZKMl5YeEkuB1T6XSvyDHYJRBZBBOoEG-rX8Eo5gDZUlix7623P75ZV8R8jUy0FRwdaTFXRgtjsOLkpP5yQjCjjKqz2ME5uS9JDQDLdza3wTfM5ppNVFjxZWmurTMSVI2hn_VaITTcYrfmQCdFJIKadLVTV_iDjSOWfu3PACn9iBFKbnxAtdjt__Yefzqr4UQDIEn2RGzDyQrHg6bHDK24guJ8NFe5Rrb0LWqAYIqk7SwuwmNL_hhaeb84NLk7JXmaEIAqc28HWhNISfBRB214IzycNET8hLnhEhUKph4F5S375Uy_wpctfP64q5bfLO3cE1C5jrAGB-yMJrcRAEHbOlXRrEXsWOVeoM7ex4eGJPoYWcgJcU2dZMJiQ-trhwiZK2xYOeJVCF81RnjbUt67DdTv5ANuKGNAjHSwOoopD7CXfL9LenZgAN1HFML-lP0B5d7zI1o51zrEZfn58_PYJuzZJvS2_s2vcHvWkZFd1KWV5qHIQRXfCxBm4ea0N9gKnbzClgRaZ9Gq0RjGNSjKoFm8bc6cHufItcXT2-vmhTWUNUBDhnUUPsM8B_jaSbikVEjuEbbckFeXyOcSOeedBLdOlUhsBLEPdbsvk-A9q5FjR8p0JsOd5xTwL4aWpzrVjXEN9F2-LZrLs5RTO-izZoxjjOo6oTQq7sLKQqhaNOVHUhRtIG-X_ZZIEBF7d1ovn1i99C4YrQnVwzXe31-RD6I8TCxTm7ogXk3jULXx_F5s2MjPRz_6GWQogipM50B9qHfqyY-JCEhNKKXPqU5SnM5iPmx6T4LzOaPaD5PUh_iHkrmkvBloGVBzFovhJoKlM72wBQ-pVBqsTnz7DrgUdXv1mr06y8KVw6G)
+[![](https://mermaid.ink/svg/pako:eNqtV9tu4jAQ_ZUoz-0P8AZLV0LaiwTtGy_TeAC3jieyHbSo7b-vLwHikCu7T3XGZ86Mx8cz5SPNiGE6S1EtOewV5Fu5lUnyolElH26VJBujuNwnnEWfO660-QU5RlYBLUY4ggH1sv4RWTEHLpLE2b5c0HPYZ4R8jQIMJ6kPvLhJo-Hj8VRKNj9aQnjlgpvTFII5eysZz8CQj_2N5E7wzOg7OVZSG25K53kXlcvhXzlq6XTc4ndBYJJCcVK2XN3uS3wFg1Ni_1Z7kNxdJJVKWi1IM_X4_cqTF30tiASCTLIDZu_IVjI22xoKsZILhfDejHLJbWysysBQZ4oX7jSx8Enul3YvGJe2Zs88R5sCKGP3naGxhZJFG-esSQou46BHlCXOGVOodbTxRlw235W2fwpcNev65J9b-2Gv6dqCzE2EsToUcTa5zQL22OCvhOIeYkeU8wFf3X0EYBvFgHcGSnFsum4yUtgrde0RsdcaC3G605UodJ0p2nZO_Xqz_QvFiBdaaxATBawPpMwBboofXsnAATyo45oa0J80nFweMFfHavDQx-Pj52d0yFmyTfn1e5t2jovK2RM5r9IuhuG-7Ti4sYsAHx4slW9d-o5CudVEjpb4o-ZS5V5v-I4Frt_TyfpzGZxNd6Q0lnNQEaOGZ_-V_7dc6gXoFmULqjacfHqXzxuPlul8R_W7Waqn7giYXwbfoRHfPC2d8ZPcB8rgr286NPQ5h_JzKADCcGym7abh4tSCGAhX7wdTPEb0kxh4UXChqCDNr9rrwFERw8Ls67_sCNMi4NoQ7Se6Bbaxtc7VCu_nZ6gI5SPwPYX0VOMuJyhmAvZc_M-r4GolkfjHLGtlaXHpKGCE7FFzNXqHixADW7jShzRHZaXP7E9EP8rtkQ9o_6VIQ3I7KIU_-peFlgWzkZ4Ytz0lnRlV4kMKpaHNSWbpbAdC4xlU_disrF9_AeKdBYU)](https://mermaid.ink/svg/pako:eNqtV9tu4jAQ_ZUoz-0P8AZLV0LaiwTtGy_TeAC3jieyHbSo7b-vLwHikCu7T3XGZ86Mx8cz5SPNiGE6S1EtOewV5Fu5lUnyolElH26VJBujuNwnnEWfO660-QU5RlYBLUY4ggH1sv4RWTEHLpLE2b5c0HPYZ4R8jQIMJ6kPvLhJo-Hj8VRKNj9aQnjlgpvTFII5eysZz8CQj_2N5E7wzOg7OVZSG25K53kXlcvhXzlq6XTc4ndBYJJCcVK2XN3uS3wFg1Ni_1Z7kNxdJJVKWi1IM_X4_cqTF30tiASCTLIDZu_IVjI22xoKsZILhfDejHLJbWysysBQZ4oX7jSx8Enul3YvGJe2Zs88R5sCKGP3naGxhZJFG-esSQou46BHlCXOGVOodbTxRlw235W2fwpcNev65J9b-2Gv6dqCzE2EsToUcTa5zQL22OCvhOIeYkeU8wFf3X0EYBvFgHcGSnFsum4yUtgrde0RsdcaC3G605UodJ0p2nZO_Xqz_QvFiBdaaxATBawPpMwBboofXsnAATyo45oa0J80nFweMFfHavDQx-Pj52d0yFmyTfn1e5t2jovK2RM5r9IuhuG-7Ti4sYsAHx4slW9d-o5CudVEjpb4o-ZS5V5v-I4Frt_TyfpzGZxNd6Q0lnNQEaOGZ_-V_7dc6gXoFmULqjacfHqXzxuPlul8R_W7Waqn7giYXwbfoRHfPC2d8ZPcB8rgr286NPQ5h_JzKADCcGym7abh4tSCGAhX7wdTPEb0kxh4UXChqCDNr9rrwFERw8Ls67_sCNMi4NoQ7Se6Bbaxtc7VCu_nZ6gI5SPwPYX0VOMuJyhmAvZc_M-r4GolkfjHLGtlaXHpKGCE7FFzNXqHixADW7jShzRHZaXP7E9EP8rtkQ9o_6VIQ3I7KIU_-peFlgWzkZ4Ytz0lnRlV4kMKpaHNSWbpbAdC4xlU_disrF9_AeKdBYU)
 
 ## Record of Tasks
 
@@ -73,9 +73,10 @@ SEARCH_TOURNAMENTS(TOURNAMENTS, QUERY):
     for WORD in QUERY.split(" "):
       if TOURNAMENT.NAME.includes(WORD):
         SCORE += 1
-      else:
-        if TOURNAMENT.LOCATION.includes(WORD):
-          SCORE += 0.5
+      else if TOURNAMENT.LOCATION.includes(WORD):
+        SCORE += 0.5
+      else if TOURNAMENT.FORMAT.includes(WORD):
+        SCORE += 0.25
     if SCORE > 0:
       FOUND = true
       RANKED_TOURNAMENTS.push({ tournament: TOURNAMENT, score: SCORE })
@@ -112,16 +113,152 @@ RANK_SPEAKERS(SPEAKERS):
 
 ## Testing Plan
 
-Potential participants should be able to view a list of upcoming tournaments (hosted using the platform) with key details.
+### Test 1
 
-Participants should be able to register and pay for a tournament.
+**Procedure:**
 
-Organisers should be provided with a web-based portal to configure their tournament's format, rules and schedule.
+On the home page, check that all future tournaments stored in the database are listed on the homepage with the correct details for date, name, format, location and prize amount.
 
-Organisers should be able view details about and contact all the registered participants.
+**Expected Outcome:** 
 
-Participants should be provided with the tournament's rules, location and schedule.
+The next twenty events from the database will be listed with a button that expands the list to include an additional twenty, up until no more future events are available. The date, name, format, location and prize amount are the same as in the database.
 
-Debate adjudicators should be able to enter scores for each debate.
+**Related Criteria**: 1
 
-The platform should generate both individual and team breaks for the tournament.
+### Test 2
+
+**Procedure:**
+
+On the home page, input a search query into the search box and check that the returned list of events includes all events relevant to the search query. Specifically, four search queries will be performed: a query containing a significant part of an event name, a query containing a location, a query containing a debate format and a query containing no relevant information to any tournament.
+
+**Expected Outcome:** 
+
+For the four cases the expected outcomes are:
+
+1) The event with that name is displayed in the first position on the list.
+2) Only events with that location are shown in the list.
+3) Only events following that format are shown in the list.
+4) No events are shown in the list.
+
+**Related Criteria**: 1
+
+### Test 3
+
+**Procedure:**
+
+On an event page, enter the relevant details into the registration form.
+
+**Expected Outcome:** 
+
+New record should be created in the database with all the inputted details and a relation to the event.
+
+**Related Criteria**: 2
+
+### Test 4
+
+**Procedure:**
+
+On an event page that requires payment, enter the relevant details into the payment form when prompted.
+
+**Expected Outcome:** 
+
+A record of payment should be created in the database and the organiser should recieve the funds payed by the registrant. 
+
+**Related Criteria**: 2
+
+### Test 5
+
+**Procedure:**
+
+On an event's configuration page, enter a long piece of markdown-formatted text in the rules box and click save.
+
+**Expected Outcome:** 
+
+The event's database record should be updated to match the value entered exactly.
+
+**Related Criteria**: 3
+
+### Test 6
+
+**Procedure:**
+
+On an event's configuration page, enter a long piece of markdown-formatted text in the schedule box and click save.
+
+**Expected Outcome:** 
+
+The event's database record should be updated to match the value entered exactly.
+
+**Related Criteria**: 3
+
+### Test 7
+
+**Procedure:**
+
+On an event's configuration page, enter a long piece of markdown-formatted text in the format box as well as a short text value in the shorthand format descriptor box and click save.
+
+**Expected Outcome:** 
+
+The event's database record should be updated to match the value entered exactly.
+
+**Related Criteria**: 3
+
+
+### Test 8
+
+**Procedure:**
+
+On an event's organising dashboard, check the details are the same as the details stored in the database. 
+
+**Expected Outcome:** 
+
+All registrants from the database will be listed. Their details are the same as those in the database.
+
+**Related Criteria**: 4
+
+### Test 9
+
+**Procedure:**
+
+On an event's organising dashboard, click the "Send Email" button and enter an email subject and a markdown-formatted message. Then click Send.
+
+**Expected Outcome:** 
+
+All registrants in the database will recieve an email with the same subject and the message correctly formatted.
+
+**Related Criteria**: 4
+
+### Test 10
+
+**Procedure:**
+
+On an event's organising dashboard, click on a couple of the listed registrants and check that the details shown are the same as those in the database. 
+
+**Expected Outcome:** 
+
+Each of their details are the same as those in the database. An email should also be listed.
+
+**Related Criteria**: 4
+
+### Test 11
+
+**Procedure:**
+
+Visit an event's page as a registered participant, check that the tournament's rules, format and location are visible and the same as those stored in the database. 
+
+**Expected Outcome:** 
+
+Each of these details should be visible and the same as those in the database.
+
+**Related Criteria**: 5
+
+### Test 12
+
+**Procedure:**
+
+On an event's organising dashboard (created with testing data), 
+
+**Expected Outcome:** 
+
+Coming soon
+
+**Related Criteria**: 5
