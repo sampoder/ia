@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id                    String                            @id @default(cuid())
   firstName             String
@@ -25,6 +24,7 @@ model User {
   adjudicator           Adjudicator[]
   institutionId         String?
   institution           Institution?                       @relation(fields: [institutionId], references: [id])
+  tokens Token[]
 }
 
 model UserTeamRelationship {
@@ -239,4 +239,11 @@ model Motion {
   breakId String?     @unique
   break   Break?      @relation(fields: [breakId], references: [id])
   motion  String
+}
+
+model Token {
+  id      String      @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId String
+  user User @relation(fields: [userId], references: [id])
 }
