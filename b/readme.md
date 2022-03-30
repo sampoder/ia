@@ -9,7 +9,7 @@
 
 ## Record of Tasks
 
-View document.
+[View document.](https://docs.google.com/document/d/1L6DsmMt2MwryKj2qw5EB5XEKsiF7AT5j3VpEgiC6HyM/edit?usp=sharing)
 
 ## Interface Mockups
 
@@ -255,10 +255,46 @@ Each of these details should be visible and the same as those in the database.
 
 **Procedure:**
 
-On an event's organising dashboard (created with testing data), 
+On an event's organising dashboard (created with testing data that includes two rounds of results), click the "Generate Draw" button and observe the generated draw.
 
 **Expected Outcome:** 
 
-Coming soon
+Each team pairing should have teams of approximate equal standing in the tournament (based on wins + average speaker score)
 
-**Related Criteria**: 5
+**Related Criteria**: 6
+
+### Test 13
+
+**Procedure:**
+
+With an djudicator's account on an event (created with testing data that includes an ongoing), load up the adjudicator dashboard and input a set of random scores for each speaker. 
+
+**Expected Outcome:** 
+
+A new score record should be created in the database with the same values as inputted and a relation to the debator and this debate.
+
+**Related Criteria**: 7
+
+### Test 14
+
+**Procedure:**
+
+On an event's organising dashboard (created with testing data that includes two rounds of results), click the "Generate Team Breaks" button and observe the generated break.
+
+**Expected Outcome:** 
+
+The generated draw should have teams ordered by wins, average speaker score and draw strength in descending order.
+
+**Related Criteria**: 8
+
+### Test 15
+
+**Procedure:**
+
+On an event's organising dashboard (created with testing data that includes two rounds of results), click the "Generate Speaker Breaks" button and observe the generated break.
+
+**Expected Outcome:** 
+
+The generated draw should have teams ordered by speaker score, standard deviation and team wins in descending order.
+
+**Related Criteria**: 8
