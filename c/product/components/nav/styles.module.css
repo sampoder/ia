@@ -6,11 +6,12 @@
   align-items: center;
 }
 
-.nav > div {
+.logoType{
+  text-align: left;
   flex-grow: 1;
 }
 
-.nav > img {
+.nav > a > img {
   height: 40px;
   border-radius: var(--radii-default);
 }

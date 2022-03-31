@@ -244,6 +244,6 @@ model Motion {
 model Token {
   id      String      @id @default(cuid())
   createdAt DateTime @default(now())
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  userEmail String
+  user User @relation(fields: [userEmail], references: [email])
 }

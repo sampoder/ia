@@ -4,6 +4,7 @@ import {
   Token as TokenType,
 } from "@prisma/client";
 const prisma = new PrismaClient();
+var md5 = require('md5');
 
 export class User {
   dbItem?: UserType | null;
@@ -11,20 +12,22 @@ export class User {
   firstName?: string;
   lastName?: string;
   email?: string;
+  avatarURL?: string;
   async addToDB() {
-    if (this.firstName && this.lastName && this.email) {
+    if (this.firstName && this.lastName && this.email && this.avatarURL) {
       this.dbItem = await prisma.user.create({
         data: {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,
+          avatarURL: this.avatarURL
         },
       });
       this.id = this.dbItem.id;
     } else console.error("USER: Could not add to DB due to missing fields.");
   }
   async updateInDB() {
-    if (this.firstName && this.lastName && this.email && this.id) {
+    if (this.firstName && this.lastName && this.email && this.id && this.avatarURL) {
       this.dbItem = await prisma.user.update({
         where: {
           id: this.id,
@@ -33,6 +36,7 @@ export class User {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,
+          avatarURL: this.avatarURL
         },
       });
     } else console.error("USER: Could not update in DB due to missing fields.");
@@ -56,20 +60,27 @@ export class User {
     this.firstName = firstName || undefined;
     this.lastName = lastName || undefined;
     this.email = email || undefined;
+    this.avatarURL = email ? "https://www.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + '?d=identicon&r=pg' : undefined
   }
 }
 
 export class Token {
   dbItem?: TokenType | null;
-  userId?: string;
+  userEmail?: string;
   id?: string;
+  userId?:string;
   async addToDB() {
-    if (this.userId) {
+    if (this.userEmail) {
       this.dbItem = await prisma.token.create({
         data: {
-          userId: this.userId,
+          userEmail: this.userEmail,
         },
+        include: {
+          user: true
+        }
       });
+      this.userEmail = this.dbItem.userEmail;
+      this.userId = this.dbItem.user.id;
       this.id = this.dbItem.id;
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
@@ -92,14 +103,19 @@ export class Token {
         where: {
           id: this.id,
         },
+        include: {
+          user: true
+        }
       });
+      this.userEmail = this.dbItem?.userEmail;
+      this.userId = this.dbItem?.user.id;
     } else console.error("TOKEN: Could not load from DB due to missing id.");
   }
   async sendToUser() {
     console.log(`Your login token is ${this.id}.`);
   }
-  constructor(id?: string, userId?: string) {
+  constructor(id?: string, userEmail?: string) {
     this.id = id || undefined;
-    this.userId = userId || undefined;
+    this.userEmail = userEmail || undefined;
   }
 }

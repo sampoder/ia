@@ -6,7 +6,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    let loginToken = new Token(undefined, req.body.user)
+    console.log(req.body.email)
+    let loginToken = new Token(undefined, req.body.email)
     await loginToken.addToDB()
     await loginToken.sendToUser()
     res.status(200).json({
