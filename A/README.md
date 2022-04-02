@@ -17,7 +17,7 @@ To build the platform, I have chosen to use the Next.js framework with React. I 
 1) Potential participants should be able to view a searchable list of upcoming tournaments (hosted using the platform) with key details.
 2) Participants should be able to register and pay for a tournament.
 3) Organisers should be provided with a web-based portal to configure their tournament's format, rules and schedule.
-4) Organisers should be able view details about and contact all the registered participants.
+4) Organisers should be able to view details about and contact all the registered participants.
 5) Participants should be provided with the tournament's rules, format and schedule.
 6) Organisers should be able to generate matchups for a debate round based on the accelerated Swiss model.
 7) Debate adjudicators should be able to enter scores for each debate.

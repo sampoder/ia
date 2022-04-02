@@ -1,3 +1,4 @@
+import { User as UserType } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { User, Token } from "../../lib/classes";
 

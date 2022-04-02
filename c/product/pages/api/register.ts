@@ -13,7 +13,7 @@ export default async function handler(
       req.body.email
     );
     await user.addToDB()
-    let loginToken = new Token(undefined, user.id)
+    let loginToken = new Token(undefined, user.email)
     await loginToken.addToDB()
     await loginToken.sendToUser()
     res.status(200).json({
