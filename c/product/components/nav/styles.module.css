@@ -11,7 +11,27 @@
   flex-grow: 1;
 }
 
-.nav > div > a > img {
+.nav > div > div > img {
   height: 40px;
   border-radius: var(--radii-default);
+}
+
+.nav > div > div {
+  position: relative;
+}
+
+.nav > div > div > div {
+  display: none;
+  position: absolute;
+  top: 40;
+  background: var(--snow);
+  right: 0;
+  padding: var(--spacing-2);
+  border-radius: var(--radii-default);
+  text-align: right;
+  width: 200px;
+}
+
+.nav > div > div:hover > div {
+  display: block;
 }

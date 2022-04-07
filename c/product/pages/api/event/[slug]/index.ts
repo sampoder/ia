@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Tournament } from "../../../lib/classes";
+import { Tournament } from "../../../../lib/classes";
 
 export async function fetchTournament(slug: string) {
   let tournament = new Tournament();

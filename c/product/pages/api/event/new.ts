@@ -10,9 +10,7 @@ export default async function handler(
     const { fetchUser } = require("../user");
     let user: UserType | null = await fetchUser(req.cookies["auth"]);
     if (user == null) {
-      return res.status(401).json({
-        authenticated: false,
-      });
+      return res.status(401).redirect('/login');
     }
     let tournament = new Tournament(
       undefined,
@@ -24,7 +22,7 @@ export default async function handler(
       req.body.type == "in-person" ? false : true
     );
     await tournament.addToDB();
-    res.status(200).json({ tournament: tournament.dbItem });
+    res.redirect(`/event/${tournament.slug}`)
   } catch (e) {
     console.error(e);
     res.status(500).json({

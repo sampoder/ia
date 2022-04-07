@@ -1,6 +1,7 @@
-import Nav from "../components/nav";
+import { GetServerSideProps } from "next";
+import Nav from "../../components/nav";
 
-export default function Signup() {
+export default function Register() {
   return (
     <>
       <Nav user={undefined} />
@@ -22,4 +23,17 @@ export default function Signup() {
       </div>
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { fetchUser } = require('../api/user');
+  const { res } = context;
+  let user = await fetchUser(context.req.cookies["auth"])
+  if (user != null) {
+    res.setHeader("location", "/");
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
+  }
+  return { props: {}}
 }

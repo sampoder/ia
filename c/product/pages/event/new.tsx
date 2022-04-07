@@ -22,15 +22,12 @@ export default function EventNew(props: {user: UserType | undefined}) {
           <small>Ending Date / Time: </small>
           <input type="datetime-local" name="endingDate" />
           <small>Type of event: </small>
-          <div>
-            <input type="radio" name="type" value="in-person" />
-            <label htmlFor="in-person">In-Person</label>
-          </div>
-          <div>
-            <input type="radio" name="type" value="virtual" />
-            <label htmlFor="virtual">Virtual</label>
-          </div>
-          <button>Register</button>
+          <select>
+            <option value="" selected>Select an event type...</option>
+            <option value="in-person">In-Person</option>
+            <option value="virtual">Virtual</option>
+          </select>
+          <button>Start Your Debate Tournament</button>
         </form>
       </div>
     </>
@@ -39,6 +36,13 @@ export default function EventNew(props: {user: UserType | undefined}) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchUser } = require('../api/user');
+  const { res } = context;
   let user = await fetchUser(context.req.cookies["auth"])
+  if (user == null) {
+    res.setHeader("location", "/login");
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
+  }
   return { props: {user}}
 }

@@ -1,0 +1,27 @@
+.events {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 16px;
+  gap: 12px;
+}
+
+.event {
+  background: var(--sunken);
+  border-radius: var(--radii-small);
+  padding: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.event > div > h2 {
+  margin-bottom: 6px;
+}
+
+.event > img {
+  height: 55px;
+  width: 55px;
+  object-fit: cover;
+  border-radius: var(--radii-default);
+  margin-right: 12px;
+}

@@ -23,14 +23,14 @@ model User {
   replyScores           ReplyScore[]
   adjudicator           Adjudicator[]
   institutionId         String?
-  institution           Institution?                       @relation(fields: [institutionId], references: [id])
-  tokens Token[]
+  institution           Institution?                      @relation(fields: [institutionId], references: [id])
+  tokens                Token[]
 }
 
 model UserTeamRelationship {
   id     String @id @default(cuid())
-  userId String @unique
-  teamId String @unique
+  userId String 
+  teamId String
   user   User   @relation(fields: [userId], references: [id])
   team   Team   @relation(fields: [teamId], references: [id])
 }
@@ -97,11 +97,11 @@ model OrganiserTournamentRelationship {
 
 model Team {
   id                         String                                 @id @default(cuid())
-  Name                       String
-  Members                    UserTeamRelationship[]
+  name                       String
+  members                    UserTeamRelationship[]
   tournamentId               String
   tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
-  checkedIn                  Boolean
+  checkedIn                  Boolean                                @default(false)
   conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
   conflictedWithInstitutions TeamInstitutionConflictsRelationship[]
   availableForRounds         TeamRoundAvailabilityRelationship[]
@@ -117,12 +117,13 @@ model Tournament {
   organisers         OrganiserTournamentRelationship[]
   participatingTeams Team[]
   name               String
-  slug               String @unique
+  slug               String                            @unique
   description        String?
   longDesc           String?
   startingDate       DateTime
   endingDate         DateTime
   online             Boolean
+  amountPerTeam      Int                               @default(3)
   venueAddress       String?
   joinURL            String?
   stripeId           String?
@@ -243,8 +244,8 @@ model Motion {
 }
 
 model Token {
-  id      String      @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   userEmail String
-  user User @relation(fields: [userEmail], references: [email])
+  user      User     @relation(fields: [userEmail], references: [email])
 }

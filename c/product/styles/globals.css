@@ -91,7 +91,91 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 }
 
-h1 {
+h1, h2{
   margin-block-start: 0em;
   margin-block-end: 0em;
+}
+
+input,
+textarea,
+select {
+  background: var(--sheet);
+  color: var(--text);
+  font-family: inherit;
+  border-radius: var(--radii-small);
+  border: 0;
+  font-size: inherit;
+  padding: var(--spacing-2);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0.1px solid var(--muted)
+}
+
+input::-webkit-input-placeholder,
+input::-moz-placeholder,
+input:-ms-input-placeholder,
+textarea::-webkit-input-placeholder,
+textarea::-moz-placeholder,
+textarea:-ms-input-placeholder,
+select::-webkit-input-placeholder,
+select::-moz-placeholder,
+select:-ms-input-placeholder {
+  color: var(--muted);
+}
+
+input[type="search"]::-webkit-search-decoration,
+textarea[type="search"]::-webkit-search-decoration,
+select[type="search"]::-webkit-search-decoration {
+  display: none;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+  appearance: checkbox;
+}
+
+input[type="radio"] {
+  -webkit-appearance: radio;
+  -moz-appearance: radio;
+  appearance: radio;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radii-small);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-card);
+  letter-spacing: var(--letter-spacing-headline);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.125s ease-in-out, box-shadow 0.125s ease-in-out;
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: var(--theme-ui-colors-white, #ffffff);
+  background-color: var(--blue);
+  border: 0;
+  font-size: var(--font-2);
+}
+
+button:focus,
+button:hover {
+  box-shadow: var(--shadow-elevated);
+  transform: scale(1.0625);
 }
