@@ -137,6 +137,7 @@ export class Token {
 export class Tournament {
   dbItem?: TournamentType | null;
   name?: string;
+  slug?: string;
   startingDate?: Date;
   endingDate?: Date;
   organiserIDs?: string[];
@@ -145,6 +146,7 @@ export class Tournament {
   async addToDB() {
     if (
       this.name &&
+      this.slug &&
       this.startingDate &&
       this.endingDate &&
       this.organiserIDs &&
@@ -153,6 +155,7 @@ export class Tournament {
       let dbItem = await prisma.tournament.create({
         data: {
           name: this.name,
+          slug: this.slug,
           startingDate: this.startingDate,
           endingDate: this.endingDate,
           online: this.online,
@@ -169,6 +172,7 @@ export class Tournament {
       
       this.dbItem = dbItem;
       this.name = this.dbItem.name;
+      this.slug = this.dbItem?.slug;
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
@@ -177,10 +181,11 @@ export class Tournament {
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
   async loadFromDB() {
-    if (this.id) {
+    if (this.id || this.slug) {
       let dbItem = await prisma.tournament.findUnique({
         where: {
           id: this.id,
+          slug: this.slug
         },
         include: {
           organisers: true,
@@ -188,6 +193,7 @@ export class Tournament {
       });
       this.dbItem = dbItem;
       this.name = this.dbItem?.name;
+      this.slug = this.dbItem?.slug;
       this.startingDate = this.dbItem?.startingDate;
       this.endingDate = this.dbItem?.endingDate;
       this.online = this.dbItem?.online;
@@ -198,6 +204,7 @@ export class Tournament {
   constructor(
     id?: string,
     name?: string,
+    slug?: string,
     startingDate?: Date,
     endingDate?: Date,
     organiserIDs?: string[],
@@ -205,6 +212,7 @@ export class Tournament {
   ) {
     this.id = id || undefined;
     this.name = name || undefined;
+    this.slug = slug || undefined;
     this.startingDate = startingDate || undefined;
     this.endingDate = endingDate || undefined;
     this.organiserIDs = organiserIDs || undefined;

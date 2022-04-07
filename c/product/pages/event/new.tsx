@@ -15,6 +15,8 @@ export default function EventNew(props: {user: UserType | undefined}) {
         >
           <small>Name: </small>
           <input name="name" />
+          <small>Slug: </small>
+          <input name="slug" />
           <small>Starting Date / Time: </small>
           <input type="datetime-local" name="startingDate" />
           <small>Ending Date / Time: </small>

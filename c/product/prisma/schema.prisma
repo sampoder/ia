@@ -117,6 +117,7 @@ model Tournament {
   organisers         OrganiserTournamentRelationship[]
   participatingTeams Team[]
   name               String
+  slug               String @unique
   description        String?
   longDesc           String?
   startingDate       DateTime

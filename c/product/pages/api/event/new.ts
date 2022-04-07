@@ -17,6 +17,7 @@ export default async function handler(
     let tournament = new Tournament(
       undefined,
       req.body.name,
+      req.body.slug,
       new Date(req.body.startingDate),
       new Date(req.body.endingDate),
       [user.id],

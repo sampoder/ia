@@ -5,7 +5,6 @@ import { User, Token } from "../../lib/classes";
 export async function fetchUser(authToken: string) {
   let token = new Token(authToken);
   await token.loadFromDB();
-  console.log(token);
   if (token.checkValid() && token.userId) {
     let user = new User(token.userId);
     await user.loadFromDB();
