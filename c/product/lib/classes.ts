@@ -143,6 +143,10 @@ export class Tournament {
   slug?: string;
   description?: string;
   venueAddress?: string;
+  prizeValue?: string;
+  eligibility?: string;
+  organisedBy?: string;
+  managerEmail?: string;
   startingDate?: Date;
   endingDate?: Date;
   organiserIDs?: string[];
@@ -164,6 +168,10 @@ export class Tournament {
           startingDate: this.startingDate,
           endingDate: this.endingDate,
           online: this.online,
+          prizeValue: this.prizeValue,
+          eligibility: this.eligibility,
+          organisedBy: this.organisedBy,
+          managerEmail: this.managerEmail,
           organisers: {
             create: this.organiserIDs.map((x) => {
               return { organiserId: x };
@@ -181,6 +189,18 @@ export class Tournament {
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
+      this.prizeValue = this.dbItem.prizeValue
+        ? this.dbItem.prizeValue
+        : undefined;
+      this.eligibility = this.dbItem.eligibility
+        ? this.dbItem.eligibility
+        : undefined;
+      this.organisedBy = this.dbItem.organisedBy
+        ? this.dbItem.organisedBy
+        : undefined;
+      this.managerEmail = this.dbItem.managerEmail
+        ? this.dbItem.managerEmail
+        : undefined;
       this.id = this.dbItem.id;
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
@@ -208,6 +228,10 @@ export class Tournament {
           online: this.online,
           description: this.description,
           venueAddress: this.venueAddress,
+          prizeValue: this.prizeValue,
+          eligibility: this.eligibility,
+          organisedBy: this.organisedBy,
+          managerEmail: this.managerEmail,
           organisers: {
             create: this.organiserIDs.map((x) => {
               return { organiserId: x };
@@ -226,6 +250,18 @@ export class Tournament {
         this.dbItem.description != null ? this.dbItem.description : undefined;
       this.venueAddress =
         this.dbItem.venueAddress != null ? this.dbItem.venueAddress : undefined;
+      this.prizeValue = this.dbItem.prizeValue
+        ? this.dbItem.prizeValue
+        : undefined;
+      this.eligibility = this.dbItem.eligibility
+        ? this.dbItem.eligibility
+        : undefined;
+      this.organisedBy = this.dbItem.organisedBy
+        ? this.dbItem.organisedBy
+        : undefined;
+      this.managerEmail = this.dbItem.managerEmail
+        ? this.dbItem.managerEmail
+        : undefined;
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
@@ -245,13 +281,35 @@ export class Tournament {
         },
       });
       this.dbItem = dbItem;
-      this.name = this.dbItem?.name;
-      this.slug = this.dbItem?.slug;
-      this.startingDate = this.dbItem?.startingDate;
-      this.endingDate = this.dbItem?.endingDate;
-      this.online = this.dbItem?.online;
-      this.id = this.dbItem?.id;
-      this.organiserIDs = dbItem?.organisers.map((x) => x.organiserId);
+      if (dbItem) {
+        this.name = dbItem.name;
+        this.slug = dbItem.slug;
+        this.description =
+          this.dbItem?.description != null
+            ? this.dbItem.description
+            : undefined;
+        this.venueAddress =
+          this.dbItem?.venueAddress != null
+            ? this.dbItem.venueAddress
+            : undefined;
+        this.prizeValue = this.dbItem?.prizeValue
+          ? this.dbItem.prizeValue
+          : undefined;
+        this.eligibility = this.dbItem?.eligibility
+          ? this.dbItem.eligibility
+          : undefined;
+        this.organisedBy = this.dbItem?.organisedBy
+          ? this.dbItem.organisedBy
+          : undefined;
+        this.managerEmail = this.dbItem?.managerEmail
+          ? this.dbItem.managerEmail
+          : undefined;
+        this.startingDate = this.dbItem?.startingDate;
+        this.endingDate = this.dbItem?.endingDate;
+        this.online = this.dbItem?.online;
+        this.id = this.dbItem?.id ? this.dbItem?.id : undefined;
+        this.organiserIDs = dbItem?.organisers.map((x) => x.organiserId);
+      }
     } else console.error("TOKEN: Could not load from DB due to missing id.");
   }
   constructor(
@@ -295,8 +353,8 @@ export class Team {
         include: {
           members: {
             include: {
-              user: true
-            }
+              user: true,
+            },
           },
         },
       });
@@ -316,8 +374,8 @@ export class Team {
         include: {
           members: {
             include: {
-              user: true
-            }
+              user: true,
+            },
           },
         },
       });
@@ -336,8 +394,8 @@ export class Team {
         include: {
           members: {
             include: {
-              user: true
-            }
+              user: true,
+            },
           },
         },
       });

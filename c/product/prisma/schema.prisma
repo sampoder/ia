@@ -125,6 +125,10 @@ model Tournament {
   online             Boolean
   amountPerTeam      Int                               @default(3)
   venueAddress       String?
+  prizeValue         String?
+  eligibility        String?
+  organisedBy        String?
+  managerEmail       String?
   joinURL            String?
   stripeId           String?
   emailsSent         Email[]

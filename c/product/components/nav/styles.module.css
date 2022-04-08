@@ -26,11 +26,34 @@
   top: 40;
   background: var(--snow);
   right: 0;
-  padding: var(--spacing-2);
   border-radius: var(--radii-default);
   text-align: right;
-  width: 200px;
+  width: 220px;
 }
+
+.nav > div > div > div > a:first-child {
+  border-top-right-radius: var(--radii-default);
+  border-top-left-radius: var(--radii-default);
+}
+
+.nav > div > div > div > a:last-child {
+  border-bottom-right-radius: var(--radii-default);
+  border-bottom-left-radius: var(--radii-default);
+}
+
+
+.nav > div > div > div > a {
+  display: block;
+  padding: var(--spacing-2);
+  text-decoration: none;
+  color: var(--text)
+}
+
+.nav > div > div > div > a:hover {
+  background: var(--blue);
+  color: var(--snow);
+}
+
 
 .nav > div > div:hover > div {
   display: block;
