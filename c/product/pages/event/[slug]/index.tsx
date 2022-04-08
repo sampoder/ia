@@ -1,21 +1,40 @@
 import { GetServerSideProps } from "next";
 import Nav from "../../../components/nav";
-import { User as UserType, Tournament as TournamentType } from "@prisma/client";
+import {
+  PrismaClient,
+  User as UserType,
+  Tournament as TournamentType,
+  Team as TeamType,
+} from "@prisma/client";
 import Link from "next/link";
 import { compile } from "@mdx-js/mdx";
 import Markdown from "../../../components/markdown";
+import styles from "./styles.module.css";
+
+type ModifiedUserType = UserType & {
+  user: UserType;
+};
+
+type ModifiedTeamType = TeamType & {
+  members: ModifiedUserType[];
+};
 
 export default function Event(props: {
   user: UserType | undefined;
   tournament: TournamentType | undefined;
   description: string;
+  team: ModifiedTeamType | null;
 }) {
   return (
     <>
       <Nav user={props.user} />
       <div
         style={{
-          backgroundImage: `linear-gradient(90deg, rgba(0, 0, 22, 0.8) 35%, rgba(0, 0, 18, 0.65) 100%), url(https://i.imgur.com/mQTh5m3.jpg)`,
+          backgroundImage: `linear-gradient(90deg, rgba(0, 0, 22, 0.8) 35%, rgba(0, 0, 18, 0.65) 100%), url(${
+            props.tournament?.cover
+              ? props.tournament.cover
+              : `https://workshops.hackclub.com/api/patterns/${props.tournament?.slug}/`
+          })`,
           backgroundPosition: "center",
           padding: "64px",
           display: "flex",
@@ -47,7 +66,7 @@ export default function Event(props: {
               <>
                 {props.tournament?.startingDate.toLocaleDateString()}{" "}
                 {props.tournament?.startingDate.toLocaleTimeString()} to{" "}
-                {props.tournament?.startingDate.toLocaleTimeString()}
+                {props.tournament?.endingDate.toLocaleTimeString()}
               </>
             ) : (
               <>
@@ -67,59 +86,99 @@ export default function Event(props: {
               marginBottom: "24px",
             }}
           >
-            Virtual ∙ GMT+8
+            {" "}
+            {props.tournament?.online ? (
+              <>Virtual ∙ GMT+8</>
+            ) : (
+              <>{props.tournament?.hostCity}</>
+            )}
           </h2>
         </div>
 
-        <form
-          action={`/api/event/${props.tournament?.slug}/register`}
-          method="POST"
+        <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-            background: "rgba(100, 100, 100, 0.1)",
+            background:
+              props.team != undefined
+                ? "rgba(44, 187, 144, 0.3)"
+                : "rgba(100, 100, 100, 0.1)",
             padding: "16px",
-            minWidth: "calc(40vw - 64px)",
+            width: "calc(40vw - 64px)",
             borderRadius: "var(--radii-small)",
           }}
         >
-          <input
-            name="name"
-            placeholder="Your Team Name"
-            disabled={props.user == null}
-            style={{ opacity: props.user != null ? 1 : 0.6 }}
-          />
-          <small
-            style={{
-              fontWeight: "bold",
-              color: "white",
-              opacity: props.user != null ? 1 : 0.6,
-            }}
-          >
-            Your Other Team Members' Emails:{" "}
-          </small>
-          {[...Array(3)].map((_, index) =>
-            index != 0 ? (
+          {" "}
+          {props.team != undefined ? (
+            <div style={{ color: "white", lineHeight: "1.6" }}>
+              ✅ You're registered for {props.tournament?.name} with{" "}
+              {props.team.name}:{" "}
+              {props.team.members.map(
+                (member, index) =>
+                  member.user.firstName +
+                  " " +
+                  member.user.lastName + //@ts-ignore
+                  (index != props.team.members.length - 1 //@ts-ignore
+                    ? index == props.team.members.length - 2 //@ts-ignore
+                      ? " & "
+                      : ", "
+                    : "")
+              )}
+              .<br />
+              <button>Join Discord</button>
+              <button style={{ margin: "6px 8px 0px" }}>View Tab</button>
+              <Link
+                href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
+              >
+                <button style={{ background: "var(--red)" }}>Deregister</button>
+              </Link>
+            </div>
+          ) : (
+            <form
+              action={`/api/event/${props.tournament?.slug}/register`}
+              method="POST"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
               <input
-                placeholder={`Team Member ${index}'s Email`}
-                name={`email${index}`}
-                key={`email${index}`}
+                name="name"
+                placeholder="Your Team Name"
                 disabled={props.user == null}
                 style={{ opacity: props.user != null ? 1 : 0.6 }}
               />
-            ) : (
-              <></>
-            )
+              <small
+                style={{
+                  fontWeight: "bold",
+                  color: "white",
+                  opacity: props.user != null ? 1 : 0.6,
+                }}
+              >
+                Your Other Team Members' Emails:{" "}
+              </small>
+              {[...Array(3)].map((_, index) =>
+                index != 0 ? (
+                  <input
+                    placeholder={`Team Member ${index}'s Email`}
+                    name={`email${index}`}
+                    key={`email${index}`}
+                    disabled={props.user == null}
+                    style={{ opacity: props.user != null ? 1 : 0.6 }}
+                  />
+                ) : (
+                  <></>
+                )
+              )}
+              {props.user == null ? (
+                <Link href="/login">
+                  <button type="button">Login To Join Tournament</button>
+                </Link>
+              ) : (
+                <button>Register</button>
+              )}
+            </form>
           )}
-          {props.user == null ? (
-            <Link href="/login">
-              <button type="button">Login To Join Tournament</button>
-            </Link>
-          ) : (
-            <button>Register</button>
-          )}
-        </form>
+        </div>
       </div>
       <div
         style={{
@@ -138,16 +197,35 @@ export default function Event(props: {
             padding: "16px",
             borderRadius: "var(--radii-small)",
           }}
+          className={styles.details}
         >
-          <div>Starts at:</div>
-          <div> Ends at:</div>
-          <div>Venue:</div>
-          <div>Prize value:</div>
-          <div>Eligibility:</div>
-          <div>Organised by:</div>
-          <div>Questions? Email the tournament manager</div>
-          <div>Tell your friends <br />
-          Twitter ~ Facebook ~ Reddit</div>
+          <div>
+            <b>Starts at:</b>{" "}
+            {props.tournament?.startingDate.toLocaleDateString()}{" "}
+            {props.tournament?.startingDate.toLocaleTimeString()}
+          </div>
+          <div>
+            <b>Ends at:</b> {props.tournament?.endingDate.toLocaleDateString()}{" "}
+            {props.tournament?.endingDate.toLocaleTimeString()}
+          </div>
+          <div>
+            <b>Venue:</b> {props.tournament?.venueAddress}
+          </div>
+          <div>
+            <b>Prize value:</b> {props.tournament?.prizeValue}
+          </div>
+          <div>
+            <b>Eligibility:</b> {props.tournament?.eligibility}
+          </div>
+          <div>
+            <b>Organised by:</b> {props.tournament?.organisedBy}
+          </div>
+          <div>
+            Questions?{" "}
+            <a href={`mailto:${props.tournament?.managerEmail}`}>
+              <b>Email the tournament manager.</b>
+            </a>
+          </div>
         </div>
       </div>
     </>
@@ -157,9 +235,27 @@ export default function Event(props: {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../api/event/[slug]/index");
   const { fetchUser } = require("../../api/user");
+  const { prisma: PrismaClient } = require("../../../lib/prisma");
   let user = await fetchUser(context.req.cookies["auth"]);
   let tournament = await fetchTournament(context.params?.slug);
-
+  let teams =
+    (await prisma?.team.findMany({
+      where: {
+        tournamentId: tournament.id,
+        members: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    })) || [];
   const description = String(
     await compile(
       tournament.description
@@ -170,5 +266,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     )
   );
-  return { props: { tournament, user, description } };
+  return {
+    props: { tournament, user, description, team: teams[0] ? teams[0] : null },
+  };
 };

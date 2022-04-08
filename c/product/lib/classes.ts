@@ -26,6 +26,10 @@ export class User {
         },
       });
       this.id = this.dbItem.id;
+      this.firstName = this.dbItem?.firstName;
+      this.lastName = this.dbItem?.lastName;
+      this.avatarURL = this.dbItem?.avatarURL || undefined;
+      this.email = this.dbItem?.email || undefined;
     } else console.error("USER: Could not add to DB due to missing fields.");
   }
   async updateInDB() {
@@ -47,6 +51,10 @@ export class User {
           avatarURL: this.avatarURL,
         },
       });
+      this.firstName = this.dbItem?.firstName;
+      this.lastName = this.dbItem?.lastName;
+      this.avatarURL = this.dbItem?.avatarURL || undefined;
+      this.email = this.dbItem?.email || undefined;
     } else console.error("USER: Could not update in DB due to missing fields.");
   }
   async loadFromDB() {
@@ -58,6 +66,10 @@ export class User {
             }
           : { email: this.email },
       });
+      this.firstName = this.dbItem?.firstName;
+      this.lastName = this.dbItem?.lastName;
+      this.avatarURL = this.dbItem?.avatarURL || undefined;
+      this.email = this.dbItem?.email || undefined;
     } else console.error("USER: Could not load from DB due to missing id.");
   }
   constructor(
@@ -143,10 +155,12 @@ export class Tournament {
   slug?: string;
   description?: string;
   venueAddress?: string;
+  hostCity?: string;
   prizeValue?: string;
   eligibility?: string;
   organisedBy?: string;
   managerEmail?: string;
+  avatar?: string;
   startingDate?: Date;
   endingDate?: Date;
   organiserIDs?: string[];
@@ -170,7 +184,10 @@ export class Tournament {
           online: this.online,
           prizeValue: this.prizeValue,
           eligibility: this.eligibility,
+          venueAddress: this.venueAddress,
           organisedBy: this.organisedBy,
+          hostCity: this.hostCity,
+          avatar: this.avatar,
           managerEmail: this.managerEmail,
           organisers: {
             create: this.organiserIDs.map((x) => {
@@ -185,12 +202,16 @@ export class Tournament {
 
       this.dbItem = dbItem;
       this.name = this.dbItem.name;
+      this.hostCity = this.dbItem.hostCity ? this.dbItem.hostCity : undefined;
       this.slug = this.dbItem?.slug;
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
       this.prizeValue = this.dbItem.prizeValue
         ? this.dbItem.prizeValue
+        : undefined;
+      this.avatar = this.dbItem.avatar
+        ? this.dbItem.avatar
         : undefined;
       this.eligibility = this.dbItem.eligibility
         ? this.dbItem.eligibility
@@ -226,6 +247,7 @@ export class Tournament {
           startingDate: this.startingDate,
           endingDate: this.endingDate,
           online: this.online,
+          avatar: this.avatar,
           description: this.description,
           venueAddress: this.venueAddress,
           prizeValue: this.prizeValue,
@@ -244,8 +266,12 @@ export class Tournament {
       });
 
       this.dbItem = dbItem;
+      this.hostCity = this.dbItem.hostCity ? this.dbItem.hostCity : undefined;
       this.name = this.dbItem.name;
       this.slug = this.dbItem.slug;
+      this.avatar = this.dbItem.avatar
+        ? this.dbItem.avatar
+        : undefined;
       this.description =
         this.dbItem.description != null ? this.dbItem.description : undefined;
       this.venueAddress =
@@ -284,6 +310,10 @@ export class Tournament {
       if (dbItem) {
         this.name = dbItem.name;
         this.slug = dbItem.slug;
+        this.hostCity = dbItem.hostCity ? dbItem.hostCity : undefined;
+        this.avatar = dbItem.avatar
+          ? dbItem.avatar
+          : undefined;
         this.description =
           this.dbItem?.description != null
             ? this.dbItem.description
@@ -404,6 +434,19 @@ export class Team {
       this.tournamentId = this.dbItem?.tournamentId;
       this.memberIDs = dbItem?.members.map((x) => x.userId);
     } else console.error("TEAM: Could not load from DB due to missing id.");
+  }
+  async deleteFromDB() {
+    if (this.id) {
+      await prisma.userTeamRelationship.deleteMany({
+        where: {
+          teamId: this.id
+        }
+      })
+      await prisma.team.delete({
+        where: { id: this.id },
+      });
+      this.dbItem = null;
+    } else console.error("TEAM: Could not delete in DB due to missing fields.");
   }
   constructor(
     id?: string,

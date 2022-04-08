@@ -1,8 +1,14 @@
 import { GetServerSideProps } from "next";
 import Nav from "../../components/nav";
-import { User as UserType } from '@prisma/client'
+import { User as UserType } from "@prisma/client";
+import { useState } from "react";
 
-export default function EventNew(props: {user: UserType | undefined}) {
+type HTMLElementEvent<T extends HTMLElement> = Event & {
+  value: T;
+};
+
+export default function EventNew(props: { user: UserType | undefined }) {
+  const [isInPerson, setIsInPerson] = useState(false);
   return (
     <>
       <Nav user={props.user} />
@@ -14,19 +20,35 @@ export default function EventNew(props: {user: UserType | undefined}) {
           style={{ display: "flex", flexDirection: "column", gap: "8px" }}
         >
           <small>Name: </small>
-          <input name="name" />
+          <input required name="name" />
           <small>Slug: </small>
-          <input name="slug" />
+          <input required name="slug" />
+          <small>Tournament Logo URL: </small>
+          <input required name="avatar" />
           <small>Starting Date / Time: </small>
-          <input type="datetime-local" name="startingDate" />
+          <input required type="datetime-local" name="startingDate" />
           <small>Ending Date / Time: </small>
-          <input type="datetime-local" name="endingDate" />
+          <input required type="datetime-local" name="endingDate" />
           <small>Type of event: </small>
-          <select>
-            <option value="" selected>Select an event type...</option>
+          <select
+          required
+            onChange={(e) =>
+              setIsInPerson(
+                (e.target as HTMLElementEvent<HTMLSelectElement>).value ==
+                  "in-person"
+                  ? true
+                  : false
+              )
+            }
+          >
+            <option value="" selected>
+              Select an event type...
+            </option>
             <option value="in-person">In-Person</option>
             <option value="virtual">Virtual</option>
           </select>
+          {isInPerson &&<> <small>Host City: </small>
+          <input required name="hostCity" /></>}
           <button>Start Your Debate Tournament</button>
         </form>
       </div>
@@ -35,14 +57,14 @@ export default function EventNew(props: {user: UserType | undefined}) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { fetchUser } = require('../api/user');
+  const { fetchUser } = require("../api/user");
   const { res } = context;
-  let user = await fetchUser(context.req.cookies["auth"])
+  let user = await fetchUser(context.req.cookies["auth"]);
   if (user == null) {
     res.setHeader("location", "/login");
     res.statusCode = 302;
     res.end();
     return { props: {} };
   }
-  return { props: {user}}
-}
+  return { props: { user } };
+};

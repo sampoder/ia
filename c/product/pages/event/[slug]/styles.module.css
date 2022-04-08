@@ -1,0 +1,11 @@
+.details > div {
+  margin-bottom: 12px;
+}
+
+.details > div:last-child {
+  margin-bottom: 0px;
+}
+
+.details > div:last-child > a {
+  color: var(--blue)
+}

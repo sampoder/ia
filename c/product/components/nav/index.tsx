@@ -15,8 +15,8 @@ export default function Nav(props: { user: UserType | undefined }) {
           <div>
             <img src={props.user?.avatarURL || ""} />
             <div>
-              <Link href="/event/new">My Profile</Link>
-              <Link href="/event/new">My Tournaments</Link>
+              <Link href="/profile">Edit My Profile</Link>
+              <Link href="/tournaments">My Tournaments</Link>
               <Link href="/event/new">Launch A Tournament</Link>
               <Link href="/api/logout">Logout</Link>
             </div>
