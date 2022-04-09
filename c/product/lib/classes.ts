@@ -77,8 +77,9 @@ export class User {
               id: this.id,
             }
           : { email: this.email },
-        include: { ...include },
+        include: include != undefined ? include : null,
       });
+      this.id = this.dbItem?.id;
       this.firstName = this.dbItem?.firstName;
       this.lastName = this.dbItem?.lastName;
       this.avatarURL = this.dbItem?.avatarURL || undefined;
@@ -248,6 +249,26 @@ export class Tournament {
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
+  async addOrganiser(id: string) {
+    if (this.id) {
+      await prisma.organiserTournamentRelationship.create({
+        data: {
+          tournamentId: this.id,
+          organiserId: id,
+        },
+      });
+    }
+  }
+  async removeOrganiser(id: string) {
+    if (this.id) {
+      await prisma.organiserTournamentRelationship.deleteMany({
+        where: {
+          tournamentId: this.id,
+          organiserId: id,
+        },
+      });
+    }
+  }
   async updateInDB() {
     if (
       this.name &&
@@ -280,11 +301,6 @@ export class Tournament {
           organisedBy: this.organisedBy,
           managerEmail: this.managerEmail,
           format: this.format,
-          organisers: {
-            create: this.organiserIDs.map((x) => {
-              return { organiserId: x };
-            }),
-          },
         },
         include: {
           organisers: true,
