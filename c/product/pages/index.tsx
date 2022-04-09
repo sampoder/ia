@@ -23,7 +23,7 @@ export default function Home(props: {
     <div>
       <Nav user={props.user || undefined} />
       <Header />
-      <div className={styles.inputWrapper}>
+      <div className={styles.inputWrapper} id="tournaments">
         <input
           className={styles.input}
           placeholder="Search / filter events"

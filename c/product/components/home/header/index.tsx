@@ -7,12 +7,15 @@ export default function Header() {
     <div className={styles.header}>
       <div>
         <h1 style={{ fontSize: "3.5em", maxWidth: "800px" }}>
-          Welcome To A Global<br />  Debating Community
+          Welcome To A Global
+          <br /> Debating Community
         </h1>
         <p>
-          <Button style={{marginRight: '10px'}}>Join A Tournament</Button>
+          <Link href="#tournaments">
+            <Button style={{ marginRight: "10px" }}>Join A Tournament</Button>
+          </Link>
           <Link href="/event/new">
-          <Button>Organise A Tournament</Button>
+            <Button>Organise A Tournament</Button>
           </Link>
         </p>
       </div>
