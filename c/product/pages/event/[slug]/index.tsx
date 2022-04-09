@@ -89,7 +89,9 @@ export default function Event(props: {
           >
             {" "}
             {props.tournament?.online ? (
-              <>{props.tournament?.hostRegion} ∙ {props.tournament?.timezone}</>
+              <>
+                {props.tournament?.hostRegion} ∙ {props.tournament?.timezone}
+              </>
             ) : (
               <>{props.tournament?.hostRegion}</>
             )}
@@ -112,17 +114,18 @@ export default function Event(props: {
             <div style={{ color: "white", lineHeight: "1.6" }}>
               ✅ You're registered for {props.tournament?.name} with{" "}
               {props.team.name}:{" "}
-              {props.team.members.map(
-                (member, index) =>
-                 <span key={`team-member-${index}`}>{member.user.firstName +
-                  " " +
-                  member.user.lastName + //@ts-ignore
-                  (index != props.team.members.length - 1 //@ts-ignore
-                    ? index == props.team.members.length - 2 //@ts-ignore
-                      ? " & "
-                      : ", "
-                    : "")}</span>
-              )}
+              {props.team.members.map((member, index) => (
+                <span key={`team-member-${index}`}>
+                  {member.user.firstName +
+                    " " +
+                    member.user.lastName + //@ts-ignore
+                    (index != props.team.members.length - 1 //@ts-ignore
+                      ? index == props.team.members.length - 2 //@ts-ignore
+                        ? " & "
+                        : ", "
+                      : "")}
+                </span>
+              ))}
               .<br />
               <button>Join Discord</button>
               <button style={{ margin: "6px 8px 0px" }}>View Tab</button>
@@ -278,31 +281,32 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { prisma: PrismaClient } = require("../../../lib/prisma");
   let user = await fetchUser(context.req.cookies["auth"]);
   let tournament = await fetchTournament(context.params?.slug);
-  let teams =
-    (await prisma?.team.findMany({
-      where: {
-        tournamentId: tournament.id,
-        members: {
-          some: {
-            userId: user.id,
+  let teams = user?.id
+    ? (await prisma?.team.findMany({
+        where: {
+          tournamentId: tournament.id,
+          members: {
+            some: {
+              userId: user.id,
+            },
           },
         },
-      },
-      include: {
-        members: {
-          include: {
-            user: true,
+        include: {
+          members: {
+            include: {
+              user: true,
+            },
           },
         },
-      },
-    })) || [];
+      })) || []
+    : [];
   const description = String(
     await compile(
       tournament.description
         ? tournament.description
         : "More information coming soon!",
       {
-        outputFormat: "function-body"
+        outputFormat: "function-body",
       }
     )
   );
@@ -312,9 +316,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user,
       description,
       team: teams[0] ? teams[0] : null,
-      organising: user.organisingTournaments // @ts-ignore
+      organising: user ? user.organisingTournaments // @ts-ignore
         .map((x) => x.tournamentId)
-        .includes(tournament.id),
+        .includes(tournament.id) : false,
     },
   };
 };

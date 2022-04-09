@@ -24,6 +24,8 @@
 .nav > div > div > div {
   display: none;
   position: absolute;
+  z-index: 999;
+  box-shadow: var(--shadow-elevated);
   top: 40;
   background: var(--snow);
   right: 0;
