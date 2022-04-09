@@ -8,8 +8,8 @@ export default async function handler(
   let tournament = new Tournament();
   tournament.slug = req.query.slug.toString();
   await tournament.loadFromDB();
-  if(tournament.organiserIDs?.length || 0 > 1){
-    await tournament.removeOrganiser(req.query.id.toString())
+  if (tournament.organiserIDs?.length || 0 > 1) {
+    await tournament.removeOrganiser(req.query.id.toString());
   }
-  res.redirect(`/event/${req.query.slug}/admin/team`)
+  res.redirect(`/event/${req.query.slug}/admin/team`);
 }

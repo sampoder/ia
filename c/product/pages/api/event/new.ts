@@ -37,6 +37,8 @@ export default async function handler(
     res.redirect(`/event/${tournament.slug}`);
   } catch (e) {
     console.error(e);
-    res.redirect(`/?error=${`There was an unexpected error, please try again.`}`)
+    res.redirect(
+      `/?error=${`There was an unexpected error, please try again.`}`
+    );
   }
 }

@@ -13,7 +13,7 @@ export default function EventNew(props: {
       <div style={{ width: "600px", margin: "auto" }}>
         <h1 style={{ margin: "16px 0px" }}>My Tournaments</h1>
         {props.tournaments?.map((tournament) => (
-          <Event tournament={tournament} key={tournament.id}  />
+          <Event tournament={tournament} key={tournament.id} />
         ))}
       </div>
     </>
@@ -37,8 +37,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         some: {
           members: {
             some: {
-              userId: user.id
-            }
+              userId: user.id,
+            },
           },
         },
       },

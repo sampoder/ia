@@ -12,12 +12,14 @@ export default async function handler(
       req.body.lastName,
       req.body.email
     );
-    await user.addToDB()
-    let loginToken = new Token(undefined, user.email)
-    await loginToken.addToDB()
-    await loginToken.sendToUser()
-    res.redirect(`/register?message=${`Check your email for a link to login!`}`)
+    await user.addToDB();
+    let loginToken = new Token(undefined, user.email);
+    await loginToken.addToDB();
+    await loginToken.sendToUser();
+    res.redirect(
+      `/register?message=${`Check your email for a link to login!`}`
+    );
   } catch (e) {
-    res.redirect(`/register?error=${e}`)
+    res.redirect(`/register?error=${e}`);
   }
 }

@@ -7,7 +7,7 @@
   color: var(--white);
 }
 
-.logoType{
+.logoType {
   text-align: left;
   flex-grow: 1;
 }
@@ -44,19 +44,17 @@
   border-bottom-left-radius: var(--radii-default);
 }
 
-
 .nav > div > div > div > a {
   display: block;
   padding: var(--spacing-2);
   text-decoration: none;
-  color: var(--text)
+  color: var(--text);
 }
 
 .nav > div > div > div > a:hover {
   background: var(--blue);
   color: var(--snow);
 }
-
 
 .nav > div > div:hover > div {
   display: block;

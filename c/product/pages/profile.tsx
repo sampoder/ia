@@ -30,7 +30,10 @@ export default function EventNew(props: { user: UserType | undefined }) {
           <input required name="email" defaultValue={props.user?.email} />
           <small>
             Looking to update your avatar? We use avatars from{" "}
-            <a href="https://en.gravatar.com" target="_blank">Gravatar</a>.
+            <a href="https://en.gravatar.com" target="_blank">
+              Gravatar
+            </a>
+            .
           </small>
           <button>Save</button>
         </form>

@@ -13,13 +13,14 @@ export default function Event(props: { tournament: TournamentType }) {
           props.tournament.endingDate.toLocaleDateString() ? (
             props.tournament.startingDate.toLocaleDateString()
           ) : (
-            <>
-              Starts {props.tournament.startingDate.toLocaleDateString()}
-            </>
+            <>Starts {props.tournament.startingDate.toLocaleDateString()}</>
           )}{" "}
           ∙ {props.tournament.prizeValue} in prizes ∙{" "}
-          {props.tournament.online ? props.tournament.timezone : props.tournament.hostRegion}{" "}
-          {props.tournament.online && <>(Virtual)</>} ∙ {props.tournament.format}
+          {props.tournament.online
+            ? props.tournament.timezone
+            : props.tournament.hostRegion}{" "}
+          {props.tournament.online && <>(Virtual)</>} ∙{" "}
+          {props.tournament.format}
         </div>
       </div>
     </Link>

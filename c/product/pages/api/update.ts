@@ -10,19 +10,19 @@ export default async function handler(
     if (req.cookies["auth"]) {
       let user = new User((await fetchUser(req.cookies["auth"]))?.id);
       if (user.id != null) {
-        await user.loadFromDB()
-        user.email = req.body.email
-        user.firstName = req.body.firstName
-        user.lastName = req.body.lastName
-        await user.updateInDB()
-        res.redirect('/')
+        await user.loadFromDB();
+        user.email = req.body.email;
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        await user.updateInDB();
+        res.redirect("/");
       } else {
-        res.redirect(`/?error=${`Unauthenticated request.`}`)
+        res.redirect(`/?error=${`Unauthenticated request.`}`);
       }
     } else {
-      res.redirect(`/?error=${`Unauthenticated request.`}`)
+      res.redirect(`/?error=${`Unauthenticated request.`}`);
     }
   } catch (e) {
-    res.redirect(`/?error=${`Unauthenticated request.`}`)
+    res.redirect(`/?error=${`Unauthenticated request.`}`);
   }
 }

@@ -22,14 +22,14 @@ export default function Signup() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { fetchUser } = require('../api/user');
+  const { fetchUser } = require("../api/user");
   const { res } = context;
-  let user = await fetchUser(context.req.cookies["auth"])
+  let user = await fetchUser(context.req.cookies["auth"]);
   if (user != null) {
     res.setHeader("location", "/");
     res.statusCode = 302;
     res.end();
     return { props: {} };
   }
-  return { props: {}}
-}
+  return { props: {} };
+};

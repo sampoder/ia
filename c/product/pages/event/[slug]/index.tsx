@@ -316,9 +316,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user,
       description,
       team: teams[0] ? teams[0] : null,
-      organising: user ? user.organisingTournaments // @ts-ignore
-        .map((x) => x.tournamentId)
-        .includes(tournament.id) : false,
+      organising: user
+        ? user.organisingTournaments // @ts-ignore
+            .map((x) => x.tournamentId)
+            .includes(tournament.id)
+        : false,
     },
   };
 };

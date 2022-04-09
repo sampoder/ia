@@ -6,11 +6,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    let loginToken = new Token(undefined, req.body.email)
-    await loginToken.addToDB()
-    await loginToken.sendToUser()
-    res.redirect(`/?message=${`Check your email for a login URL!`}`)
+    let loginToken = new Token(undefined, req.body.email);
+    await loginToken.addToDB();
+    await loginToken.sendToUser();
+    res.redirect(`/?message=${`Check your email for a login URL!`}`);
   } catch (e) {
-    res.redirect(`/?error=${`There was an unexpected error, please try again.`}`)
+    res.redirect(
+      `/?error=${`There was an unexpected error, please try again.`}`
+    );
   }
 }

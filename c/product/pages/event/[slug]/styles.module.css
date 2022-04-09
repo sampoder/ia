@@ -7,7 +7,7 @@
 }
 
 .details > div > a {
-  color: var(--blue)
+  color: var(--blue);
 }
 
 .details > div > button {

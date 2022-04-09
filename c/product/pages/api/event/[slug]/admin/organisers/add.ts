@@ -33,21 +33,25 @@ export default async function handler(
       },
     })
   ).map((user) => user.id);
-  let organiser = new User()
-  organiser.email = req.body.email
-  await organiser.loadFromDB()
+  let organiser = new User();
+  organiser.email = req.body.email;
+  await organiser.loadFromDB();
   tournament.slug = req.query.slug.toString();
   await tournament.loadFromDB();
-  if(organiser.id){
-    if(alreadyParticipating.includes(organiser.id)){
-      res.redirect(`/event/${req.query.slug}/admin/team?error=${`User is already participating in this tournament.`}`)
+  if (organiser.id) {
+    if (alreadyParticipating.includes(organiser.id)) {
+      res.redirect(
+        `/event/${
+          req.query.slug
+        }/admin/team?error=${`User is already participating in this tournament.`}`
+      );
+    } else {
+      await tournament.addOrganiser(organiser.id);
+      res.redirect(`/event/${req.query.slug}/admin/team`);
     }
-    else{
-      await tournament.addOrganiser(organiser.id)
-      res.redirect(`/event/${req.query.slug}/admin/team`)
-    }
-  }
-  else{
-    res.redirect(`/event/${req.query.slug}/admin/team?error=${`Could not find user.`}`)
+  } else {
+    res.redirect(
+      `/event/${req.query.slug}/admin/team?error=${`Could not find user.`}`
+    );
   }
 }

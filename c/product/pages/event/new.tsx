@@ -35,7 +35,7 @@ export default function EventNew(props: { user: UserType | undefined }) {
           <input required type="datetime-local" name="endingDate" />
           <small>Type of event: </small>
           <select
-          required
+            required
             onChange={(e) =>
               setIsInPerson(
                 (e.target as HTMLElementEvent<HTMLSelectElement>).value ==
@@ -51,10 +51,20 @@ export default function EventNew(props: { user: UserType | undefined }) {
             <option value="in-person">In-Person</option>
             <option value="virtual">Virtual</option>
           </select>
-          {isInPerson &&<> <small>Host City: </small>
-          <input required name="hostRegion" /></>}
-          {!isInPerson &&<> <small>Focus Region (eg. South East Asia or Europe): </small>
-          <input required name="hostRegion" /></>}
+          {isInPerson && (
+            <>
+              {" "}
+              <small>Host City: </small>
+              <input required name="hostRegion" />
+            </>
+          )}
+          {!isInPerson && (
+            <>
+              {" "}
+              <small>Focus Region (eg. South East Asia or Europe): </small>
+              <input required name="hostRegion" />
+            </>
+          )}
           <button>Start Your Debate Tournament</button>
         </form>
       </div>
