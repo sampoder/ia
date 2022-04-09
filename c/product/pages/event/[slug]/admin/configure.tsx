@@ -17,20 +17,87 @@ export default function EventNew(props: {
           method="POST"
           style={{ display: "flex", flexDirection: "column", gap: "8px" }}
         >
-          <small>Description: </small>
+          <small>Description (formatted as Markdown): </small>
           <textarea
             name="description"
+            required
             defaultValue={props.tournament?.description?.toString()}
           />
           <small>Venue Address: </small>
           <input
             name="venueAddress"
+            required
             defaultValue={props.tournament?.venueAddress?.toString()}
+          />
+          <small>Contact Email: </small>
+          <input
+            name="contactEmail"
+            required
+            defaultValue={props.tournament?.managerEmail?.toString()}
+          />
+          <small>Organised by: </small>
+          <input
+            name="organisedBy"
+            required
+            defaultValue={props.tournament?.organisedBy?.toString()}
+          />
+          <small>Debate Format: </small>
+          <input
+            name="format"
+            required
+            defaultValue={props.tournament?.format?.toString()}
+          />
+
+          <small>Avatar Image URL: </small>
+          <input
+            name="avatar"
+            required
+            defaultValue={props.tournament?.avatar?.toString()}
+          />
+          <small>Cover Image URL (optional): </small>
+          <input
+            name="cover"
+            defaultValue={props.tournament?.cover?.toString()}
+          />
+          <small>
+            {props.tournament?.online ? "Focus Region" : "Host City"}:{" "}
+          </small>
+          <input
+            name="hostRegion"
+            required
+            defaultValue={props.tournament?.hostRegion?.toString()}
+          />
+          <small>Local currency symbol: </small>
+          <input
+            name="currencySymbol"
+            required
+            defaultValue={
+              props.tournament?.prizeValue
+                ? props.tournament?.prizeValue.replace(
+                    props.tournament?.prizeValue?.toString().replace(/\D/g, ""),
+                    ""
+                  )
+                : "$"
+            }
+          />
+          <small>Prize value: </small>
+          <input
+            name="prizeValue"
+            type="number"
+            required
+            defaultValue={
+              props.tournament?.prizeValue
+                ? parseInt(
+                    props.tournament?.prizeValue?.toString().replace(/\D/g, "")
+                  )
+                : 0
+            }
           />
           <small>Starting Date / Time: </small>
           <input
             type="datetime-local"
             name="startingDate"
+            required
             defaultValue={props.tournament?.startingDate
               .toISOString()
               .replace(".000Z", "")}
@@ -39,11 +106,12 @@ export default function EventNew(props: {
           <input
             type="datetime-local"
             name="endingDate"
+            required
             defaultValue={props.tournament?.endingDate
               .toISOString()
               .replace(".000Z", "")}
           />
-          <button>Register</button>
+          <button>Update Event</button>
         </form>
       </div>
     </>
@@ -53,16 +121,17 @@ export default function EventNew(props: {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../../api/event/[slug]/index");
   const { fetchUser } = require("../../../api/user");
-  let user:User = await fetchUser(context.req.cookies["auth"]);
+  let user: User = await fetchUser(context.req.cookies["auth"]);
   const { res } = context;
-  let tournament: Tournament = await fetchTournament(context.params?.slug);
-  if(tournament.organiserIDs == null || user.id == null){
+  let tournament = await fetchTournament(context.params?.slug); //@ts-ignore
+  tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
+  if (tournament.organiserIDs == null || user.id == null) {
     res.setHeader("location", "/");
     res.statusCode = 302;
     res.end();
     return { props: {} };
   }
-  if(!tournament.organiserIDs.includes(user.id)){
+  if (!tournament.organiserIDs.includes(user.id)) {
     res.setHeader("location", "/");
     res.statusCode = 302;
     res.end();

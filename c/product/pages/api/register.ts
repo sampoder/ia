@@ -16,12 +16,8 @@ export default async function handler(
     let loginToken = new Token(undefined, user.email)
     await loginToken.addToDB()
     await loginToken.sendToUser()
-    res.status(200).json({
-      ok: true,
-    });
+    res.redirect(`/register?message=${`Check your email for a link to login!`}`)
   } catch (e) {
-    res.status(500).json({
-      error: e,
-    });
+    res.redirect(`/register?error=${e}`)
   }
 }

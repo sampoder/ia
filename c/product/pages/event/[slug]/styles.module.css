@@ -6,6 +6,6 @@
   margin-bottom: 0px;
 }
 
-.details > div:last-child > a {
+.details > div > a {
   color: var(--blue)
 }

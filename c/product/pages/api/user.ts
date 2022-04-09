@@ -7,10 +7,10 @@ export async function fetchUser(authToken: string) {
   await token.loadFromDB();
   if (token.checkValid() && token.userId) {
     let user = new User(token.userId);
-    await user.loadFromDB();
-    return user.dbItem
+    await user.loadFromDB({ organisingTournaments: true });
+    return user.dbItem;
   } else {
-    return null
+    return null;
   }
 }
 

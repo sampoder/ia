@@ -1,0 +1,7 @@
+.bar {
+  background: var(--blue);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-3);
+  color: var(--white);
+  text-align: center;
+}

@@ -14,11 +14,12 @@ export default function Event(props: { tournament: TournamentType }) {
             props.tournament.startingDate.toLocaleDateString()
           ) : (
             <>
-              {props.tournament.startingDate.toLocaleDateString()} to{" "}
-              {props.tournament.endingDate.toLocaleDateString()}
+              Starts {props.tournament.startingDate.toLocaleDateString()}
             </>
           )}{" "}
-          ∙ $1,500 in prizes ∙ Singapore ∙ WSC
+          ∙ {props.tournament.prizeValue} in prizes ∙{" "}
+          {props.tournament.hostRegion}{" "}
+          {props.tournament.online && <>(Virtual)</>} ∙ {props.tournament.format}
         </div>
       </div>
     </Link>

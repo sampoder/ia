@@ -13,11 +13,9 @@ export default async function handler(
       res.setHeader("set-cookie", `auth=${token.id}; Max-Age=604800; Path=/`);
       res.redirect("/");
     } else {
-      res.status(401).json({ authenticated: false });
+      res.redirect("/login");
     }
   } catch (e) {
-    res.status(500).json({
-      error: e,
-    });
+    res.redirect("/login");
   }
 }

@@ -19,11 +19,19 @@ export default function EventNew(props: { user: UserType | undefined }) {
           style={{ display: "flex", flexDirection: "column", gap: "8px" }}
         >
           <small>First Name: </small>
-          <input required name="firstName" defaultValue={props.user?.firstName} />
+          <input
+            required
+            name="firstName"
+            defaultValue={props.user?.firstName}
+          />
           <small>Last Name: </small>
           <input required name="lastName" defaultValue={props.user?.lastName} />
           <small>Email: </small>
           <input required name="email" defaultValue={props.user?.email} />
+          <small>
+            Looking to update your avatar? We use avatars from{" "}
+            <a href="https://en.gravatar.com" target="_blank">Gravatar</a>.
+          </small>
           <button>Save</button>
         </form>
       </div>

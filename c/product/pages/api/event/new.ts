@@ -19,7 +19,7 @@ export default async function handler(
       new Date(req.body.startingDate),
       new Date(req.body.endingDate),
       [user.id],
-      req.body.hostCity ? false : true
+      req.body.hostRegion ? false : true
     );
     tournament.managerEmail = user.email;
     tournament.prizeValue = "$0";
@@ -27,15 +27,15 @@ export default async function handler(
     tournament.organisedBy = user.firstName + " " + user.lastName;
     tournament.eligibility = "all debaters, anywhere.";
     tournament.avatar = req.body.avatar;
-    if (req.body.hostCity) {
-      tournament.hostCity = req.body.hostCity;
+    tournament.format = req.body.format;
+    tournament.organisedBy = req.body.organisedBy;
+    if (req.body.hostRegion) {
+      tournament.hostRegion = req.body.hostRegion;
     }
     await tournament.addToDB();
     res.redirect(`/event/${tournament.slug}`);
   } catch (e) {
     console.error(e);
-    res.status(500).json({
-      error: e,
-    });
+    res.redirect(`/?error=${`There was an unexpected error, please try again.`}`)
   }
 }

@@ -9,12 +9,8 @@ export default async function handler(
     let loginToken = new Token(undefined, req.body.email)
     await loginToken.addToDB()
     await loginToken.sendToUser()
-    res.status(200).json({
-      ok: true,
-    });
+    res.redirect(`/?message=${`Check your email for a login URL!`}`)
   } catch (e) {
-    res.status(500).json({
-      error: e,
-    });
+    res.redirect(`/?error=${`There was an unexpected error, please try again.`}`)
   }
 }

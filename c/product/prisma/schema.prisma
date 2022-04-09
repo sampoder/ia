@@ -118,10 +118,10 @@ model Tournament {
   participatingTeams Team[]
   name               String
   slug               String                            @unique
-  description        String?
-  hostCity           String?
+  description        String?                           @default("More information coming soon!")
+  hostRegion         String?
   longDesc           String?
-  avatar             String @default("https://www.gravatar.com/avatar/3a794f7bbeb6e5d4287debf1454ebcf5?d=identicon&r=pg")
+  avatar             String                            @default("https://www.gravatar.com/avatar/3a794f7bbeb6e5d4287debf1454ebcf5?d=identicon&r=pg")
   cover              String?
   startingDate       DateTime
   endingDate         DateTime
@@ -131,6 +131,7 @@ model Tournament {
   prizeValue         String?
   eligibility        String?
   organisedBy        String?
+  format             String?
   managerEmail       String?
   joinURL            String?
   stripeId           String?

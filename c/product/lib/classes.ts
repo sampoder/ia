@@ -5,6 +5,18 @@ import {
   Tournament as TournamentType,
   Team as TeamType,
 } from "@prisma/client";
+
+type UserInclude = {
+  Teams?: boolean;
+  organisingTournaments?: boolean;
+  emailsSent?: boolean;
+  scores?: boolean;
+  replyScores?: boolean;
+  adjudicator?: boolean;
+  institution?: boolean;
+  tokens?: boolean;
+};
+
 const prisma = new PrismaClient();
 var md5 = require("md5");
 
@@ -57,7 +69,7 @@ export class User {
       this.email = this.dbItem?.email || undefined;
     } else console.error("USER: Could not update in DB due to missing fields.");
   }
-  async loadFromDB() {
+  async loadFromDB(include?: UserInclude) {
     if (this.id || this.email) {
       this.dbItem = await prisma.user.findUnique({
         where: this.id
@@ -65,6 +77,7 @@ export class User {
               id: this.id,
             }
           : { email: this.email },
+        include: { ...include },
       });
       this.firstName = this.dbItem?.firstName;
       this.lastName = this.dbItem?.lastName;
@@ -155,12 +168,14 @@ export class Tournament {
   slug?: string;
   description?: string;
   venueAddress?: string;
-  hostCity?: string;
+  hostRegion?: string;
   prizeValue?: string;
   eligibility?: string;
   organisedBy?: string;
   managerEmail?: string;
   avatar?: string;
+  cover?: string;
+  format?: string;
   startingDate?: Date;
   endingDate?: Date;
   organiserIDs?: string[];
@@ -186,8 +201,10 @@ export class Tournament {
           eligibility: this.eligibility,
           venueAddress: this.venueAddress,
           organisedBy: this.organisedBy,
-          hostCity: this.hostCity,
+          hostRegion: this.hostRegion,
+          format: this.format,
           avatar: this.avatar,
+          cover: this.cover,
           managerEmail: this.managerEmail,
           organisers: {
             create: this.organiserIDs.map((x) => {
@@ -202,17 +219,18 @@ export class Tournament {
 
       this.dbItem = dbItem;
       this.name = this.dbItem.name;
-      this.hostCity = this.dbItem.hostCity ? this.dbItem.hostCity : undefined;
+      this.hostRegion = this.dbItem.hostRegion
+        ? this.dbItem.hostRegion
+        : undefined;
       this.slug = this.dbItem?.slug;
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
+      this.format = this.dbItem.format ? this.dbItem.format : undefined;
       this.prizeValue = this.dbItem.prizeValue
         ? this.dbItem.prizeValue
         : undefined;
-      this.avatar = this.dbItem.avatar
-        ? this.dbItem.avatar
-        : undefined;
+      this.avatar = this.dbItem.avatar ? this.dbItem.avatar : undefined;
       this.eligibility = this.dbItem.eligibility
         ? this.dbItem.eligibility
         : undefined;
@@ -222,6 +240,7 @@ export class Tournament {
       this.managerEmail = this.dbItem.managerEmail
         ? this.dbItem.managerEmail
         : undefined;
+      this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
       this.id = this.dbItem.id;
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
@@ -249,11 +268,13 @@ export class Tournament {
           online: this.online,
           avatar: this.avatar,
           description: this.description,
+          cover: this.cover,
           venueAddress: this.venueAddress,
           prizeValue: this.prizeValue,
           eligibility: this.eligibility,
           organisedBy: this.organisedBy,
           managerEmail: this.managerEmail,
+          format: this.format,
           organisers: {
             create: this.organiserIDs.map((x) => {
               return { organiserId: x };
@@ -266,12 +287,13 @@ export class Tournament {
       });
 
       this.dbItem = dbItem;
-      this.hostCity = this.dbItem.hostCity ? this.dbItem.hostCity : undefined;
+      this.format = this.dbItem.format ? this.dbItem.format : undefined;
+      this.hostRegion = this.dbItem.hostRegion
+        ? this.dbItem.hostRegion
+        : undefined;
       this.name = this.dbItem.name;
       this.slug = this.dbItem.slug;
-      this.avatar = this.dbItem.avatar
-        ? this.dbItem.avatar
-        : undefined;
+      this.avatar = this.dbItem.avatar ? this.dbItem.avatar : undefined;
       this.description =
         this.dbItem.description != null ? this.dbItem.description : undefined;
       this.venueAddress =
@@ -288,6 +310,7 @@ export class Tournament {
       this.managerEmail = this.dbItem.managerEmail
         ? this.dbItem.managerEmail
         : undefined;
+      this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
       this.startingDate = this.dbItem.startingDate;
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
@@ -310,10 +333,9 @@ export class Tournament {
       if (dbItem) {
         this.name = dbItem.name;
         this.slug = dbItem.slug;
-        this.hostCity = dbItem.hostCity ? dbItem.hostCity : undefined;
-        this.avatar = dbItem.avatar
-          ? dbItem.avatar
-          : undefined;
+        this.format = dbItem.format ? dbItem.format : undefined;
+        this.hostRegion = dbItem.hostRegion ? dbItem.hostRegion : undefined;
+        this.avatar = dbItem.avatar ? dbItem.avatar : undefined;
         this.description =
           this.dbItem?.description != null
             ? this.dbItem.description
@@ -325,6 +347,7 @@ export class Tournament {
         this.prizeValue = this.dbItem?.prizeValue
           ? this.dbItem.prizeValue
           : undefined;
+        this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
         this.eligibility = this.dbItem?.eligibility
           ? this.dbItem.eligibility
           : undefined;
@@ -439,9 +462,9 @@ export class Team {
     if (this.id) {
       await prisma.userTeamRelationship.deleteMany({
         where: {
-          teamId: this.id
-        }
-      })
+          teamId: this.id,
+        },
+      });
       await prisma.team.delete({
         where: { id: this.id },
       });

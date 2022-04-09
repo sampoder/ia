@@ -24,6 +24,7 @@ export default function Event(props: {
   tournament: TournamentType | undefined;
   description: string;
   team: ModifiedTeamType | null;
+  organising: boolean;
 }) {
   return (
     <>
@@ -90,7 +91,7 @@ export default function Event(props: {
             {props.tournament?.online ? (
               <>Virtual ∙ GMT+8</>
             ) : (
-              <>{props.tournament?.hostCity}</>
+              <>{props.tournament?.hostRegion}</>
             )}
           </h2>
         </div>
@@ -144,14 +145,16 @@ export default function Event(props: {
               <input
                 name="name"
                 placeholder="Your Team Name"
-                disabled={props.user == null}
-                style={{ opacity: props.user != null ? 1 : 0.6 }}
+                disabled={props.user == null || props.organising}
+                style={{
+                  opacity: props.user != null && !props.organising ? 1 : 0.6,
+                }}
               />
               <small
                 style={{
                   fontWeight: "bold",
                   color: "white",
-                  opacity: props.user != null ? 1 : 0.6,
+                  opacity: props.user != null && !props.organising ? 1 : 0.6,
                 }}
               >
                 Your Other Team Members' Emails:{" "}
@@ -162,8 +165,11 @@ export default function Event(props: {
                     placeholder={`Team Member ${index}'s Email`}
                     name={`email${index}`}
                     key={`email${index}`}
-                    disabled={props.user == null}
-                    style={{ opacity: props.user != null ? 1 : 0.6 }}
+                    disabled={props.user == null || props.organising}
+                    style={{
+                      opacity:
+                        props.user != null && !props.organising ? 1 : 0.6,
+                    }}
                   />
                 ) : (
                   <></>
@@ -174,7 +180,19 @@ export default function Event(props: {
                   <button type="button">Login To Join Tournament</button>
                 </Link>
               ) : (
-                <button>Register</button>
+                <button
+                  disabled={props.organising}
+                  style={
+                    props.organising
+                      ? {
+                          opacity: 0.6,
+                          pointerEvents: "none",
+                        }
+                      : {}
+                  }
+                >
+                  Register {props.organising && <>(disabled for organisers)</>}
+                </button>
               )}
             </form>
           )}
@@ -191,40 +209,55 @@ export default function Event(props: {
         <div>
           <Markdown code={props.description} />
         </div>
-        <div
-          style={{
-            background: "var(--sunken)",
-            padding: "16px",
-            borderRadius: "var(--radii-small)",
-          }}
-          className={styles.details}
-        >
-          <div>
-            <b>Starts at:</b>{" "}
-            {props.tournament?.startingDate.toLocaleDateString()}{" "}
-            {props.tournament?.startingDate.toLocaleTimeString()}
-          </div>
-          <div>
-            <b>Ends at:</b> {props.tournament?.endingDate.toLocaleDateString()}{" "}
-            {props.tournament?.endingDate.toLocaleTimeString()}
-          </div>
-          <div>
-            <b>Venue:</b> {props.tournament?.venueAddress}
-          </div>
-          <div>
-            <b>Prize value:</b> {props.tournament?.prizeValue}
-          </div>
-          <div>
-            <b>Eligibility:</b> {props.tournament?.eligibility}
-          </div>
-          <div>
-            <b>Organised by:</b> {props.tournament?.organisedBy}
-          </div>
-          <div>
-            Questions?{" "}
-            <a href={`mailto:${props.tournament?.managerEmail}`}>
-              <b>Email the tournament manager.</b>
-            </a>
+        <div>
+          <div
+            style={{
+              background: "var(--sunken)",
+              padding: "16px",
+              borderRadius: "var(--radii-small)",
+            }}
+            className={styles.details}
+          >
+            <div>
+              <b>Starts at:</b>{" "}
+              {props.tournament?.startingDate.toLocaleDateString()}{" "}
+              {props.tournament?.startingDate.toLocaleTimeString()}
+            </div>
+            <div>
+              <b>Ends at:</b>{" "}
+              {props.tournament?.endingDate.toLocaleDateString()}{" "}
+              {props.tournament?.endingDate.toLocaleTimeString()}
+            </div>
+            {!props.tournament?.online && (
+              <div>
+                <b>Venue:</b> {props.tournament?.venueAddress}
+              </div>
+            )}
+            <div>
+              <b>Format:</b> {props.tournament?.format}
+            </div>
+            <div>
+              <b>Prize value:</b> {props.tournament?.prizeValue}
+            </div>
+            <div>
+              <b>Eligibility:</b> {props.tournament?.eligibility}
+            </div>
+            <div>
+              <b>Organised by:</b> {props.tournament?.organisedBy}
+            </div>
+            <div>
+              Questions?{" "}
+              <a href={`mailto:${props.tournament?.managerEmail}`}>
+                <b>Email the tournament manager.</b>
+              </a>
+            </div>
+            {props.organising && (
+              <div>
+                <Link href={`/event/${props.tournament?.slug}/admin/configure`}>
+                  <button>Edit Tournament Details</button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -262,11 +295,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         ? tournament.description
         : "More information coming soon!",
       {
-        outputFormat: "function-body" /* …otherOptions */,
+        outputFormat: "function-body"
       }
     )
   );
   return {
-    props: { tournament, user, description, team: teams[0] ? teams[0] : null },
+    props: {
+      tournament,
+      user,
+      description,
+      team: teams[0] ? teams[0] : null,
+      organising: user.organisingTournaments // @ts-ignore
+        .map((x) => x.tournamentId)
+        .includes(tournament.id),
+    },
   };
 };

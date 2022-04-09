@@ -28,6 +28,16 @@ export default async function handler(
   }
   tournament.venueAddress = req.body.venueAddress;
   tournament.description = req.body.description;
+  tournament.format = req.body.format;
+  tournament.avatar = req.body.avatar;
+  if (req.body.cover) {
+    tournament.cover = req.body.cover;
+  }
+  tournament.hostRegion = req.body.hostRegion;
+  tournament.managerEmail = req.body.managerEmail;
+  tournament.prizeValue = req.body.currencySymbol + req.body.prizeValue;
+  tournament.startingDate = new Date(req.body.startingDate);
+  tournament.endingDate = new Date(req.body.endingDate);
   await tournament.updateInDB();
-  res.json(tournament.dbItem);
+  res.redirect(`/event/${tournament.slug}`);
 }

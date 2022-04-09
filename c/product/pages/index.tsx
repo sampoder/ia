@@ -18,7 +18,7 @@ export default function Home(props: {
       <Header />
       <div className={styles.events}>
         {props.tournaments?.map((tournament) => (
-          <Event tournament={tournament} />
+          <Event tournament={tournament} key={tournament.id} />
         ))}
       </div>
     </div>

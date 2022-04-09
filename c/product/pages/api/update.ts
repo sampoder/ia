@@ -17,18 +17,12 @@ export default async function handler(
         await user.updateInDB()
         res.redirect('/')
       } else {
-        res.status(401).json({
-          user: null,
-        });
+        res.redirect(`/?error=${`Unauthenticated request.`}`)
       }
     } else {
-      res.status(401).json({
-        user: null,
-      });
+      res.redirect(`/?error=${`Unauthenticated request.`}`)
     }
   } catch (e) {
-    res.status(500).json({
-      error: e,
-    });
+    res.redirect(`/?error=${`Unauthenticated request.`}`)
   }
 }
