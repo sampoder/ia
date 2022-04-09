@@ -27,6 +27,8 @@ export default function EventNew(props: { user: UserType | undefined }) {
           <input required name="avatar" />
           <small>Tournament Format (eg. Asian Parliamentary, Custom): </small>
           <input required name="format" />
+          <small>Scheduling Timezone: </small>
+          <input required name="timezone" />
           <small>Starting Date / Time: </small>
           <input required type="datetime-local" name="startingDate" />
           <small>Ending Date / Time: </small>
@@ -51,7 +53,7 @@ export default function EventNew(props: { user: UserType | undefined }) {
           </select>
           {isInPerson &&<> <small>Host City: </small>
           <input required name="hostRegion" /></>}
-          {!isInPerson &&<> <small>Focus Region (eg. South East Asia or Europe or GMT+8): </small>
+          {!isInPerson &&<> <small>Focus Region (eg. South East Asia or Europe): </small>
           <input required name="hostRegion" /></>}
           <button>Start Your Debate Tournament</button>
         </form>

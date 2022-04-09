@@ -7,19 +7,39 @@ import { GetServerSideProps } from "next";
 import { User as UserType, Tournament as TournamentType } from "@prisma/client";
 import Link from "next/link";
 import Event from "../components/event";
+import search from "../lib/methods/search";
+import { useState } from "react";
+
+type HTMLElementEvent<T extends HTMLElement> = Event & {
+  value: T;
+};
 
 export default function Home(props: {
   user: UserType | undefined;
   tournaments: TournamentType[] | undefined;
 }) {
+  const [query, setQuery] = useState("");
   return (
     <div>
       <Nav user={props.user || undefined} />
       <Header />
+      <div className={styles.inputWrapper}>
+        <input
+          className={styles.input}
+          placeholder="Search / filter events"
+          onChange={(e) =>
+            setQuery(
+              (e.target as HTMLElementEvent<HTMLInputElement>).value.toString()
+            )
+          }
+        />
+      </div>
       <div className={styles.events}>
-        {props.tournaments?.map((tournament) => (
-          <Event tournament={tournament} key={tournament.id} />
-        ))}
+        {search(props.tournaments ? props.tournaments : [], query)?.map(
+          (tournament) => (
+            <Event tournament={tournament} key={tournament.id} />
+          )
+        )}
       </div>
     </div>
   );

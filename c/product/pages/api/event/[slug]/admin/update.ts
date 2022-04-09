@@ -33,6 +33,7 @@ export default async function handler(
   if (req.body.cover) {
     tournament.cover = req.body.cover;
   }
+  tournament.timezone = req.body.timezone;
   tournament.hostRegion = req.body.hostRegion;
   tournament.managerEmail = req.body.managerEmail;
   tournament.prizeValue = req.body.currencySymbol + req.body.prizeValue;

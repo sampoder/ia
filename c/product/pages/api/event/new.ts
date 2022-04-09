@@ -22,6 +22,7 @@ export default async function handler(
       req.body.hostRegion ? false : true
     );
     tournament.managerEmail = user.email;
+    tournament.timezone = req.body.timezone;
     tournament.prizeValue = "$0";
     tournament.venueAddress = "TBC";
     tournament.organisedBy = user.firstName + " " + user.lastName;

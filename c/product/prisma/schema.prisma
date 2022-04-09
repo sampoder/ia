@@ -134,6 +134,7 @@ model Tournament {
   format             String?
   managerEmail       String?
   joinURL            String?
+  timezone           String?
   stripeId           String?
   emailsSent         Email[]
   rounds             DebateRound[]

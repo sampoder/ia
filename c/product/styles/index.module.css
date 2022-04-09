@@ -25,3 +25,12 @@
   border-radius: var(--radii-default);
   margin-right: 12px;
 }
+
+.inputWrapper {
+  margin: 24px 16px 0px;
+}
+
+.input {
+  width: -webkit-fill-available;
+  border: 2px dashed var(--sunken);
+}

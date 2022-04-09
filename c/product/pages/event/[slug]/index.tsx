@@ -89,7 +89,7 @@ export default function Event(props: {
           >
             {" "}
             {props.tournament?.online ? (
-              <>Virtual ∙ GMT+8</>
+              <>{props.tournament?.hostRegion} ∙ {props.tournament?.timezone}</>
             ) : (
               <>{props.tournament?.hostRegion}</>
             )}
@@ -114,14 +114,14 @@ export default function Event(props: {
               {props.team.name}:{" "}
               {props.team.members.map(
                 (member, index) =>
-                  member.user.firstName +
+                 <span key={`team-member-${index}`}>{member.user.firstName +
                   " " +
                   member.user.lastName + //@ts-ignore
                   (index != props.team.members.length - 1 //@ts-ignore
                     ? index == props.team.members.length - 2 //@ts-ignore
                       ? " & "
                       : ", "
-                    : "")
+                    : "")}</span>
               )}
               .<br />
               <button>Join Discord</button>
@@ -218,6 +218,9 @@ export default function Event(props: {
             }}
             className={styles.details}
           >
+            <div>
+              <b>Timezone:</b> {props.tournament?.timezone}
+            </div>
             <div>
               <b>Starts at:</b>{" "}
               {props.tournament?.startingDate.toLocaleDateString()}{" "}

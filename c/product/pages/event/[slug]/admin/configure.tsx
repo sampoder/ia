@@ -47,7 +47,8 @@ export default function EventNew(props: {
             required
             defaultValue={props.tournament?.format?.toString()}
           />
-
+          <small>Scheduling Timezone: </small>
+          <input required name="timezone" defaultValue={props.tournament?.timezone?.toString()} />
           <small>Avatar Image URL: </small>
           <input
             name="avatar"

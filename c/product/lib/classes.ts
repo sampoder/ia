@@ -174,6 +174,7 @@ export class Tournament {
   organisedBy?: string;
   managerEmail?: string;
   avatar?: string;
+  timezone?: string;
   cover?: string;
   format?: string;
   startingDate?: Date;
@@ -204,6 +205,7 @@ export class Tournament {
           hostRegion: this.hostRegion,
           format: this.format,
           avatar: this.avatar,
+          timezone: this.timezone,
           cover: this.cover,
           managerEmail: this.managerEmail,
           organisers: {
@@ -227,6 +229,7 @@ export class Tournament {
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
       this.format = this.dbItem.format ? this.dbItem.format : undefined;
+      this.timezone = this.dbItem.timezone ? this.dbItem.timezone : undefined;
       this.prizeValue = this.dbItem.prizeValue
         ? this.dbItem.prizeValue
         : undefined;
@@ -270,7 +273,9 @@ export class Tournament {
           description: this.description,
           cover: this.cover,
           venueAddress: this.venueAddress,
+          hostRegion: this.hostRegion,
           prizeValue: this.prizeValue,
+          timezone: this.timezone,
           eligibility: this.eligibility,
           organisedBy: this.organisedBy,
           managerEmail: this.managerEmail,
@@ -298,6 +303,7 @@ export class Tournament {
         this.dbItem.description != null ? this.dbItem.description : undefined;
       this.venueAddress =
         this.dbItem.venueAddress != null ? this.dbItem.venueAddress : undefined;
+      this.timezone = this.dbItem.timezone ? this.dbItem.timezone : undefined;
       this.prizeValue = this.dbItem.prizeValue
         ? this.dbItem.prizeValue
         : undefined;
@@ -336,6 +342,7 @@ export class Tournament {
         this.format = dbItem.format ? dbItem.format : undefined;
         this.hostRegion = dbItem.hostRegion ? dbItem.hostRegion : undefined;
         this.avatar = dbItem.avatar ? dbItem.avatar : undefined;
+        this.timezone = dbItem.timezone ? dbItem.timezone : undefined;
         this.description =
           this.dbItem?.description != null
             ? this.dbItem.description

@@ -18,7 +18,7 @@ export default function Event(props: { tournament: TournamentType }) {
             </>
           )}{" "}
           ∙ {props.tournament.prizeValue} in prizes ∙{" "}
-          {props.tournament.hostRegion}{" "}
+          {props.tournament.online ? props.tournament.timezone : props.tournament.hostRegion}{" "}
           {props.tournament.online && <>(Virtual)</>} ∙ {props.tournament.format}
         </div>
       </div>
