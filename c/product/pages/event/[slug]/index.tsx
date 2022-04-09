@@ -259,6 +259,10 @@ export default function Event(props: {
                 <Link href={`/event/${props.tournament?.slug}/admin/configure`}>
                   <button>Edit Tournament Details</button>
                 </Link>
+                <br />
+                <Link href={`/event/${props.tournament?.slug}/admin/team`}>
+                  <button>Manage Organising Team</button>
+                </Link>
               </div>
             )}
           </div>

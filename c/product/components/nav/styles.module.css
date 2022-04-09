@@ -1,9 +1,10 @@
 .nav {
-  background: var(--sunken);
+  background: var(--dark);
   padding: var(--spacing-2) var(--spacing-3);
   font-size: var(--font-3);
   display: flex;
   align-items: center;
+  color: var(--white);
 }
 
 .logoType{
