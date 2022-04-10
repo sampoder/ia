@@ -1,11 +1,20 @@
 import { GetServerSideProps } from "next";
 import Nav from "../../../../components/nav";
-import { User as UserType, Tournament as TournamentType } from "@prisma/client";
+import {
+  User as UserType,
+  Tournament as TournamentType,
+  StripeAccount,
+} from "@prisma/client";
 import { Tournament, User } from "../../../../lib/classes";
+import Link from "next/link";
+
+type TournamentTypeWithStripeAccount = TournamentType & {
+  stripeAccount: StripeAccount;
+};
 
 export default function EventNew(props: {
   user: UserType | undefined;
-  tournament: TournamentType | undefined;
+  tournament: TournamentTypeWithStripeAccount | undefined;
 }) {
   return (
     <>
@@ -116,6 +125,64 @@ export default function EventNew(props: {
               .toISOString()
               .replace(".000Z", "")}
           />
+          <div style={{ margin: "16px 0px" }}>
+            <h3 style={{ marginBottom: "8px" }}>Paid Tournaments: </h3>
+            {props.tournament?.stripeAccount == null && (
+              <div>
+                To create a paid tournament, please first connect this event to{" "}
+                <Link
+                  href={`/api/event/${props.tournament?.slug}/admin/stripe/connect/new`}
+                >
+                  Stripe
+                </Link>
+                .
+              </div>
+            )}
+            {props.tournament?.stripeAccount != null && (
+              <div>
+                Launch {props.tournament.name}'s{" "}
+                <a
+                  target="_blank"
+                  href={`/api/event/${props.tournament?.slug}/admin/stripe/connect/${props.tournament?.stripeAccount.stripeId}/login`}
+                >
+                  Stripe Dashboard
+                </a>
+                .<br />
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
+                  <small>
+                    Local currency ISO code (
+                    <a
+                      href="https://stripe.com/docs/currencies"
+                      target="_blank"
+                    >
+                      one of these
+                    </a>
+                    ):{" "}
+                  </small>
+                  <input
+                    name="priceISOCode"
+                    required
+                    defaultValue={props.tournament?.priceISOCode}
+                  />
+
+                  <small>Registration cost: </small>
+                  <input
+                    name="price"
+                    type="number"
+                    required
+                    defaultValue={props.tournament?.price}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
           <button>Update Event</button>
         </form>
       </div>
@@ -128,7 +195,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchUser } = require("../../../api/user");
   let user: User = await fetchUser(context.req.cookies["auth"]);
   const { res } = context;
-  let tournament = await fetchTournament(context.params?.slug); //@ts-ignore
+  let tournament = await fetchTournament(context.params?.slug, {
+    stripeAccount: true,
+  }); //@ts-ignore
   tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
   if (tournament.organiserIDs == null || user.id == null) {
     res.setHeader("location", "/");
@@ -142,5 +211,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res.end();
     return { props: {} };
   }
+  console.log(tournament.stripeAccount);
   return { props: { tournament, user } };
 };

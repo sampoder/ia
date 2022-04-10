@@ -4,7 +4,11 @@ import {
   Token as TokenType,
   Tournament as TournamentType,
   Team as TeamType,
+  StripeAccount,
 } from "@prisma/client";
+import mail from "./methods/mail";
+
+const nodemailer = require("nodemailer");
 
 type UserInclude = {
   Teams?: boolean;
@@ -15,6 +19,15 @@ type UserInclude = {
   adjudicator?: boolean;
   institution?: boolean;
   tokens?: boolean;
+};
+
+type TournamentInclude = {
+  stripeAccount?: boolean;
+  participatingTeams?: boolean;
+};
+
+type TournamentTypeWithStripeAccount = TournamentType & {
+  stripeAccount: StripeAccount;
 };
 
 const prisma = new PrismaClient();
@@ -153,9 +166,21 @@ export class Token {
     } else console.error("TOKEN: Could not load from DB due to missing id.");
   }
   async sendToUser() {
-    console.log(
-      `Your login token is http://localhost:3000/api/login/token/${this.id}.`
-    );
+    await mail({
+      from: '"debate.sh" <noreply@example.com>', // sender address
+      to: this.userEmail,
+      subject: "Magic link for debate.sh", // Subject line
+      html: `<p>👋 Hey!</p>
+
+<p>Your magic link to log into debate.sh is <a href="http://localhost:3000/api/login/token/${this.id}">http://localhost:3000/api/login/token/${this.id}</a>.</p>
+
+<p>If you didn't request this link you can safely ignore this message.</p>
+
+<p>Best,</p>
+
+<p>debate.sh</p>
+      `, // plain text body
+    })
   }
   constructor(id?: string, userEmail?: string) {
     this.id = id || undefined;
@@ -164,7 +189,7 @@ export class Token {
 }
 
 export class Tournament {
-  dbItem?: TournamentType | null;
+  dbItem?: TournamentType | TournamentTypeWithStripeAccount | null;
   name?: string;
   slug?: string;
   description?: string;
@@ -269,6 +294,21 @@ export class Tournament {
       });
     }
   }
+  async updatePricingDetails(code: string, price: number) {
+    if (this.id || this.slug) {
+      await prisma.tournament.update({
+        where: this.slug
+          ? {
+              slug: this.slug,
+            }
+          : { id: this.id },
+        data: {
+          price,
+          priceISOCode: code,
+        },
+      });
+    }
+  }
   async updateInDB() {
     if (
       this.name &&
@@ -340,7 +380,7 @@ export class Tournament {
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
-  async loadFromDB() {
+  async loadFromDB(include?: TournamentInclude) {
     if (this.id || this.slug) {
       let dbItem = await prisma.tournament.findUnique({
         where: {
@@ -349,6 +389,7 @@ export class Tournament {
         },
         include: {
           organisers: true,
+          ...include,
         },
       });
       this.dbItem = dbItem;
@@ -414,12 +455,19 @@ export class Team {
   memberIDs?: string[];
   checkedIn?: boolean;
   id?: string;
+  paid?: boolean;
   async addToDB() {
-    if (this.name && this.tournamentId && this.memberIDs) {
+    if (
+      this.name &&
+      this.tournamentId &&
+      this.memberIDs &&
+      this.paid != undefined
+    ) {
       let dbItem = await prisma.team.create({
         data: {
           name: this.name,
           tournamentId: this.tournamentId,
+          paid: this.paid,
           members: {
             create: this.memberIDs.map((x) => {
               return { userId: x };
@@ -435,6 +483,7 @@ export class Team {
         },
       });
       this.dbItem = dbItem;
+      this.id = dbItem.id;
       this.name = this.dbItem.name;
       this.tournamentId = this.dbItem?.tournamentId;
       this.memberIDs = dbItem.members.map((x) => x.userId);
@@ -446,6 +495,7 @@ export class Team {
         where: { id: this.id },
         data: {
           name: this.name,
+          paid: this.paid,
         },
         include: {
           members: {
@@ -456,10 +506,21 @@ export class Team {
         },
       });
       this.dbItem = dbItem;
+      this.paid = this.dbItem.paid;
       this.name = this.dbItem?.name;
       this.tournamentId = this.dbItem?.tournamentId;
       this.memberIDs = dbItem?.members.map((x) => x.userId);
     } else console.error("TEAM: Could not update in DB due to missing fields.");
+  }
+  async linkPaymentSession(session: string) {
+    if (this.id) {
+      let dbItem = await prisma.team.update({
+        where: { id: this.id },
+        data: {
+          paymentSessionID: session,
+        },
+      });
+    } else console.error("TEAM: Could not update in DB due to missing id.");
   }
   async loadFromDB() {
     if (this.id) {
@@ -476,6 +537,7 @@ export class Team {
         },
       });
       this.dbItem = dbItem;
+      this.paid = this.dbItem?.paid;
       this.name = this.dbItem?.name;
       this.tournamentId = this.dbItem?.tournamentId;
       this.memberIDs = dbItem?.members.map((x) => x.userId);

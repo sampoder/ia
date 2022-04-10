@@ -27,6 +27,13 @@ model User {
   tokens                Token[]
 }
 
+model StripeAccount {
+  id           String     @id @default(cuid())
+  tournamentId String     @unique
+  stripeId     String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
 model UserTeamRelationship {
   id     String @id @default(cuid())
   userId String
@@ -100,6 +107,8 @@ model Team {
   name                       String
   members                    UserTeamRelationship[]
   tournamentId               String
+  paymentSessionID           String?
+  paid                       Boolean                                @default(true)
   tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
   checkedIn                  Boolean                                @default(false)
   conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
@@ -135,12 +144,14 @@ model Tournament {
   managerEmail       String?
   joinURL            String?
   timezone           String?
-  stripeId           String?
+  price              Int                               @default(0)
+  priceISOCode       String                            @default("SGD")
   emailsSent         Email[]
   rounds             DebateRound[]
   adjudicators       Adjudicator[]
   rooms              Room[]
   breaks             Break[]
+  stripeAccount      StripeAccount?
 }
 
 model Email {

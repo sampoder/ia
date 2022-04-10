@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchTournament } from "..";
-import { Team, User } from "../../../../../lib/classes";
+import { Team } from "../../../../../lib/classes";
 import { fetchUser } from "../../../user";
 
 export default async function handler(

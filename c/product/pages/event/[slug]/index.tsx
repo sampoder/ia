@@ -10,6 +10,7 @@ import Link from "next/link";
 import { compile } from "@mdx-js/mdx";
 import Markdown from "../../../components/markdown";
 import styles from "./styles.module.css";
+import {zeroDecimalCurrencies} from '../../../lib/currencies'
 
 type ModifiedUserType = UserType & {
   user: UserType;
@@ -21,7 +22,7 @@ type ModifiedTeamType = TeamType & {
 
 export default function Event(props: {
   user: UserType | undefined;
-  tournament: TournamentType | undefined;
+  tournament: TournamentType;
   description: string;
   team: ModifiedTeamType | null;
   organising: boolean;
@@ -132,7 +133,9 @@ export default function Event(props: {
               <Link
                 href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
               >
-                <button style={{ background: "var(--red)" }}>Deregister</button>
+                <button style={{ background: "var(--red)" }}>
+                  Deregister {props.tournament?.price > 0 && "(no refunds)"}
+                </button>
               </Link>
             </div>
           ) : (
@@ -194,7 +197,18 @@ export default function Event(props: {
                       : {}
                   }
                 >
-                  Register {props.organising && <>(disabled for organisers)</>}
+                  {props.tournament?.price == 0 && (
+                    <>
+                      Register{" "}
+                      {props.organising && <>(disabled for organisers)</>}
+                    </>
+                  )}
+                  {props.tournament?.price != 0 && (
+                    <>
+                      Proceed to Checkout ({props.tournament?.priceISOCode} {props.tournament?.price * (zeroDecimalCurrencies.includes(props.tournament?.priceISOCode) ? 1 : 0.01)}){" "}
+                      {props.organising && <>(disabled for organisers)</>}
+                    </>
+                  )}
                 </button>
               )}
             </form>
@@ -263,6 +277,10 @@ export default function Event(props: {
                   <button>Edit Tournament Details</button>
                 </Link>
                 <br />
+                <Link href={`/event/${props.tournament?.slug}/admin/email`}>
+                  <button>Email Participants</button>
+                </Link>
+                <br />
                 <Link href={`/event/${props.tournament?.slug}/admin/team`}>
                   <button>Manage Organising Team</button>
                 </Link>
@@ -279,8 +297,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../api/event/[slug]/index");
   const { fetchUser } = require("../../api/user");
   const { prisma: PrismaClient } = require("../../../lib/prisma");
+  const { res } = context
   let user = await fetchUser(context.req.cookies["auth"]);
   let tournament = await fetchTournament(context.params?.slug);
+  if (tournament == undefined) {
+    res.setHeader("location", "/");
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
+  }
   let teams = user?.id
     ? (await prisma?.team.findMany({
         where: {
@@ -290,6 +315,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               userId: user.id,
             },
           },
+          paid: true,
         },
         include: {
           members: {
