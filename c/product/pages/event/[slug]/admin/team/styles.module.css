@@ -1,0 +1,29 @@
+.organiser {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  background: var(--sunken);
+  padding: var(--spacing-2);
+  border-radius: var(--radii-default);
+}
+
+.organiserAvatar {
+  height: 60px;
+  margin-right: 12px;
+  border-radius: var(--radii-small);
+}
+
+.organiserKeyInfo {
+  flex-grow: 1
+}
+
+.plus {
+  transform: rotate(45deg);
+  display: block
+}
+
+.removeWrapper {
+  margin-right: 8px;
+  font-size: 24px;
+  font-weight: 600;
+}

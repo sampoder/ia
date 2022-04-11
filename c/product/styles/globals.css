@@ -186,3 +186,13 @@ button:hover {
 a {
   color: var(--blue);
 }
+
+.adminHeader {
+  margin: 16px 0px;
+}
+
+.flexFormWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px
+}
