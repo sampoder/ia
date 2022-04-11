@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const stripe = require("stripe")(
-  process.env.STRIPE
-);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   res.send(
     `
     This URL is invalid for one of the following reasons:
@@ -16,5 +16,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     Please try again!
     `
-  )
+  );
 }

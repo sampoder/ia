@@ -1,4 +1,3 @@
-import { User as UserType } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { User } from "../../lib/classes";
 import { fetchUser } from "./user";

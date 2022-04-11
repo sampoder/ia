@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../lib/classes";
-import mail from "../../../../../lib/methods/mail";
 import { fetchUser } from "../../../user";
 import { prisma } from "../../../../../lib/prisma";
+import mail from "../../../../../lib/methods/mail";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +39,7 @@ export default async function handler(
                   tournament: {
                     id: tournament?.id,
                   },
-                  paid: true
+                  paid: true,
                 },
               },
             },
@@ -57,9 +57,9 @@ export default async function handler(
   ).map((user) => user.email);
   await mail({
     from: '"debate.sh" <noreply@example.com>', // @ts-ignore
-      bcc: alreadyParticipating.join(','),
-      subject: req.body.subject, // Subject line
-      html: req.body.text, // plain text body
-  })
+    bcc: alreadyParticipating.join(","),
+    subject: req.body.subject,
+    html: req.body.text,
+  });
   res.redirect(`/event/${tournament.slug}?message=${`Email sent!`}`);
 }

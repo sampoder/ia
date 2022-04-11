@@ -40,8 +40,11 @@ export default async function handler(
   tournament.startingDate = new Date(req.body.startingDate);
   tournament.endingDate = new Date(req.body.endingDate);
   await tournament.updateInDB();
-  if(req.body.priceISOCode){
-    await tournament.updatePricingDetails(req.body.priceISOCode, parseInt(req.body.price))
+  if (req.body.priceISOCode) {
+    await tournament.updatePricingDetails(
+      req.body.priceISOCode,
+      parseInt(req.body.price)
+    );
   }
   res.redirect(`/event/${tournament.slug}`);
 }

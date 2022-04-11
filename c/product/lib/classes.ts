@@ -8,8 +8,6 @@ import {
 } from "@prisma/client";
 import mail from "./methods/mail";
 
-const nodemailer = require("nodemailer");
-
 type UserInclude = {
   Teams?: boolean;
   organisingTournaments?: boolean;

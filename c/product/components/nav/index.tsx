@@ -1,5 +1,5 @@
-import styles from "./styles.module.css";
 import { User as UserType } from "@prisma/client";
+import styles from "./styles.module.css";
 import Link from "next/link";
 
 export default function Nav(props: { user: UserType | undefined }) {

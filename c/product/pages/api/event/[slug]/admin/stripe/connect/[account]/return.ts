@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../../lib/classes";
-const stripe = require("stripe")(
-  process.env.STRIPE
-);
 import { prisma } from "../../../../../../../../lib/prisma";
 import { fetchUser } from "../../../../../../user";
+const stripe = require("stripe")(process.env.STRIPE);
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,7 +25,7 @@ export default async function handler(
         tournamentId: tournament.id,
       },
     });
-    res.redirect(`/event/${req.query.slug.toString()}/admin/configure`)
+    res.redirect(`/event/${req.query.slug.toString()}/admin/configure`);
   } else {
     res.redirect("/api/stripe/connect/failed");
   }

@@ -3,22 +3,17 @@ import { fetchTournament } from ".";
 import { Team, User } from "../../../../lib/classes";
 import { fetchUser } from "../../user";
 import { prisma } from "../../../../lib/prisma";
-import { StripeAccount, Tournament as TournamentType } from "@prisma/client";
 import mail from "../../../../lib/methods/mail";
-const stripe = require("stripe")(
-  process.env.STRIPE
-);
 
-type TournamentTypeWithStripeAccount = TournamentType & {
-  stripeAccount: StripeAccount;
-};
-
+const stripe = require("stripe")(process.env.STRIPE);
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  let tournament = await fetchTournament(req.query.slug.toString(), {stripeAccount: true});
+  let tournament = await fetchTournament(req.query.slug.toString(), {
+    stripeAccount: true,
+  });
   let alreadyParticipating = (
     await prisma.user.findMany({
       where: {
@@ -30,7 +25,7 @@ export default async function handler(
                   tournament: {
                     id: tournament?.id,
                   },
-                  paid: true
+                  paid: true,
                 },
               },
             },
@@ -70,13 +65,13 @@ export default async function handler(
     }
   }
   let team = new Team(undefined, req.body.name, tournament?.id, members);
-  if(tournament?.price == 0){
-    team.paid = true
+  if (tournament?.price == 0) {
+    team.paid = true;
     await team.addToDB();
     await mail({
       from: '"debate.sh" <noreply@example.com>', // @ts-ignore
-      to: team.dbItem.members.map(member => member.user.email).join(','),
-      subject: `Registration confirmed for ${tournament.name}.`, // Subject line
+      to: team.dbItem.members.map((member) => member.user.email).join(","),
+      subject: `Registration confirmed for ${tournament.name}.`,
       html: `<p>👋 Hey!</p>
 
 <p>You are now registered for ${tournament.name}.</p>
@@ -84,12 +79,11 @@ export default async function handler(
 <p>Best,</p>
 
 <p>debate.sh</p>
-      `, // plain text body
-    })
+      `,
+    });
     return res.redirect(`/event/${tournament?.slug}`);
-  }
-  else{
-    team.paid = false
+  } else {
+    team.paid = false;
     await team.addToDB();
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -103,16 +97,16 @@ export default async function handler(
       ],
       payment_intent_data: {
         application_fee_amount: 0,
-        transfer_data: { // @ts-ignore
-          destination: tournament?.stripeAccount.stripeId 
+        transfer_data: {
+          // @ts-ignore
+          destination: tournament?.stripeAccount.stripeId,
         },
       },
       mode: "payment",
       success_url: `http://localhost:3000/api/event/${tournament?.slug}/${team.id}/verify-payment`,
       cancel_url: `http://localhost:3000/event/${tournament?.slug}`,
     });
-    await team.linkPaymentSession(session.id)
-    res.redirect(session.url)
+    await team.linkPaymentSession(session.id);
+    res.redirect(session.url);
   }
-  
 }

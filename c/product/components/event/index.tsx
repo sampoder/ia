@@ -1,5 +1,5 @@
-import styles from "./styles.module.css";
 import { Tournament as TournamentType } from "@prisma/client";
+import styles from "./styles.module.css";
 import Link from "next/link";
 
 export default function Event(props: { tournament: TournamentType }) {

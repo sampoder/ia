@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer')
 const { exec } = require("child_process");
+
 export default async function mail(config: object) {
   let testAccount = await nodemailer.createTestAccount();
     let transporter = nodemailer.createTransport({
