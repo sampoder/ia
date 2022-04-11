@@ -2,10 +2,15 @@ import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { withRouter } from "next/router";
 import Message from "../components/message";
+import Head from 'next/head'
 
 function DebateSH({ Component, pageProps, router }: AppProps) {
   return (
     <>
+    <Head>
+     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+     <title>debate.sh</title>
+    </Head>
       <div
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >

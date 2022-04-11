@@ -6,7 +6,7 @@ export default function Signup() {
     <>
       <Nav user={undefined} />
       <div style={{ width: "600px", margin: "auto" }}>
-        <h1 style={{ margin: "16px 0px" }}>Sign Up</h1>
+        <h1 style={{ margin: "16px 0px" }}>Login</h1>
         <form
           action="/api/login"
           method="POST"

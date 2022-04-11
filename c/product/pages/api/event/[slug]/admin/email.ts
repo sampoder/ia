@@ -55,7 +55,6 @@ export default async function handler(
       },
     })
   ).map((user) => user.email);
-  console.log(req.body.subject)
   await mail({
     from: '"debate.sh" <noreply@example.com>', // @ts-ignore
       bcc: alreadyParticipating.join(','),

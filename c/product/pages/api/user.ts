@@ -3,12 +3,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { User, Token } from "../../lib/classes";
 
 export async function fetchUser(authToken: string) {
-  let token = new Token(authToken);
-  await token.loadFromDB();
-  if (token.checkValid() && token.userId) {
-    let user = new User(token.userId);
-    await user.loadFromDB({ organisingTournaments: true });
-    return user.dbItem;
+  if (authToken != undefined) {
+    let token = new Token(authToken);
+    await token.loadFromDB();
+    if (token.checkValid() && token.userId) {
+      let user = new User(token.userId);
+      await user.loadFromDB({ organisingTournaments: true });
+      return user.dbItem;
+    } else {
+      return null;
+    }
   } else {
     return null;
   }

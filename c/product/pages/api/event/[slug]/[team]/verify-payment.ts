@@ -11,7 +11,6 @@ export default async function handler(
 ) {
   let team = new Team(req.query.team.toString());
   await team.loadFromDB();
-  console.log(team);
   const session = await stripe.checkout.sessions.retrieve(
     team.dbItem?.paymentSessionID
   );

@@ -427,7 +427,7 @@ export class Tournament {
         this.id = this.dbItem?.id ? this.dbItem?.id : undefined;
         this.organiserIDs = dbItem?.organisers.map((x) => x.organiserId);
       }
-    } else console.error("TOKEN: Could not load from DB due to missing id.");
+    } else console.error("TOURNAMENT: Could not load from DB due to missing id.");
   }
   constructor(
     id?: string,

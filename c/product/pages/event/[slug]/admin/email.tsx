@@ -64,6 +64,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res.end();
     return { props: {} };
   }
-  console.log(tournament.stripeAccount);
   return { props: { tournament, user } };
 };

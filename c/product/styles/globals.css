@@ -182,3 +182,7 @@ button:hover {
   box-shadow: var(--shadow-elevated);
   transform: scale(1.0625);
 }
+
+a {
+  color: var(--blue);
+}
