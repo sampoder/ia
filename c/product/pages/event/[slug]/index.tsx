@@ -10,7 +10,7 @@ import Link from "next/link";
 import { compile } from "@mdx-js/mdx";
 import Markdown from "../../../components/markdown";
 import styles from "./styles.module.css";
-import {zeroDecimalCurrencies} from '../../../lib/currencies'
+import { zeroDecimalCurrencies } from "../../../lib/currencies";
 
 type ModifiedUserType = UserType & {
   user: UserType;
@@ -18,6 +18,22 @@ type ModifiedUserType = UserType & {
 
 type ModifiedTeamType = TeamType & {
   members: ModifiedUserType[];
+};
+
+const headerGradient = (tournament: TournamentType) => {
+  return `linear-gradient(90deg, rgba(0, 0, 22, 0.8) 35%, rgba(0, 0, 18, 0.65) 100%), url(${
+    tournament?.cover
+      ? tournament.cover
+      : `https://workshops.hackclub.com/api/patterns/${tournament?.slug}/`
+  })`;
+};
+
+const registrationBoxBackground = (team: boolean) => {
+  return team ? "rgba(44, 187, 144, 0.3)" : "rgba(100, 100, 100, 0.1)";
+};
+
+const inputOpacity = (user: UserType | undefined, organising: boolean) => {
+  return user != undefined && !organising ? 1 : 0.6;
 };
 
 export default function Event(props: {
@@ -32,37 +48,13 @@ export default function Event(props: {
       <Nav user={props.user} />
       <div
         style={{
-          backgroundImage: `linear-gradient(90deg, rgba(0, 0, 22, 0.8) 35%, rgba(0, 0, 18, 0.65) 100%), url(${
-            props.tournament?.cover
-              ? props.tournament.cover
-              : `https://workshops.hackclub.com/api/patterns/${props.tournament?.slug}/`
-          })`,
-          backgroundPosition: "center",
-          padding: "64px",
-          display: "flex",
-          alignItems: "center",
+          backgroundImage: headerGradient(props.tournament),
         }}
+        className={styles.header}
       >
-        <div style={{ width: "calc(60vw - 64px)", minWidth: "fit-content" }}>
-          <h1
-            style={{
-              background: "var(--blue)",
-              padding: "8px 12px",
-              color: "white",
-              width: "fit-content",
-              fontSize: "64px",
-            }}
-          >
-            {props.tournament?.name}
-          </h1>
-          <h2
-            style={{
-              background: "var(--purple)",
-              padding: "8px 12px",
-              color: "white",
-              width: "fit-content",
-            }}
-          >
+        <div className={styles.headerTitles}>
+          <h1 className={styles.mainTitle}>{props.tournament?.name}</h1>
+          <h2 className={styles.timingTitle}>
             {props.tournament?.startingDate.toLocaleDateString() ==
             props.tournament?.endingDate.toLocaleDateString() ? (
               <>
@@ -79,16 +71,7 @@ export default function Event(props: {
               </>
             )}
           </h2>
-          <h2
-            style={{
-              background: "var(--green)",
-              padding: "8px 12px",
-              color: "white",
-              width: "fit-content",
-              marginBottom: "24px",
-            }}
-          >
-            {" "}
+          <h2 className={styles.locationTitle}>
             {props.tournament?.online ? (
               <>
                 {props.tournament?.hostRegion} ∙ {props.tournament?.timezone}
@@ -98,21 +81,14 @@ export default function Event(props: {
             )}
           </h2>
         </div>
-
         <div
           style={{
-            background:
-              props.team != undefined
-                ? "rgba(44, 187, 144, 0.3)"
-                : "rgba(100, 100, 100, 0.1)",
-            padding: "16px",
-            width: "calc(40vw - 64px)",
-            borderRadius: "var(--radii-small)",
+            background: registrationBoxBackground(props.team != undefined),
           }}
+          className={styles.registrationBox}
         >
-          {" "}
           {props.team != undefined ? (
-            <div style={{ color: "white", lineHeight: "1.6" }}>
+            <div className={styles.registered}>
               ✅ You're registered for {props.tournament?.name} with{" "}
               {props.team.name}:{" "}
               {props.team.members.map((member, index) => (
@@ -129,11 +105,11 @@ export default function Event(props: {
               ))}
               .<br />
               <button>Join Discord</button>
-              <button style={{ margin: "6px 8px 0px" }}>View Tab</button>
+              <button className={styles.tabButton}>View Tab</button>
               <Link
                 href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
               >
-                <button style={{ background: "var(--red)" }}>
+                <button className={styles.deregister}>
                   Deregister {props.tournament?.price > 0 && "(no refunds)"}
                 </button>
               </Link>
@@ -142,44 +118,37 @@ export default function Event(props: {
             <form
               action={`/api/event/${props.tournament?.slug}/register`}
               method="POST"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
+              className="flexFormWrapper"
             >
               <input
                 name="name"
                 placeholder="Your Team Name"
                 disabled={props.user == null || props.organising}
                 style={{
-                  opacity: props.user != null && !props.organising ? 1 : 0.6,
+                  opacity: inputOpacity(props.user, props.organising),
                 }}
               />
               <small
+                className={styles.emailsLabel}
                 style={{
-                  fontWeight: "bold",
-                  color: "white",
-                  opacity: props.user != null && !props.organising ? 1 : 0.6,
+                  opacity: inputOpacity(props.user, props.organising),
                 }}
               >
                 Your Other Team Members' Emails:{" "}
               </small>
-              {[...Array(3)].map((_, index) =>
-                index != 0 ? (
-                  <input
-                    placeholder={`Team Member ${index}'s Email`}
-                    name={`email${index}`}
-                    key={`email${index}`}
-                    disabled={props.user == null || props.organising}
-                    style={{
-                      opacity:
-                        props.user != null && !props.organising ? 1 : 0.6,
-                    }}
-                  />
-                ) : (
-                  <></>
-                )
+              {[...Array(3)].map(
+                (_, index) =>
+                  index != 0 && (
+                    <input
+                      placeholder={`Team Member ${index}'s Email`}
+                      name={`email${index}`}
+                      key={`email${index}`}
+                      disabled={props.user == null || props.organising}
+                      style={{
+                        opacity: inputOpacity(props.user, props.organising),
+                      }}
+                    />
+                  )
               )}
               {props.user == null ? (
                 <Link href="/login">
@@ -205,8 +174,14 @@ export default function Event(props: {
                   )}
                   {props.tournament?.price != 0 && (
                     <>
-                      Proceed to Checkout ({props.tournament?.priceISOCode} {props.tournament?.price * (zeroDecimalCurrencies.includes(props.tournament?.priceISOCode) ? 1 : 0.01)}){" "}
-                      {props.organising && <>(disabled for organisers)</>}
+                      Proceed to Checkout ({props.tournament?.priceISOCode}{" "}
+                      {props.tournament?.price *
+                        (zeroDecimalCurrencies.includes(
+                          props.tournament?.priceISOCode
+                        )
+                          ? 1
+                          : 0.01)}
+                      ) {props.organising && <>(disabled for organisers)</>}
                     </>
                   )}
                 </button>
@@ -215,26 +190,12 @@ export default function Event(props: {
           )}
         </div>
       </div>
-      <div
-        style={{
-          padding: "32px 64px",
-          display: "grid",
-          gridTemplateColumns: "6fr 3fr",
-          gap: "16px",
-        }}
-      >
+      <div className={styles.content}>
         <div>
           <Markdown code={props.description} />
         </div>
         <div>
-          <div
-            style={{
-              background: "var(--sunken)",
-              padding: "16px",
-              borderRadius: "var(--radii-small)",
-            }}
-            className={styles.details}
-          >
+          <div className={styles.details}>
             <div>
               <b>Timezone:</b> {props.tournament?.timezone}
             </div>
@@ -297,7 +258,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../api/event/[slug]/index");
   const { fetchUser } = require("../../api/user");
   const { prisma: PrismaClient } = require("../../../lib/prisma");
-  const { res } = context
+  const { res } = context;
   let user = await fetchUser(context.req.cookies["auth"]);
   let tournament = await fetchTournament(context.params?.slug);
   if (tournament == undefined) {

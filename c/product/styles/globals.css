@@ -23,16 +23,6 @@
   --sunken: var(--smoke);
   --border: var(--smoke);
   --primary: var(--blue);
-  --secondary: #8492a6;
-  --accent: #5bc0de;
-  --twitter: #1da1f2;
-  --facebook: #3b5998;
-  --instagram: #e1306c;
-  --breakpoint-xs: 32em;
-  --breakpoint-s: 48em;
-  --breakpoint-m: 64em;
-  --breakpoint-l: 96em;
-  --breakpoint-xl: 128em;
   --spacing-0: 0px;
   --spacing-1: 4px;
   --spacing-2: 8px;
@@ -42,37 +32,6 @@
   --spacing-6: 128px;
   --spacing-7: 256px;
   --spacing-8: 512px;
-  --font-1: 12px;
-  --font-2: 16px;
-  --font-3: 20px;
-  --font-4: 24px;
-  --font-5: 32px;
-  --font-6: 48px;
-  --font-6: 64px;
-  --font-7: 96px;
-  --font-8: 128px;
-  --font-9: 160px;
-  --font-10: 192px;
-  --line-height-limit: 0.875;
-  --line-height-title: 1;
-  --line-height-heading: 1.125;
-  --line-height-subheading: 1.25;
-  --line-height-caption: 1.375;
-  --line-height-body: 1.5;
-  --font-weight-body: 400;
-  --font-weight-bold: 700;
-  --font-weight-heading: var(--font-weight-bold);
-  --letter-spacing-title: -0.009em;
-  --letter-spacing-headline: 0.009em;
-  --size-wide-plus: 2048px;
-  --size-wide: 1536px;
-  --size-layout-plus: 1200px;
-  --size-layout: 1024px;
-  --size-copy-ultra: 980px;
-  --size-copy-plus: 768px;
-  --size-copy: 680px;
-  --size-narrow-plus: 600px;
-  --size-narrow: 512px;
   --radii-small: 4px;
   --radii-default: 8px;
   --radii-extra: 12px;
@@ -108,9 +67,7 @@ select {
   border-radius: var(--radii-small);
   border: 0;
   font-size: inherit;
-  padding: var(--spacing-2);
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  padding: 8px;
   appearance: none;
   border: 0.1px solid var(--muted);
 }
@@ -148,33 +105,27 @@ input[type="radio"] {
 button {
   cursor: pointer;
   font-family: inherit;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   border-radius: var(--radii-small);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-card);
-  letter-spacing: var(--letter-spacing-headline);
+  letter-spacing: 0.009em;
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.125s ease-in-out, box-shadow 0.125s ease-in-out;
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   text-align: center;
   line-height: inherit;
-  -webkit-text-decoration: none;
   text-decoration: none;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: var(--theme-ui-colors-white, #ffffff);
+  padding: 8px 16px;
+  color: white;
   background-color: var(--blue);
   border: 0;
-  font-size: var(--font-2);
+  font-size: 16px;
 }
 
 button:focus,
@@ -187,12 +138,17 @@ a {
   color: var(--blue);
 }
 
-.adminHeader {
+.adminHeader, .formHeader {
   margin: 16px 0px;
 }
 
 .flexFormWrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px
+  gap: 8px;
+}
+
+.formHolder {
+  width: 600px;
+  margin: auto;
 }

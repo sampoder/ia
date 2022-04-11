@@ -5,13 +5,9 @@ export default function Register() {
   return (
     <>
       <Nav user={undefined} />
-      <div style={{ width: "600px", margin: "auto" }}>
-        <h1 style={{ margin: "16px 0px" }}>Sign Up</h1>
-        <form
-          action="/api/register"
-          method="POST"
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-        >
+      <div className="formHolder">
+        <h1 className="formHeader">Register</h1>
+        <form action="/api/register" method="POST" className="flexFormWrapper">
           <small>Email: </small>
           <input name="email" />
           <small>First Name: </small>

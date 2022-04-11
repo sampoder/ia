@@ -7,18 +7,14 @@ type HTMLElementEvent<T extends HTMLElement> = Event & {
   value: T;
 };
 
-export default function EventNew(props: { user: UserType | undefined }) {
+export default function EventNew(props: { user: UserType }) {
   const [isInPerson, setIsInPerson] = useState(false);
   return (
     <>
       <Nav user={props.user} />
-      <div style={{ width: "600px", margin: "auto" }}>
-        <h1 style={{ margin: "16px 0px" }}>Start A New Event</h1>
-        <form
-          action="/api/event/new"
-          method="POST"
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-        >
+      <div className="formHolder">
+        <h1 className="formHeader">Start A New Event</h1>
+        <form action="/api/event/new" method="POST" className="flexFormWrap">
           <small>Name: </small>
           <input required name="name" />
           <small>Slug: </small>
@@ -40,8 +36,6 @@ export default function EventNew(props: { user: UserType | undefined }) {
               setIsInPerson(
                 (e.target as HTMLElementEvent<HTMLSelectElement>).value ==
                   "in-person"
-                  ? true
-                  : false
               )
             }
           >
@@ -53,14 +47,12 @@ export default function EventNew(props: { user: UserType | undefined }) {
           </select>
           {isInPerson && (
             <>
-              {" "}
               <small>Host City: </small>
               <input required name="hostRegion" />
             </>
           )}
           {!isInPerson && (
             <>
-              {" "}
               <small>Focus Region (eg. South East Asia or Europe): </small>
               <input required name="hostRegion" />
             </>

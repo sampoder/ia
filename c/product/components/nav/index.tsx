@@ -23,7 +23,13 @@ export default function Nav(props: { user: UserType | undefined }) {
           </div>
         ) : (
           <div>
-            <a href="/login"  style={{textDecoration: 'none'}}>Login</a> | <a href="/register"  style={{textDecoration: 'none'}}>Register</a>
+            <a href="/login" className={styles.loginOrRegister}>
+              Login
+            </a>{" "}
+            |{" "}
+            <a href="/register" className={styles.loginOrRegister}>
+              Register
+            </a>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
-import Link from "next/link";
 import React, { ReactChildren, ReactChild } from "react";
+import Link from "next/link";
+import styles from "./styles.module.css";
 
 export default function AdminWrapper(props: {
   children: ReactChild | ReactChildren;
@@ -7,25 +8,12 @@ export default function AdminWrapper(props: {
   name: string;
 }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 3fr" }}>
-      <div style={{ padding: "32px" }}>
-        <div
-          style={{
-            background: "var(--sunken)",
-            padding: "16px",
-            borderRadius: "var(--radii-small)",
-          }}
-        >
+    <div className={styles.wrapper}>
+      <div className={styles.sideBar}>
+        <div className={styles.navigation}>
           <b>{props.name}</b>
-          <h3 style={{ marginTop: "4px" }}>Admin Dashboard</h3>
-          <div
-            style={{
-              marginTop: "8px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-            }}
-          >
+          <h3 className={styles.adminTitle}>Admin Dashboard</h3>
+          <div className={styles.links}>
             <div>
               <Link href={`/event/${props.slug}/admin/configure`}>
                 Configure Event
@@ -44,9 +32,7 @@ export default function AdminWrapper(props: {
           </div>
         </div>
       </div>
-      <div style={{ paddingTop: "16px", width: "600px", margin: "auto" }}>
-        {props.children}
-      </div>
+      <div className={styles.content}>{props.children}</div>
     </div>
   );
 }

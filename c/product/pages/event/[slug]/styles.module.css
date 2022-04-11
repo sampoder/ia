@@ -1,3 +1,21 @@
+.header {
+  background-position: center;
+  padding: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.headerTitles {
+  width: calc(60vw - 64px);
+  min-width: fit-content;
+}
+
+.details {
+  background: var(--sunken);
+  padding: 16px;
+  border-radius: var(--radii-small);
+}
+
 .details > div {
   margin-bottom: 12px;
 }
@@ -12,4 +30,58 @@
 
 .details > div > button {
   margin-top: 8px;
+}
+
+.content {
+  padding: 32px 64px;
+  display: grid;
+  grid-template-columns: 6fr 3fr;
+  gap: 16px;
+}
+
+.mainTitle {
+  background: var(--blue);
+  padding: 8px 12px;
+  color: white;
+  width: fit-content;
+  font-size: 64px;
+}
+
+.timingTitle {
+  background: var(--purple);
+  padding: 8px 12px;
+  color: white;
+  width: fit-content;
+}
+
+.locationTitle {
+  background: var(--green);
+  padding: 8px 12px;
+  color: white;
+  width: fit-content;
+  margin-bottom: 24px;
+}
+
+.registrationBox {
+  padding: 16px;
+  width: calc(40vw - 64px);
+  border-radius: var(--radii-small);
+}
+
+.registered {
+  color: white;
+  line-height: 1.6;
+}
+
+.tabButton {
+  margin: 6px 8px 0px;
+}
+
+.deregister {
+  background: var(--red);
+}
+
+.emailsLabel {
+  font-weight: bold;
+  color: white;
 }

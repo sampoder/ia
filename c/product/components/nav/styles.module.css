@@ -1,7 +1,7 @@
 .nav {
   background: var(--dark);
   padding: var(--spacing-2) var(--spacing-3);
-  font-size: var(--font-3);
+  font-size: 20px;
   display: flex;
   align-items: center;
   color: var(--white);
@@ -58,4 +58,8 @@
 
 .nav > div > div:hover > div {
   display: block;
+}
+
+.loginOrRegister {
+  text-decoration: none;
 }

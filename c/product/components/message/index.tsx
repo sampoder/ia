@@ -1,5 +1,4 @@
 import styles from "./styles.module.css";
-import Link from "next/link";
 
 export default function Message(props: { message: string; error: boolean }) {
   return (

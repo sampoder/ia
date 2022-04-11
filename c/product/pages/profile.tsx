@@ -11,13 +11,9 @@ export default function EventNew(props: { user: UserType | undefined }) {
   return (
     <>
       <Nav user={props.user} />
-      <div style={{ width: "600px", margin: "auto" }}>
-        <h1 style={{ margin: "16px 0px" }}>Edit Your Profile</h1>
-        <form
-          action="/api/update"
-          method="POST"
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-        >
+      <div className="formHolder">
+        <h1 className="formHeader">Edit Your Profile</h1>
+        <form action="/api/update" method="POST" className="flexFormWrapper">
           <small>First Name: </small>
           <input
             required

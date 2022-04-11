@@ -5,13 +5,9 @@ export default function Signup() {
   return (
     <>
       <Nav user={undefined} />
-      <div style={{ width: "600px", margin: "auto" }}>
-        <h1 style={{ margin: "16px 0px" }}>Login</h1>
-        <form
-          action="/api/login"
-          method="POST"
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-        >
+      <div className="formHolder">
+        <h1 className="formHeader">Login</h1>
+        <form action="/api/login" method="POST" className="flexFormWrapper">
           <small>Email: </small>
           <input name="email" />
           <button>Login</button>

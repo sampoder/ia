@@ -1,14 +1,11 @@
-import Head from "next/head";
-import Image from "next/image";
+import { GetServerSideProps } from "next";
+import { User as UserType, Tournament as TournamentType } from "@prisma/client";
+import { useState } from "react";
 import styles from "../styles/index.module.css";
 import Nav from "../components/nav";
 import Header from "../components/home/header";
-import { GetServerSideProps } from "next";
-import { User as UserType, Tournament as TournamentType } from "@prisma/client";
-import Link from "next/link";
 import Event from "../components/event";
 import search from "../lib/methods/search";
-import { useState } from "react";
 
 type HTMLElementEvent<T extends HTMLElement> = Event & {
   value: T;
