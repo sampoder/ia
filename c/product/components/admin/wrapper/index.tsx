@@ -20,6 +20,11 @@ export default function AdminWrapper(props: {
               </Link>
             </div>
             <div>
+              <Link href={`/event/${props.slug}/admin/attendees`}>
+                View Attendees
+              </Link>
+            </div>
+            <div>
               <Link href={`/event/${props.slug}/admin/email`}>
                 Email Attendees
               </Link>

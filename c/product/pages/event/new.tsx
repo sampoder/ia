@@ -14,7 +14,7 @@ export default function EventNew(props: { user: UserType }) {
       <Nav user={props.user} />
       <div className="formHolder">
         <h1 className="formHeader">Start A New Event</h1>
-        <form action="/api/event/new" method="POST" className="flexFormWrap">
+        <form action="/api/event/new" method="POST" className="flexFormWrapper">
           <small>Name: </small>
           <input required name="name" />
           <small>Slug: </small>

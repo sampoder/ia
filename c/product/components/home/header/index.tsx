@@ -1,5 +1,4 @@
 import styles from "./styles.module.css";
-import Button from "../../button";
 import Link from "next/link";
 
 export default function Header() {
@@ -12,10 +11,10 @@ export default function Header() {
         </h1>
         <p>
           <Link href="#tournaments">
-            <Button className={styles.join}>Join A Tournament</Button>
+            <button style={{marginRight: '10px'}}>Join A Tournament</button>
           </Link>
           <Link href="/event/new">
-            <Button>Organise A Tournament</Button>
+            <button>Organise A Tournament</button>
           </Link>
         </p>
       </div>

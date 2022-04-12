@@ -14,9 +14,17 @@ export default async function handler(
   }
   let team = new Team(req.query.team.toString());
   await team.loadFromDB();
-  if (team.memberIDs?.includes(currentUser.id)) {
-    await team.deleteFromDB();
-    res.redirect(`/event/${tournament?.slug}`);
+  if (
+    team.memberIDs?.includes(currentUser.id) || // @ts-ignore
+    tournament.organisers.map((x) => x.organiserId).includes(currentUser.id)
+  ) {
+    await team.deleteFromDB();// @ts-ignore
+    if(tournament.organisers.map((x) => x.organiserId).includes(currentUser.id)){
+      res.redirect(`/event/${tournament?.slug}/admin/attendees`);
+    }
+    else{
+      res.redirect(`/event/${tournament?.slug}`);
+    }
   } else {
     console.log("Could not delete!");
     res.redirect(`/event/${tournament?.slug}`);

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../lib/classes";
 import { fetchUser } from "../../../user";
-import { prisma } from "../../../../../lib/prisma";
+import { prisma, alreadyParticipatingFilter } from "../../../../../lib/prisma";
 import mail from "../../../../../lib/methods/mail";
 
 export default async function handler(
@@ -15,7 +15,8 @@ export default async function handler(
   if (
     tournament.organiserIDs == null ||
     user?.id == undefined ||
-    user?.id == null
+    user?.id == null ||
+    !tournament?.id
   ) {
     res.setHeader("location", "/");
     res.statusCode = 302;
@@ -29,31 +30,7 @@ export default async function handler(
     return;
   }
   let alreadyParticipating = (
-    await prisma.user.findMany({
-      where: {
-        OR: [
-          {
-            Teams: {
-              some: {
-                team: {
-                  tournament: {
-                    id: tournament?.id,
-                  },
-                  paid: true,
-                },
-              },
-            },
-          },
-          {
-            organisingTournaments: {
-              some: {
-                tournamentId: tournament?.id,
-              },
-            },
-          },
-        ],
-      },
-    })
+    await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))
   ).map((user) => user.email);
   await mail({
     from: '"debate.sh" <noreply@example.com>', // @ts-ignore

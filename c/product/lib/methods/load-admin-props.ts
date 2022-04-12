@@ -7,7 +7,9 @@ export const getAdminProps: GetServerSideProps = async (context) => {
   const { fetchUser } = require("../../pages/api/user");
   let user: User = await fetchUser(context.req.cookies["auth"]);
   const { res } = context;
-  let tournament = await fetchTournament(context.params?.slug, {stripeAccount: true}); //@ts-ignore
+  let tournament = await fetchTournament(context.params?.slug, {
+    stripeAccount: true,
+  }); //@ts-ignore
   tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
   if (tournament.organiserIDs == null || user.id == null) {
     res.setHeader("location", "/");
@@ -30,5 +32,17 @@ export const getAdminProps: GetServerSideProps = async (context) => {
       },
     },
   });
-  return { props: { tournament, user, organisers } };
+  let teams = await prisma.team.findMany({
+    where: {
+      tournamentId: tournament.id,
+    },
+    include: {
+      members: {
+        include: {
+          user: true
+        }
+      }
+    }
+  });
+  return { props: { tournament, user, organisers, teams } };
 };
