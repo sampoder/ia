@@ -35,10 +35,16 @@ export default function AdminConfigure(props: {
               required
               defaultValue={props.tournament?.description?.toString()}
             />
-            <small>Venue Address: </small>
+            <small>
+              {props.tournament?.online
+                ? "Join URL (for example, a Discord invite or a Zoom call)"
+                : "Venue Address"}
+              :{" "}
+            </small>
             <input
               name="venueAddress"
               required
+              type={props.tournament?.online ? "url" : "text"}
               defaultValue={props.tournament?.venueAddress?.toString()}
             />
             <small>Contact Email: </small>
@@ -77,7 +83,7 @@ export default function AdminConfigure(props: {
               defaultValue={props.tournament?.cover?.toString()}
             />
             <small>
-              {props.tournament?.online ? "Focus Region" : "Host City"}:{" "}
+              {props.tournament?.online ? "Focus Region" : "Host City"}:
             </small>
             <input
               name="hostRegion"
@@ -175,7 +181,7 @@ export default function AdminConfigure(props: {
                       required
                       defaultValue={props.tournament?.priceISOCode}
                     />
-                    <small>Registration cost: </small>
+                    <small>Registration cost: (in cents)</small>
                     <input
                       name="price"
                       type="number"

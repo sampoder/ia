@@ -104,7 +104,13 @@ export default function Event(props: {
                 </span>
               ))}
               .<br />
-              <button>Join Discord</button>
+              {props.tournament.online &&
+                props.tournament.venueAddress != "TBC" &&
+                props.tournament.venueAddress != undefined && (
+                  <Link href={props.tournament.venueAddress}>
+                    <button>Join The Tournament</button>
+                  </Link>
+                )}
               <button className={styles.tabButton}>View Tab</button>
               <Link
                 href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
@@ -196,9 +202,11 @@ export default function Event(props: {
         </div>
         <div>
           <div className={styles.details}>
-            <div>
-              <b>Timezone:</b> {props.tournament?.timezone}
-            </div>
+            {props.tournament?.online && (
+              <div>
+                <b>Timezone:</b> {props.tournament?.timezone}
+              </div>
+            )}
             <div>
               <b>Starts at:</b>{" "}
               {props.tournament?.startingDate.toLocaleDateString()}{" "}
