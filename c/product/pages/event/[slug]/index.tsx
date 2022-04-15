@@ -104,21 +104,23 @@ export default function Event(props: {
                 </span>
               ))}
               .<br />
-              {props.tournament.online &&
-                props.tournament.venueAddress != "TBC" &&
-                props.tournament.venueAddress != undefined && (
-                  <Link href={props.tournament.venueAddress}>
-                    <button>Join The Tournament</button>
-                  </Link>
-                )}
-              <button className={styles.tabButton}>View Tab</button>
-              <Link
-                href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
-              >
-                <button className={styles.deregister}>
-                  Deregister {props.tournament?.price > 0 && "(no refunds)"}
-                </button>
-              </Link>
+              <div className={styles.attendeeButtons}>
+                {props.tournament.online &&
+                  props.tournament.venueAddress != "TBC" &&
+                  props.tournament.venueAddress != undefined && (
+                    <Link href={props.tournament.venueAddress}>
+                      <button>Join The Tournament</button>
+                    </Link>
+                  )}
+                <button className={styles.tabButton}>View Tab</button>
+                <Link
+                  href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
+                >
+                  <button className={styles.deregister}>
+                    Deregister {props.tournament?.price > 0 && "(no refunds)"}
+                  </button>
+                </Link>
+              </div>
             </div>
           ) : (
             <form

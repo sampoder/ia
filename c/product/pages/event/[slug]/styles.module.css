@@ -1,8 +1,6 @@
 .header {
   background-position: center;
-  padding: 64px;
-  display: flex;
-  align-items: center;
+  padding: 16px;
 }
 
 .headerTitles {
@@ -33,10 +31,34 @@
 }
 
 .content {
-  padding: 32px 64px;
   display: grid;
-  grid-template-columns: 6fr 3fr;
+  padding: 16px;
   gap: 16px;
+}
+
+@media screen and (min-width: 1200px) {
+  .header {
+    background-position: center;
+    display: flex;
+    align-items: center;
+  }
+  .registrationBox {
+    padding: 16px;
+    width: calc(40vw - 64px);
+    border-radius: var(--radii-small);
+  }
+}
+
+@media screen and (min-width: 720px) {
+  .header {
+    padding: 64px;
+  }
+  .content {
+    padding: 32px 64px;
+    display: grid;
+    grid-template-columns: 6fr 3fr;
+    gap: 16px;
+  }
 }
 
 .mainTitle {
@@ -64,7 +86,7 @@
 
 .registrationBox {
   padding: 16px;
-  width: calc(40vw - 64px);
+  max-width: 400px;
   border-radius: var(--radii-small);
 }
 
@@ -75,6 +97,14 @@
 
 .tabButton {
   margin: 6px 8px 0px;
+}
+
+.tabButton:first-child {
+  margin: 6px 8px 0px 0px;
+}
+
+.attendeeButtons > button {
+  margin-top: 8px;
 }
 
 .deregister {
