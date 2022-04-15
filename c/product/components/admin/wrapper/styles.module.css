@@ -34,6 +34,6 @@
 .content {
   padding-top: 8px;
   max-width: 600px;
-  min-width: calc(100vw - 32px);
+  width: calc(100vw - 32px);
   margin: auto;
 }
