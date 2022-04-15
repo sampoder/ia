@@ -21,14 +21,18 @@ export default function Home(props: {
     <div>
       <Nav user={props.user || undefined} />
       <Header />
-      <div className={styles.wrapper}>
-        <h2>Your Tournaments</h2>
-      </div>
-      <div className={styles.events}>
-        {props.participating.map((tournament) => (
-          <Event tournament={tournament} key={tournament.id} />
-        ))}
-      </div>
+      {props.participating[0] != undefined && (
+        <>
+          <div className={styles.wrapper}>
+            <h2>Your Tournaments</h2>
+          </div>
+          <div className={styles.events}>
+            {props.participating.map((tournament) => (
+              <Event tournament={tournament} key={tournament.id} />
+            ))}
+          </div>
+        </>
+      )}
       <div className={styles.wrapper} id="tournaments">
         <h2>Discover Tournaments</h2>
         <input
@@ -41,7 +45,6 @@ export default function Home(props: {
           }
         />
       </div>
-      
       <div className={styles.events}>
         {search(props.tournaments ? props.tournaments : [], query)?.map(
           (tournament) => (

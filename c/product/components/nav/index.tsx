@@ -21,7 +21,7 @@ export default function Nav(props: { user: UserType | undefined }) {
             </div>
           </div>
         ) : (
-          <div>
+          <div className={styles.notAuthed}>
             <a href="/login" className={styles.loginOrRegister}>
               Login
             </a>{" "}
