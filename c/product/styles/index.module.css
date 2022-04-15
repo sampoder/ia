@@ -5,6 +5,12 @@
   gap: 12px;
 }
 
+@media screen and (max-width: 680px) {
+  .events {
+    grid-template-columns: 1fr;
+  }
+}
+
 .event {
   background: var(--sunken);
   border-radius: var(--radii-small);
@@ -26,11 +32,12 @@
   margin-right: 12px;
 }
 
-.inputWrapper {
+.wrapper {
   margin: 24px 16px 0px;
 }
 
 .input {
+  margin-top: 16px;
   width: -webkit-fill-available;
   border: 2px dashed var(--sunken);
 }

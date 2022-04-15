@@ -1,29 +1,33 @@
 .header {
-  background-image: linear-gradient(
-      90deg,
-      rgba(0, 0, 22, 0.8) 35%,
-      rgba(0, 0, 18, 0.65) 100%
-    ),
-    url(https://i.imgur.com/mQTh5m3.jpg);
-  height: 300px;
-  background-size: cover;
   background-position: center;
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: var(--spacing-4);
-  text-align: center;
+  justify-content: flex-start;
+  padding: var(--spacing-4) var(--spacing-3);
+  text-align: left;
   background-attachment: fixed;
   background-position: center;
-  background-repeat: no-repeat;
+}
+
+.header > div > p > button {
+  padding: calc( var(--spacing-2) + var(--spacing-1)) var(--spacing-3);
+  font-size: 20px!important;
+  border-radius: var(--radii-default);
 }
 
 .join {
+  background: var(--green)!important;
   margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 510px) {
+  .join {
+    margin-bottom: 10px;
+  }
 }
 
 .title {
   font-size: 3.5em;
-  max-width: 800px;
 }

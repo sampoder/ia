@@ -1,11 +1,7 @@
 import { GetServerSideProps } from "next";
 import Nav from "../components/nav";
 import { User as UserType } from "@prisma/client";
-import { useState } from "react";
-
-type HTMLElementEvent<T extends HTMLElement> = Event & {
-  value: T;
-};
+import Link from "next/link";
 
 export default function EventNew(props: { user: UserType | undefined }) {
   return (
@@ -32,8 +28,18 @@ export default function EventNew(props: { user: UserType | undefined }) {
             .
           </small>
           <button>Save</button>
+          <Link href="/api/logout">
+            <button type="button" className="logout">Logout</button>
+          </Link>
         </form>
       </div>
+      <style>
+        {
+          `.logout {
+            background: var(--red)
+          }`
+        }
+      </style>
     </>
   );
 }
