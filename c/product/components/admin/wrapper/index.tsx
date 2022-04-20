@@ -40,7 +40,7 @@ export default function AdminWrapper(props: {
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/tab`}>
+                <Link href={`/event/${props.slug}/admin/tab/configuration`}>
                   Tab Management
                 </Link>
               </div>
@@ -54,52 +54,22 @@ export default function AdminWrapper(props: {
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/attendees`}>
-                  Draw Rules
+                <Link href={`/event/${props.slug}/admin/tab/configuration`}>
+                  Configuration
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/attendees`}>
-                  Debate Rules
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/email`}>
-                  Scoring Rules
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/email`}>
-                  Standings
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/email`}>
+                <Link href={`/event/${props.slug}/admin/tab/motions`}>
                   Motions
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/team`}>
-                  Tab Release
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/team`}>
-                  Data Entry
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/team`}>
-                  Notifications
-                </Link>
-              </div>
-              <div>
-                <Link href={`/event/${props.slug}/admin/team`}>
+                <Link href={`/event/${props.slug}/admin/tab/adjudicators`}>
                   Adjudicators
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/team`}>
+                <Link href={`/event/${props.slug}/admin/tab/rooms`}>
                   Rooms
                 </Link>
               </div>

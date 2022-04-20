@@ -144,7 +144,7 @@ export default function Event(props: {
               >
                 Your Other Team Members' Emails:{" "}
               </small>
-              {[...Array(3)].map(
+              {[...Array(props.tournament.amountPerTeam)].map(
                 (_, index) =>
                   index != 0 && (
                     <input

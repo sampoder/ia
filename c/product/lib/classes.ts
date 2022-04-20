@@ -178,7 +178,7 @@ export class Token {
 
 <p>debate.sh</p>
       `, // plain text body
-    })
+    });
   }
   constructor(id?: string, userEmail?: string) {
     this.id = id || undefined;
@@ -206,6 +206,13 @@ export class Tournament {
   organiserIDs?: string[];
   online?: boolean;
   id?: string;
+  amountPerTeam?: number;
+  supportingSideLabel?: string;
+  opposingSideLabel?: string;
+  minSpeakerScore?: number;
+  maxSpeakerScore?: number;
+  speakerScoreStep?: number;
+  missableSpeeches?: number;
   async addToDB() {
     if (
       this.name &&
@@ -339,6 +346,12 @@ export class Tournament {
           organisedBy: this.organisedBy,
           managerEmail: this.managerEmail,
           format: this.format,
+          amountPerTeam: this.amountPerTeam,
+          supportingSideLabel: this.supportingSideLabel,
+          opposingSideLabel: this.opposingSideLabel,
+          minSpeakerScore: this.minSpeakerScore,
+          maxSpeakerScore: this.maxSpeakerScore,
+          speakerScoreStep: this.speakerScoreStep,
         },
         include: {
           organisers: true,
@@ -369,6 +382,24 @@ export class Tournament {
         : undefined;
       this.managerEmail = this.dbItem.managerEmail
         ? this.dbItem.managerEmail
+        : undefined;
+      this.amountPerTeam = this.dbItem.amountPerTeam
+        ? this.dbItem.amountPerTeam
+        : undefined;
+      this.supportingSideLabel = this.dbItem.supportingSideLabel
+        ? this.dbItem.supportingSideLabel
+        : undefined;
+      this.opposingSideLabel = this.dbItem.opposingSideLabel
+        ? this.dbItem.opposingSideLabel
+        : undefined;
+      this.minSpeakerScore = this.dbItem.minSpeakerScore
+        ? this.dbItem.minSpeakerScore
+        : undefined;
+      this.maxSpeakerScore = this.dbItem.maxSpeakerScore
+        ? this.dbItem.maxSpeakerScore
+        : undefined;
+      this.speakerScoreStep = this.dbItem.speakerScoreStep
+        ? this.dbItem.speakerScoreStep
         : undefined;
       this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
       this.startingDate = this.dbItem.startingDate;
@@ -422,10 +453,29 @@ export class Tournament {
         this.startingDate = this.dbItem?.startingDate;
         this.endingDate = this.dbItem?.endingDate;
         this.online = this.dbItem?.online;
+        this.amountPerTeam = dbItem.amountPerTeam
+          ? dbItem.amountPerTeam
+          : undefined;
+        this.supportingSideLabel = dbItem.supportingSideLabel
+          ? dbItem.supportingSideLabel
+          : undefined;
+        this.opposingSideLabel = dbItem.opposingSideLabel
+          ? dbItem.opposingSideLabel
+          : undefined;
+        this.minSpeakerScore = dbItem.minSpeakerScore
+          ? dbItem.minSpeakerScore
+          : undefined;
+        this.maxSpeakerScore = dbItem.maxSpeakerScore
+          ? dbItem.maxSpeakerScore
+          : undefined;
+        this.speakerScoreStep = dbItem.speakerScoreStep
+          ? dbItem.speakerScoreStep
+          : undefined;
         this.id = this.dbItem?.id ? this.dbItem?.id : undefined;
         this.organiserIDs = dbItem?.organisers.map((x) => x.organiserId);
       }
-    } else console.error("TOURNAMENT: Could not load from DB due to missing id.");
+    } else
+      console.error("TOURNAMENT: Could not load from DB due to missing id.");
   }
   constructor(
     id?: string,

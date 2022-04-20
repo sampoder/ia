@@ -122,36 +122,42 @@ model Team {
 }
 
 model Tournament {
-  id                 String                            @id @default(cuid())
-  organisers         OrganiserTournamentRelationship[]
-  participatingTeams Team[]
-  name               String
-  slug               String                            @unique
-  description        String?                           @default("More information coming soon!")
-  hostRegion         String?
-  longDesc           String?
-  avatar             String                            @default("https://www.gravatar.com/avatar/3a794f7bbeb6e5d4287debf1454ebcf5?d=identicon&r=pg")
-  cover              String?
-  startingDate       DateTime
-  endingDate         DateTime
-  online             Boolean
-  amountPerTeam      Int                               @default(3)
-  venueAddress       String?
-  prizeValue         String?
-  eligibility        String?
-  organisedBy        String?
-  format             String?
-  managerEmail       String?
-  joinURL            String?
-  timezone           String?
-  price              Int                               @default(0)
-  priceISOCode       String                            @default("SGD")
-  emailsSent         Email[]
-  rounds             DebateRound[]
-  adjudicators       Adjudicator[]
-  rooms              Room[]
-  breaks             Break[]
-  stripeAccount      StripeAccount?
+  id                  String                            @id @default(cuid())
+  organisers          OrganiserTournamentRelationship[]
+  participatingTeams  Team[]
+  name                String
+  slug                String                            @unique
+  description         String?                           @default("More information coming soon!")
+  hostRegion          String?
+  longDesc            String?
+  avatar              String                            @default("https://www.gravatar.com/avatar/3a794f7bbeb6e5d4287debf1454ebcf5?d=identicon&r=pg")
+  cover               String?
+  startingDate        DateTime
+  endingDate          DateTime
+  online              Boolean
+  amountPerTeam       Int                               @default(3)
+  supportingSideLabel String                            @default("Proposition")
+  opposingSideLabel   String                            @default("Opposition")
+  minSpeakerScore     Float                             @default(0)
+  maxSpeakerScore     Float                             @default(100)
+  speakerScoreStep    Float                             @default(1)
+  missableSpeeches    Float @default(1)
+  venueAddress        String?
+  prizeValue          String?
+  eligibility         String?
+  organisedBy         String?
+  format              String?
+  managerEmail        String?
+  joinURL             String?
+  timezone            String?
+  price               Int                               @default(0)
+  priceISOCode        String                            @default("SGD")
+  emailsSent          Email[]
+  rounds              DebateRound[]
+  adjudicators        Adjudicator[]
+  rooms               Room[]
+  breaks              Break[]
+  stripeAccount       StripeAccount?
 }
 
 model Email {

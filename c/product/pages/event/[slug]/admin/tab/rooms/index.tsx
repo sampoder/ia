@@ -5,9 +5,9 @@ import {
   Team as TeamType,
   UserTeamRelationship,
 } from "@prisma/client";
-import { getAdminProps } from "../../../../../lib/methods/load-admin-props";
-import Nav from "../../../../../components/nav";
-import Wrapper from "../../../../../components/admin/wrapper";
+import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
+import Nav from "../../../../../../components/nav";
+import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
@@ -44,7 +44,24 @@ export default function AdminTeam(props: {
     <>
       <Nav user={props.user} />
       <Wrapper tab={true} slug={props.tournament?.slug} name={props.tournament?.name}>
-       <></>
+        <>
+          <div>
+            <h1 className="adminHeader">Rooms</h1>
+            {props.teams.map((team) => (
+              <Team team={team} tournament={props.tournament} />
+            ))}
+          </div>
+          <div className={styles.form}>
+            <form
+              action={`/api/event/${props.tournament?.slug}/register?organiser=true`}
+              method="POST"
+              className="flexFormWrapper"
+            >
+              <input name="name" placeholder="Label" />
+              <button>Add Room</button>
+            </form>
+          </div>
+        </>
       </Wrapper>
     </>
   );
