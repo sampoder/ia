@@ -15,7 +15,7 @@ export default function AdminWrapper(props: {
         <div className={styles.navigation}>
           <b>{props.name}</b>
           <h3 className={styles.adminTitle}>
-            {!tab ? "Admin Dashboard" : "Tab Management"}
+            {!tab ? "Admin Dashboard" : "Tab Configuration"}
           </h3>
           {!tab && (
             <div className={styles.links}>
@@ -41,7 +41,7 @@ export default function AdminWrapper(props: {
               </div>
               <div>
                 <Link href={`/event/${props.slug}/admin/tab/configuration`}>
-                  Tab Management
+                  Tab Configuration
                 </Link>
               </div>
             </div>
@@ -55,7 +55,7 @@ export default function AdminWrapper(props: {
               </div>
               <div>
                 <Link href={`/event/${props.slug}/admin/tab/configuration`}>
-                  Configuration
+                  General
                 </Link>
               </div>
               <div>

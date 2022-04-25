@@ -50,9 +50,9 @@ RANK_TEAMS(TEAMS):
         maxIndex = X
       else if TEAMS[N]["DRAW_STRENGTH"] > TEAMS[X]["DRAW_STRENGTH"]:
         maxIndex = X
-    int TEMP = TEAMS[maxIndex]
+    TEMP = TEAMS[maxIndex]
     TEAMS[maxIndex] = TEAMS[N]
-    TEAMS[N] = TEAMS[maxIndex]
+    TEAMS[N] = TEMP
   return TEAMS
 ```
 

@@ -4,6 +4,7 @@ import {
   Token as TokenType,
   Tournament as TournamentType,
   Team as TeamType,
+  DebateRound as DebateRoundType,
   StripeAccount,
 } from "@prisma/client";
 import mail from "./methods/mail";
@@ -213,6 +214,7 @@ export class Tournament {
   maxSpeakerScore?: number;
   speakerScoreStep?: number;
   missableSpeeches?: number;
+  rounds?: DebateRoundType[];
   async addToDB() {
     if (
       this.name &&
@@ -247,6 +249,7 @@ export class Tournament {
         },
         include: {
           organisers: true,
+          rounds: true
         },
       });
 
@@ -277,6 +280,7 @@ export class Tournament {
       this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
       this.id = this.dbItem.id;
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
+      this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
   async addOrganiser(id: string) {
@@ -355,10 +359,11 @@ export class Tournament {
         },
         include: {
           organisers: true,
+          rounds: true
         },
       });
-
       this.dbItem = dbItem;
+      this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
       this.format = this.dbItem.format ? this.dbItem.format : undefined;
       this.hostRegion = this.dbItem.hostRegion
         ? this.dbItem.hostRegion
@@ -409,20 +414,38 @@ export class Tournament {
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
+  async addRound(){
+    if(this.id){
+      await prisma.debateRound.create({
+        data: {
+          tournamentId: this.id 
+        }
+      })
+      await this.loadFromDB()
+    }
+  }
+  async deleteRound(id: string){
+    await prisma.debateRound.delete({
+      where: {
+        id
+      }
+    })
+  }
   async loadFromDB(include?: TournamentInclude) {
     if (this.id || this.slug) {
       let dbItem = await prisma.tournament.findUnique({
-        where: {
-          id: this.id,
-          slug: this.slug,
-        },
+        where: this.id ? {
+          id: this.id
+        } : {slug: this.slug},
         include: {
           organisers: true,
+          rounds: true,
           ...include,
         },
       });
       this.dbItem = dbItem;
       if (dbItem) {
+        this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
         this.name = dbItem.name;
         this.slug = dbItem.slug;
         this.format = dbItem.format ? dbItem.format : undefined;

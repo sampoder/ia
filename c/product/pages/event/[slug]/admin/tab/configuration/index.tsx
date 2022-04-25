@@ -84,6 +84,14 @@ export default function AdminTeam(props: {
                 defaultValue={props.tournament.missableSpeeches}
                 type="number"
               />
+              <small className={styles.emailsLabel}>
+                Amount of Rounds
+              </small>
+              <input
+                name={`rounds` /*@ts-ignore*/}
+                defaultValue={props.tournament.rounds.length /*@ts-ignore*/}
+                type="number"
+              />
               <button>Update Tab</button>
             </form>
         </>

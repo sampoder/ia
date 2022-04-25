@@ -50,6 +50,16 @@ model TeamRoundAvailabilityRelationship {
   team    Team        @relation(fields: [teamId], references: [id])
 }
 
+model AdjudicatorRoundAvailabilityRelationship {
+  id            String      @id @default(cuid())
+  roundId       String      @unique
+  adjudicatorId String      @unique
+  round         DebateRound @relation(fields: [roundId], references: [id])
+  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
+  Team          Team?       @relation(fields: [teamId], references: [id])
+  teamId        String?
+}
+
 model AdjudicatorTeamConflictsRelationship {
   id            String      @id @default(cuid())
   adjudicatorId String      @unique
@@ -81,6 +91,7 @@ model Adjudicator {
   tournamentId               String
   tournament                 Tournament                                    @relation(fields: [tournamentId], references: [id])
   debates                    AdjudicatorDebateRelationship[]
+  availableForRounds         AdjudicatorRoundAvailabilityRelationship[]
   priority                   Float
   conflictedWithTeams        AdjudicatorTeamConflictsRelationship[]
   conflictedWithInstitutions AdjudicatorInstitutionConflictsRelationship[]
@@ -103,22 +114,23 @@ model OrganiserTournamentRelationship {
 }
 
 model Team {
-  id                         String                                 @id @default(cuid())
-  name                       String
-  members                    UserTeamRelationship[]
-  tournamentId               String
-  paymentSessionID           String?
-  paid                       Boolean                                @default(true)
-  tournament                 Tournament                             @relation(fields: [tournamentId], references: [id])
-  checkedIn                  Boolean                                @default(false)
-  conflictedWithAdjudicators AdjudicatorTeamConflictsRelationship[]
-  conflictedWithInstitutions TeamInstitutionConflictsRelationship[]
-  availableForRounds         TeamRoundAvailabilityRelationship[]
-  breakId                    String?
-  break                      Break?                                 @relation(fields: [breakId], references: [id])
-  stillInBreak               Boolean?
-  propositionDebates         Debate[]                               @relation("proposition")
-  oppositionDebates          Debate[]                               @relation("opposition")
+  id                                       String                                     @id @default(cuid())
+  name                                     String
+  members                                  UserTeamRelationship[]
+  tournamentId                             String
+  paymentSessionID                         String?
+  paid                                     Boolean                                    @default(true)
+  tournament                               Tournament                                 @relation(fields: [tournamentId], references: [id])
+  checkedIn                                Boolean                                    @default(false)
+  conflictedWithAdjudicators               AdjudicatorTeamConflictsRelationship[]
+  conflictedWithInstitutions               TeamInstitutionConflictsRelationship[]
+  availableForRounds                       TeamRoundAvailabilityRelationship[]
+  breakId                                  String?
+  break                                    Break?                                     @relation(fields: [breakId], references: [id])
+  stillInBreak                             Boolean?
+  propositionDebates                       Debate[]                                   @relation("proposition")
+  oppositionDebates                        Debate[]                                   @relation("opposition")
+  AdjudicatorRoundAvailabilityRelationship AdjudicatorRoundAvailabilityRelationship[]
 }
 
 model Tournament {
@@ -141,7 +153,7 @@ model Tournament {
   minSpeakerScore     Float                             @default(0)
   maxSpeakerScore     Float                             @default(100)
   speakerScoreStep    Float                             @default(1)
-  missableSpeeches    Float @default(1)
+  missableSpeeches    Float                             @default(1)
   venueAddress        String?
   prizeValue          String?
   eligibility         String?
@@ -172,14 +184,17 @@ model Email {
 }
 
 model DebateRound {
-  id             String                              @id @default(cuid())
-  tournamentId   String
-  tournament     Tournament                          @relation(fields: [tournamentId], references: [id])
-  debates        Debate[]
-  availableRooms RoomRoundRelationship[]
-  availableTeams TeamRoundAvailabilityRelationship[]
-  breakRound     Boolean                             @default(false)
-  motions        Motion[]
+  id                    String                                     @id @default(cuid())
+  sequence              Int                                        @default(autoincrement())
+  tournamentId          String
+  tournament            Tournament                                 @relation(fields: [tournamentId], references: [id])
+  debates               Debate[]
+  availableRooms        RoomRoundRelationship[]
+  availableTeams        TeamRoundAvailabilityRelationship[]
+  availableAdjudicators AdjudicatorRoundAvailabilityRelationship[]
+  breakRound            Boolean                                    @default(false)
+  motion                String                                     @default("")
+  complete              Boolean                                    @default(false)
 }
 
 model Debate {
@@ -194,6 +209,7 @@ model Debate {
   oppositionId  String?
   opposition    Team?                           @relation("opposition", fields: [oppositionId], references: [id])
   breakDebate   BreakDebate?
+  carried       Boolean?
 }
 
 model Score {
@@ -246,7 +262,6 @@ model Break {
   tournament    Tournament    @relation(fields: [tournamentId], references: [id])
   breakingTeams Team[]
   debates       BreakDebate[]
-  motions       Motion[]
 }
 
 model BreakDebate {
@@ -258,15 +273,6 @@ model BreakDebate {
   debate         Debate       @relation(fields: [debateId], references: [id])
   breakId        String
   break          Break        @relation(fields: [breakId], references: [id])
-}
-
-model Motion {
-  id      String      @id @default(cuid())
-  roundId String      @unique
-  round   DebateRound @relation(fields: [roundId], references: [id])
-  breakId String?     @unique
-  break   Break?      @relation(fields: [breakId], references: [id])
-  motion  String
 }
 
 model Token {

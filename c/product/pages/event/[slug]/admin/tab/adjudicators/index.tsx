@@ -4,6 +4,7 @@ import {
   Tournament as TournamentType,
   Team as TeamType,
   UserTeamRelationship,
+  Adjudicator as AdjudicatorType,
 } from "@prisma/client";
 import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../../components/nav";
@@ -11,24 +12,31 @@ import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
-function Team(props: {
-  team: TeamType & { members: (UserTeamRelationship & { user: UserType })[] };
+function Adjudicator(props: {
   tournament: TournamentType;
+  adjudicator: AdjudicatorType;
+  user: UserType;
 }) {
   return (
-    <details className={styles.team}>
-      <summary>{props.team.name}</summary>
-      <ul>
-        {props.team.members.map((member) => (
-          <li>
-            {member.user.firstName} {member.user.lastName}: {member.user.email}
-          </li>
-        ))}
-      </ul>
-      <Link href={`/api/event/${props.tournament.slug}/${props.team.id}/deregister`}>
-        Remove From Tournament
-      </Link>
-    </details>
+    <div className={styles.adjudicator}>
+      <img
+        src={props.user.avatarURL || ""}
+        className={styles.adjudicatorAvatar}
+      />
+      <div className={styles.adjudicatorKeyInfo}>
+        <h3>
+          {props.user.firstName} {props.user.lastName}
+        </h3>
+        <span>{props.user.email}</span>
+      </div>
+      <div className={styles.removeWrapper}>
+        <Link
+          href={`/api/event/${props.tournament?.slug}/admin/tab/adjudicators/remove/${props.adjudicator.id}`}
+        >
+          <span className={styles.plus}>+</span>
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -43,21 +51,32 @@ export default function AdminTeam(props: {
   return (
     <>
       <Nav user={props.user} />
-      <Wrapper tab={true} slug={props.tournament?.slug} name={props.tournament?.name}>
+      <Wrapper
+        tab={true}
+        slug={props.tournament?.slug}
+        name={props.tournament?.name}
+      >
         <>
           <div>
             <h1 className="adminHeader">Adjudicators</h1>
-            {props.teams.map((team) => (
-              <Team team={team} tournament={props.tournament} />
-            ))}
+            {
+              //@ts-ignore
+              props.tournament.adjudicators.map((adjudicator) => (
+                <Adjudicator
+                  user={adjudicator.user}
+                  adjudicator={adjudicator}
+                  tournament={props.tournament}
+                />
+              ))
+            }
           </div>
           <div className={styles.form}>
             <form
-              action={`/api/event/${props.tournament?.slug}/register?organiser=true`}
+              action={`/api/event/${props.tournament?.slug}/admin/tab/adjudicators/add`}
               method="POST"
               className="flexFormWrapper"
             >
-              <input name="name" placeholder="Email" />
+              <input name="email" placeholder="Email" />
               <button>Add An Adjudicator</button>
             </form>
           </div>

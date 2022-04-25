@@ -8,7 +8,6 @@ export default async function handler(
   try {
     let { slug } = req.query;
     let token = new Token(slug.toString());
-    console.log("hi!")
     await token.loadFromDB();
     if (token.checkValid()) {
       res.setHeader("set-cookie", `auth=${token.id}; Max-Age=604800; Path=/`);

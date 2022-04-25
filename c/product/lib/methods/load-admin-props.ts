@@ -9,6 +9,11 @@ export const getAdminProps: GetServerSideProps = async (context) => {
   const { res } = context;
   let tournament = await fetchTournament(context.params?.slug, {
     stripeAccount: true,
+    rounds: true,
+    rooms: true,
+    adjudicators: {
+       include: { user: true } 
+    }
   }); //@ts-ignore
   tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
   if (tournament.organiserIDs == null || user.id == null) {

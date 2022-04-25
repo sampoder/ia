@@ -1,0 +1,2 @@
+- u are a user
+- visit the page and you will get redirected to your private url
