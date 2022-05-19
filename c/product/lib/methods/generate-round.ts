@@ -28,9 +28,9 @@ type DebateRoundWithIncludes = DebateRound & {
     team: TeamWithDebate;
   })[];
   availableRooms: (RoomRoundRelationship & {
-    room: Room
+    room: Room 
   })[]
-  adjudicators: (AdjudicatorRoundAvailabilityRelationship & {
+  availableAdjudicators: (AdjudicatorRoundAvailabilityRelationship & {
     adjudicator: Adjudicator
   })[]
 };
@@ -45,6 +45,7 @@ function calculateWins(team: TeamWithDebate) {
 }
 
 function rankTeams(teams: TeamWithDebate[]) {
+  console.log(teams)
   let rankedTeams = teams.map((team) => ({
     ...team,
     debates: team.propositionDebates.concat(team.oppositionDebates),
@@ -85,13 +86,14 @@ function rankTeams(teams: TeamWithDebate[]) {
   return rankedTeams;
 }
 
-function generateRound(round: DebateRoundWithIncludes) {
+export function generateRound(round: DebateRoundWithIncludes) {
   let teams = rankTeams(round.availableTeams.map((x) => x.team));
   let pairs = [];
+  console.log(round.availableTeams.length)
   if(round.availableRooms.length < (round.availableTeams.length / 2)){
     return { error: "Too little rooms available for round."}
   }
-  if(round.adjudicators.length < (round.availableTeams.length / 2)){
+  if(round.availableAdjudicators.length < (round.availableTeams.length / 2)){
     return { error: "Too little adjudicators available for round."}
   }
   for (let x = 0; x / 2 < teams.length; x++) {
@@ -100,7 +102,7 @@ function generateRound(round: DebateRoundWithIncludes) {
         proposition: teams[x * 2], 
         opposition: teams[x * 2 + 1],
         room: round.availableRooms[x].room,
-        adjudicator: round.adjudicators[x].adjudicator
+        adjudicator: round.availableAdjudicators[x].adjudicator
       });
     }
     else {
@@ -108,7 +110,7 @@ function generateRound(round: DebateRoundWithIncludes) {
         proposition: teams[x * 2 + 1], 
         opposition: teams[x * 2],
         room: round.availableRooms[x].room,
-        adjudicator: round.adjudicators[x].adjudicator
+        adjudicator: round.availableAdjudicators[x].adjudicator
       });
     }
   }

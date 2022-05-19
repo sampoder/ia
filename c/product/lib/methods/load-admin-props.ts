@@ -10,7 +10,9 @@ export const getAdminProps: GetServerSideProps = async (context) => {
   let tournament = await fetchTournament(context.params?.slug, {
     stripeAccount: true,
     rounds: true,
-    rooms: true,
+    rooms: {
+      include: { availableFor: true } 
+   },
     adjudicators: {
        include: { user: true } 
     }

@@ -11,7 +11,7 @@ import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
-export default function AdminTeam(props: {
+export default function TabConfiguration(props: {
   user: UserType | undefined;
   tournament: TournamentType;
   organisers: UserType[];

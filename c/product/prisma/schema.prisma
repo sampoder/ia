@@ -44,16 +44,16 @@ model UserTeamRelationship {
 
 model TeamRoundAvailabilityRelationship {
   id      String      @id @default(cuid())
-  roundId String      @unique
-  teamId  String      @unique
+  roundId String      
+  teamId  String      
   round   DebateRound @relation(fields: [roundId], references: [id])
   team    Team        @relation(fields: [teamId], references: [id])
 }
 
 model AdjudicatorRoundAvailabilityRelationship {
   id            String      @id @default(cuid())
-  roundId       String      @unique
-  adjudicatorId String      @unique
+  roundId       String      
+  adjudicatorId String      
   round         DebateRound @relation(fields: [roundId], references: [id])
   adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
   Team          Team?       @relation(fields: [teamId], references: [id])
@@ -232,8 +232,8 @@ model ReplyScore {
 
 model RoomRoundRelationship {
   id      String      @id @default(cuid())
-  roomId  String      @unique
-  roundId String      @unique
+  roomId  String      
+  roundId String      
   room    Room        @relation(fields: [roomId], references: [id])
   round   DebateRound @relation(fields: [roundId], references: [id])
 }

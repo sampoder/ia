@@ -40,7 +40,7 @@ function Adjudicator(props: {
   );
 }
 
-export default function AdminTeam(props: {
+export default function TabAdjudicators(props: {
   user: UserType | undefined;
   tournament: TournamentType;
   organisers: UserType[];

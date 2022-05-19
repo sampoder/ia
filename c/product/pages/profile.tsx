@@ -3,7 +3,7 @@ import Nav from "../components/nav";
 import { User as UserType } from "@prisma/client";
 import Link from "next/link";
 
-export default function EventNew(props: { user: UserType | undefined }) {
+export default function Profile(props: { user: UserType | undefined }) {
   return (
     <>
       <Nav user={props.user} />

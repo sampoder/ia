@@ -188,7 +188,10 @@ export class Token {
 }
 
 export class Tournament {
-  dbItem?: TournamentType | TournamentTypeWithStripeAccount | null;
+  dbItem?:
+    | (TournamentType & { rounds: DebateRoundType[] })
+    | (TournamentTypeWithStripeAccount & { rounds: DebateRoundType[] })
+    | null;
   name?: string;
   slug?: string;
   description?: string;
@@ -249,7 +252,7 @@ export class Tournament {
         },
         include: {
           organisers: true,
-          rounds: true
+          rounds: true,
         },
       });
 
@@ -280,7 +283,9 @@ export class Tournament {
       this.cover = this.dbItem?.cover ? this.dbItem.cover : undefined;
       this.id = this.dbItem.id;
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
-      this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
+      this.rounds = dbItem.rounds.sort((a, b) =>
+        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+      );
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
   async addOrganiser(id: string) {
@@ -359,11 +364,13 @@ export class Tournament {
         },
         include: {
           organisers: true,
-          rounds: true
+          rounds: true,
         },
       });
       this.dbItem = dbItem;
-      this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
+      this.rounds = dbItem.rounds.sort((a, b) =>
+        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+      );
       this.format = this.dbItem.format ? this.dbItem.format : undefined;
       this.hostRegion = this.dbItem.hostRegion
         ? this.dbItem.hostRegion
@@ -414,29 +421,31 @@ export class Tournament {
       this.organiserIDs = dbItem.organisers.map((x) => x.organiserId);
     } else console.error("TOKEN: Could not add to DB due to missing fields.");
   }
-  async addRound(){
-    if(this.id){
+  async addRound() {
+    if (this.id) {
       await prisma.debateRound.create({
         data: {
-          tournamentId: this.id 
-        }
-      })
-      await this.loadFromDB()
+          tournamentId: this.id,
+        },
+      });
+      await this.loadFromDB();
     }
   }
-  async deleteRound(id: string){
+  async deleteRound(id: string) {
     await prisma.debateRound.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
   async loadFromDB(include?: TournamentInclude) {
     if (this.id || this.slug) {
       let dbItem = await prisma.tournament.findUnique({
-        where: this.id ? {
-          id: this.id
-        } : {slug: this.slug},
+        where: this.id
+          ? {
+              id: this.id,
+            }
+          : { slug: this.slug },
         include: {
           organisers: true,
           rounds: true,
@@ -445,7 +454,9 @@ export class Tournament {
       });
       this.dbItem = dbItem;
       if (dbItem) {
-        this.rounds = dbItem.rounds.sort((a,b) => (a.sequence > b.sequence) ? 1 : ((b.sequence > a.sequence) ? -1 : 0));
+        this.rounds = dbItem.rounds.sort((a, b) =>
+          a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+        );
         this.name = dbItem.name;
         this.slug = dbItem.slug;
         this.format = dbItem.format ? dbItem.format : undefined;

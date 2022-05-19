@@ -32,7 +32,7 @@ function Team(props: {
   );
 }
 
-export default function AdminTeam(props: {
+export default function AdminAttendees(props: {
   user: UserType | undefined;
   tournament: TournamentType;
   organisers: UserType[];
