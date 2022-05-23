@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next";
-import Nav from "../../../../../../../components/nav";
-import { getAdminProps } from "../../../../../../../lib/methods/load-admin-props";
+import Nav from "../../../../../../components/nav";
 import styles from "./styles.module.css";
 import {
   User as UserType,
@@ -66,4 +65,6 @@ export default function Availability(props: {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = getAdminProps;
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} }
+};

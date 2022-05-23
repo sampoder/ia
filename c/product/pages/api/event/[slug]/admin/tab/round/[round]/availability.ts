@@ -55,6 +55,26 @@ export default async function handler(
       });
     }
   }
+  await prisma.teamRoundAvailabilityRelationship.deleteMany({
+    where: {
+      roundId: req.query.round.toString()
+    }
+  })
+  await prisma.adjudicatorRoundAvailabilityRelationship.deleteMany({
+    where: {
+      roundId: req.query.round.toString()
+    }
+  })
+  await prisma.roomRoundRelationship.deleteMany({
+    where: {
+      roundId: req.query.round.toString()
+    }
+  })
+  await prisma.debate.deleteMany({
+    where: {
+      debateRoundId: req.query.round.toString()
+    }
+  })
   await prisma.teamRoundAvailabilityRelationship.createMany({
     data: availableTeams,
     skipDuplicates: true,
@@ -97,9 +117,14 @@ export default async function handler(
   if(round == null){
     res.send("Invalid ID")
   }
+  await prisma.roomRoundRelationship.deleteMany({
+    where: {
+      roundId: req.query.round.toString()
+    }
+  })
   // @ts-ignore
   let pairings = generateRound(round)
-  if(pairings.error != undefined){
+  if(pairings?.error != undefined){
     res.send(pairings.error)
   }
   for(let index in pairings){
@@ -111,6 +136,7 @@ export default async function handler(
         debateRoundId: round.id,
       }
     })
+    console.log(debate)
     await prisma.adjudicatorDebateRelationship.create({
       data: {
         adjudicatorId: pair.adjudicator.id,
@@ -118,5 +144,5 @@ export default async function handler(
       }
     })
   }
-  res.json(Object.keys(req.body));
+  res.json(pairings);
 }

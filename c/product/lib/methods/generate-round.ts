@@ -89,14 +89,15 @@ function rankTeams(teams: TeamWithDebate[]) {
 export function generateRound(round: DebateRoundWithIncludes) {
   let teams = rankTeams(round.availableTeams.map((x) => x.team));
   let pairs = [];
-  console.log(round.availableTeams.length)
+  console.log(round.availableTeams)
   if(round.availableRooms.length < (round.availableTeams.length / 2)){
     return { error: "Too little rooms available for round."}
   }
   if(round.availableAdjudicators.length < (round.availableTeams.length / 2)){
     return { error: "Too little adjudicators available for round."}
   }
-  for (let x = 0; x / 2 < teams.length; x++) {
+  for (let x = 0; x < round.availableTeams.length / 2; x++) {
+    console.log(x)
     if(Math.random() > 0.5){
       pairs.push({
         proposition: teams[x * 2], 

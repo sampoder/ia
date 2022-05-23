@@ -102,7 +102,7 @@ model AdjudicatorDebateRelationship {
   adjudicatorId String
   adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
   debateId      String
-  debate        Debate      @relation(fields: [debateId], references: [id])
+  debate        Debate      @relation(fields: [debateId], references: [id], onDelete: Cascade)
 }
 
 model OrganiserTournamentRelationship {
