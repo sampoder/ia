@@ -136,10 +136,15 @@ export default async function handler(
         debateRoundId: round.id,
       }
     })
-    console.log(debate)
     await prisma.adjudicatorDebateRelationship.create({
       data: {
         adjudicatorId: pair.adjudicator.id,
+        debateId: debate.id
+      }
+    })
+    await prisma.roomDebateRelationship.create({
+      data: {
+        roomId: pair.room.id,
         debateId: debate.id
       }
     })

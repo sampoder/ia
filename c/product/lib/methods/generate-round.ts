@@ -44,13 +44,36 @@ function calculateWins(team: TeamWithDebate) {
   );
 }
 
-function rankTeams(teams: TeamWithDebate[]) {
-  console.log(teams)
+function calculateSpeakerPoints(team: TeamWithDebate) {
+  let speakerPoints = 0
+  team.propositionDebates.map(debate => {
+    debate.scores.map(score => {
+      speakerPoints += score.score
+    })
+  })
+  team.oppositionDebates.map(debate => {
+    debate.scores.map(score => {
+      speakerPoints += score.score
+    })
+  })
+  return speakerPoints
+}
+
+export function rankSpeakers(debates: DebateWithScores[]) {
+  let speakers = {}
+  debates.map(debate => {
+    debate.scores.map(score => {
+      
+    })
+  })
+}
+
+export function rankTeams(teams: TeamWithDebate[]) {
   let rankedTeams = teams.map((team) => ({
     ...team,
     debates: team.propositionDebates.concat(team.oppositionDebates),
     wins: calculateWins(team),
-    speakerPoints: 0,
+    speakerPoints: calculateSpeakerPoints(team),
     drawStrength: 0,
   }));
   for (let teamIndex in rankedTeams) {
@@ -89,7 +112,6 @@ function rankTeams(teams: TeamWithDebate[]) {
 export function generateRound(round: DebateRoundWithIncludes) {
   let teams = rankTeams(round.availableTeams.map((x) => x.team));
   let pairs = [];
-  console.log(round.availableTeams)
   if(round.availableRooms.length < (round.availableTeams.length / 2)){
     return { error: "Too little rooms available for round."}
   }
@@ -97,7 +119,6 @@ export function generateRound(round: DebateRoundWithIncludes) {
     return { error: "Too little adjudicators available for round."}
   }
   for (let x = 0; x < round.availableTeams.length / 2; x++) {
-    console.log(x)
     if(Math.random() > 0.5){
       pairs.push({
         proposition: teams[x * 2], 

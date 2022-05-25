@@ -44,16 +44,16 @@ model UserTeamRelationship {
 
 model TeamRoundAvailabilityRelationship {
   id      String      @id @default(cuid())
-  roundId String      
-  teamId  String      
+  roundId String
+  teamId  String
   round   DebateRound @relation(fields: [roundId], references: [id])
   team    Team        @relation(fields: [teamId], references: [id])
 }
 
 model AdjudicatorRoundAvailabilityRelationship {
   id            String      @id @default(cuid())
-  roundId       String      
-  adjudicatorId String      
+  roundId       String
+  adjudicatorId String
   round         DebateRound @relation(fields: [roundId], references: [id])
   adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
   Team          Team?       @relation(fields: [teamId], references: [id])
@@ -203,6 +203,7 @@ model Debate {
   round         DebateRound                     @relation(fields: [debateRoundId], references: [id])
   scores        Score[]
   replyScores   ReplyScore[]
+  room          RoomDebateRelationship?
   adjudicators  AdjudicatorDebateRelationship[]
   propositionId String?
   proposition   Team?                           @relation("proposition", fields: [propositionId], references: [id])
@@ -232,17 +233,26 @@ model ReplyScore {
 
 model RoomRoundRelationship {
   id      String      @id @default(cuid())
-  roomId  String      
-  roundId String      
+  roomId  String
+  roundId String
   room    Room        @relation(fields: [roomId], references: [id])
   round   DebateRound @relation(fields: [roundId], references: [id])
 }
 
+model RoomDebateRelationship {
+  id       String @id @default(cuid())
+  roomId   String
+  debateId String @unique
+  room     Room   @relation(fields: [roomId], references: [id])
+  debate   Debate @relation(fields: [debateId], references: [id])
+}
+
 model Room {
-  id           String                  @id @default(cuid())
+  id           String                   @id @default(cuid())
   availableFor RoomRoundRelationship[]
+  usedFor      RoomDebateRelationship[]
   tournamentId String
-  tournament   Tournament              @relation(fields: [tournamentId], references: [id])
+  tournament   Tournament               @relation(fields: [tournamentId], references: [id])
   label        String
   priority     Float
 }

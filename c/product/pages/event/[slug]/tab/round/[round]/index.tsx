@@ -9,10 +9,16 @@ import {
   DebateRound,
   RoomRoundRelationship,
   Room,
-  Adjudicator
+  Adjudicator,
+  Debate,
+  AdjudicatorDebateRelationship,
+  RoomDebateRelationship,
 } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { prisma } from "../../../../../../lib/prisma";
+import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
+import { rankTeams } from "../../../../../../lib/methods/generate-round";
 
 export default function Availability(props: {
   user: UserType | undefined;
@@ -21,42 +27,72 @@ export default function Availability(props: {
       availableFor: RoomRoundRelationship[];
     })[];
     adjudicators: (Adjudicator & {
-      user: UserType 
-    })[]
+      user: UserType;
+    })[];
     rounds: DebateRound[];
+  };
+  round: DebateRound & {
+    debates: (Debate & {
+      proposition: TeamType;
+      opposition: TeamType;
+      room: RoomDebateRelationship & {
+        room: Room;
+      };
+      adjudicators: (AdjudicatorDebateRelationship & {
+        adjudicator: Adjudicator & {
+          user: UserType;
+        };
+      })[];
+    })[];
   };
   organisers: UserType[];
   teams: (TeamType & {
     members: (UserTeamRelationship & { user: UserType })[];
   })[];
 }) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <>
       <Nav user={props.user} />
-      <form className={styles.holder} action={`/api/event/${props.tournament.slug}/admin/tab/round/${router.query.round}/availability`} method="POST">
+      <form
+        className={styles.holder}
+        action={`/api/event/${props.tournament.slug}/admin/tab/round/${router.query.round}/availability`}
+        method="POST"
+      >
         <div className={styles.adminBar}>
-          <h2>Availability (Generate New Round)</h2>
+          <Link
+            href={`/event/wtp-2/tab/round/${
+              //@ts-ignore
+              props.tournament?.rounds
+                .sort((a, b) =>
+                  a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+                )
+                .filter((round) => !round.completed)[0].id
+            }/availability`}
+          >
+            <button>Generate Next Round</button>
+          </Link>
+          <button>Scoring Status</button>
         </div>
-        <h3>Teams</h3>
-        {props.teams.map((team) => (
+        <div className={styles.bar}>
+          <button>Draw</button>
+          <button>Team Standings</button>
+          <button>Speaker Standings</button>
+        </div>
+        <h3>Draw</h3>
+        {props.round.debates.map((debate) => (
           <div className={styles.bar}>
-            <input type="checkbox" name={`team-${team.id}`} />
-            {team.name}
+            {debate.proposition.name} vs {debate.opposition.name} (Adjudicated
+            by {" "}
+            {debate.adjudicators[0].adjudicator.user.firstName}{" "}
+            {debate.adjudicators[0].adjudicator.user.lastName} in{" "}
+            <i>{debate.room.room.label}</i>)
           </div>
         ))}
-        <h3>Rooms</h3>
-        {props.tournament.rooms.map((room) => (
+        <h3>Team Standings</h3>
+        {rankTeams(props.tournament.participatingTeams).map((team, index) => (
           <div className={styles.bar}>
-            <input type="checkbox" name={`room-${room.id}`} />
-            {room.label}
-          </div>
-        ))}
-        <h3>Adjudicators</h3>
-        {props.tournament.adjudicators.map((adjudicator) => (
-          <div className={styles.bar}>
-            <input type="checkbox" name={`adjudicator-${adjudicator.id}`} />
-            {adjudicator.user.firstName} {adjudicator.user.lastName}
+            <b>#{index + 1}</b> {team.name} (Wins: {team.wins}) (Points: {team.speakerPoints}) (Draw Strength: {team.drawStrength})
           </div>
         ))}
         <button>Proceed</button>
@@ -65,6 +101,37 @@ export default function Availability(props: {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  return { props: {} }
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  let ogProps = await getAdminProps(ctx);
+  if (ctx.params?.round == undefined) {
+    return { props: {} };
+  }
+  let round = await prisma.debateRound.findUnique({
+    where: {
+      id: ctx.params.round.toString(),
+    },
+    include: {
+      debates: {
+        include: {
+          proposition: true,
+          opposition: true,
+          adjudicators: {
+            include: {
+              adjudicator: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+          room: {
+            include: {
+              room: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return { props: { round, ...ogProps.props } };
 };

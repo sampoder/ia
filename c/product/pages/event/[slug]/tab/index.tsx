@@ -17,23 +17,25 @@ export default function TabIndex(props: {
           <Link
             href={`/event/wtp-2/tab/round/${
               //@ts-ignore
-              props.tournament?.rounds.sort((a, b) =>
-                a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
-              ).filter(round => !round.completed)[0].id
+              props.tournament?.rounds
+                .sort((a, b) =>
+                  a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+                )
+                .filter((round) => !round.completed)[0].id
             }/availability`}
           >
             <button>Generate Next Round</button>
           </Link>
           <button>Scoring Status</button>
         </div>
-        <div className={styles.blank}>
-          The organising team hasn't generated the first round yet. Check back
-          later!
-        </div>
         <div className={styles.bar}>
           <button>Draw</button>
           <button>Team Standings</button>
           <button>Speaker Standings</button>
+        </div>
+        <div className={styles.blank}>
+          The organising team hasn't generated the next round yet. Check back
+          later!
         </div>
       </div>
     </>
@@ -51,5 +53,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: {} };
   }
   let tournament = await fetchTournament(context?.params?.slug);
+  if (
+    tournament?.rounds
+      .sort((a, b) =>
+        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+      )
+      .filter((round) => !round.completed)[0].debates.length != 0
+  ) {
+    res.setHeader("location", `/event/${context?.params?.slug}/tab/round/${tournament?.rounds
+      .sort((a, b) =>
+        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+      )
+      .filter((round) => !round.completed)[0].id}`);
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
+  }
   return { props: { user, tournament } };
 };

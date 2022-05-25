@@ -448,7 +448,89 @@ export class Tournament {
           : { slug: this.slug },
         include: {
           organisers: true,
-          rounds: true,
+          rounds: {
+            include: {
+              debates: true,
+            },
+          },
+          participatingTeams: {
+            include: {
+              oppositionDebates: {
+                include: {
+                  scores: true,
+                  proposition: {
+                    include: {
+                      oppositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                    },
+                  },
+                  opposition: {
+                    include: {
+                      oppositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              propositionDebates: {
+                include: {
+                  scores: true,
+                  proposition: {
+                    include: {
+                      oppositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                    },
+                  },
+                  opposition: {
+                    include: {
+                      oppositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           ...include,
         },
       });
