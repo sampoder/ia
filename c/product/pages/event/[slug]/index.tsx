@@ -5,6 +5,7 @@ import {
   User as UserType,
   Tournament as TournamentType,
   Team as TeamType,
+  OrganiserTournamentRelationship,
 } from "@prisma/client";
 import Link from "next/link";
 import { compile } from "@mdx-js/mdx";
@@ -95,9 +96,9 @@ export default function Event(props: {
                 <span key={`team-member-${index}`}>
                   {member.user.firstName +
                     " " +
-                    member.user.lastName + //@ts-ignore
-                    (index != props.team.members.length - 1 //@ts-ignore
-                      ? index == props.team.members.length - 2 //@ts-ignore
+                    member.user.lastName +
+                    (index != (props.team?.members?.length || 0) - 1
+                      ? index == (props.team?.members?.length || 0) - 2
                         ? " & "
                         : ", "
                       : "")}
@@ -309,8 +310,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       description,
       team: teams[0] ? teams[0] : null,
       organising: user
-        ? user.organisingTournaments // @ts-ignore
-            .map((x) => x.tournamentId)
+        ? user.organisingTournaments
+            .map((x: OrganiserTournamentRelationship) => x.tournamentId)
             .includes(tournament.id)
         : false,
     },

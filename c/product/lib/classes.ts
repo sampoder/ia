@@ -6,6 +6,9 @@ import {
   Team as TeamType,
   DebateRound as DebateRoundType,
   StripeAccount,
+  Debate,
+  OrganiserTournamentRelationship,
+  UserTeamRelationship,
 } from "@prisma/client";
 import mail from "./methods/mail";
 
@@ -189,8 +192,15 @@ export class Token {
 
 export class Tournament {
   dbItem?:
-    | (TournamentType & { rounds: DebateRoundType[] })
-    | (TournamentTypeWithStripeAccount & { rounds: DebateRoundType[] })
+    | (TournamentType & {
+        stripeAccount?: StripeAccount;
+        rounds: (DebateRoundType & { debates: Debate[] })[];
+        organisers: OrganiserTournamentRelationship[];
+      })
+    | (TournamentTypeWithStripeAccount & {
+        rounds: (DebateRoundType & { debates: Debate[] })[];
+        organisers: OrganiserTournamentRelationship[];
+      })
     | null;
   name?: string;
   slug?: string;
@@ -252,7 +262,11 @@ export class Tournament {
         },
         include: {
           organisers: true,
-          rounds: true,
+          rounds: {
+            include: {
+              debates: true,
+            },
+          },
         },
       });
 
@@ -363,8 +377,12 @@ export class Tournament {
           speakerScoreStep: this.speakerScoreStep,
         },
         include: {
+          rounds: {
+            include: {
+              debates: true,
+            },
+          },
           organisers: true,
-          rounds: true,
         },
       });
       this.dbItem = dbItem;
@@ -613,7 +631,7 @@ export class Tournament {
 }
 
 export class Team {
-  dbItem?: TeamType | null;
+  dbItem?: TeamType & {members: (UserTeamRelationship & {user: UserType})[]} | null;
   name?: string;
   tournamentId?: string;
   memberIDs?: string[];

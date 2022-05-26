@@ -15,11 +15,11 @@ export default async function handler(
   let team = new Team(req.query.team.toString());
   await team.loadFromDB();
   if (
-    team.memberIDs?.includes(currentUser.id) || // @ts-ignore
-    tournament.organisers.map((x) => x.organiserId).includes(currentUser.id)
+    team.memberIDs?.includes(currentUser.id) ||
+    tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)
   ) {
-    await team.deleteFromDB();// @ts-ignore
-    if(tournament.organisers.map((x) => x.organiserId).includes(currentUser.id)){
+    await team.deleteFromDB();
+    if(tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)){
       res.redirect(`/event/${tournament?.slug}/admin/attendees`);
     }
     else{

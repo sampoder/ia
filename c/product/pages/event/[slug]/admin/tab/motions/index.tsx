@@ -42,8 +42,8 @@ function Adjudicator(props: {
 
 export default function TabMotions(props: {
   user: UserType | undefined;
-  tournament: TournamentType;
-  organisers: UserType[];
+  tournament: TournamentType & {adjudicators: (AdjudicatorType & {user: UserType})[]};
+  organisers: UserType[]; 
   teams: (TeamType & {
     members: (UserTeamRelationship & { user: UserType })[];
   })[];
@@ -60,7 +60,6 @@ export default function TabMotions(props: {
           <div>
             <h1 className="adminHeader">Adjudicators</h1>
             {
-              //@ts-ignore
               props.tournament.adjudicators.map((adjudicator) => (
                 <Adjudicator
                   user={adjudicator.user}

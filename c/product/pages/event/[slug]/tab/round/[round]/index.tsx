@@ -13,14 +13,16 @@ import {
   Debate,
   AdjudicatorDebateRelationship,
   RoomDebateRelationship,
+  OrganiserTournamentRelationship,
+  Score,
+  Team,
 } from "@prisma/client";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { prisma } from "../../../../../../lib/prisma";
-import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import {
   rankTeams,
   rankSpeakers,
+  DebateWithScores,
 } from "../../../../../../lib/methods/generate-round";
 import { useState } from "react";
 
@@ -29,13 +31,19 @@ export default function Availability(props: {
   speakers: UserType[];
   isOrganising: boolean;
   tournament: TournamentType & {
+    participatingTeams: (Team & {
+      propositionDebates: DebateWithScores[];
+      oppositionDebates: DebateWithScores[];
+    })[];
     rooms: (Room & {
       availableFor: RoomRoundRelationship[];
     })[];
     adjudicators: (Adjudicator & {
       user: UserType;
     })[];
-    rounds: DebateRound[];
+    rounds: (DebateRound & {
+      debates: (Debate & { scores: (Score & { user: UserType })[] })[];
+    })[];
   };
   round: DebateRound & {
     debates: (Debate & {
@@ -56,7 +64,6 @@ export default function Availability(props: {
     members: (UserTeamRelationship & { user: UserType })[];
   })[];
 }) {
-  const router = useRouter();
   const [viewing, setViewing] = useState("draw");
   return (
     <>
@@ -66,7 +73,6 @@ export default function Availability(props: {
           <div className={styles.adminBar}>
             <Link
               href={`/event/wtp-2/tab/round/${
-                //@ts-ignore
                 props.tournament?.rounds
                   .sort((a, b) =>
                     a.sequence > b.sequence
@@ -75,7 +81,7 @@ export default function Availability(props: {
                       ? -1
                       : 0
                   )
-                  .filter((round) => !round.completed)[0].id
+                  .filter((round) => !round.complete)[0].id
               }/availability`}
             >
               <button>Generate Next Round</button>
@@ -149,7 +155,6 @@ export default function Availability(props: {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  let ogProps = await getAdminProps(ctx);
   if (ctx.params?.round == undefined) {
     return { props: {} };
   }
@@ -185,7 +190,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   } = require("../../../../../../pages/api/event/[slug]/index");
   const { fetchUser } = require("../../../../../../pages/api/user");
   let user: UserType = await fetchUser(ctx.req.cookies["auth"]);
-  const { res } = ctx;
   let tournament = await fetchTournament(ctx.params?.slug, {
     stripeAccount: true,
     rounds: {
@@ -203,9 +207,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     adjudicators: {
       include: { user: true },
     },
-  }); //@ts-ignore
+  });
   let isOrganising = false;
-  tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
+  tournament.organiserIDs = tournament.organisers.map(
+    (x: OrganiserTournamentRelationship) => x.organiserId
+  );
   if (tournament.organiserIDs.includes(user.id)) {
     isOrganising = true;
   }
@@ -214,7 +220,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       Teams: {
         some: {
           team: {
-            tournamentId: ogProps.props.tournament.id,
+            tournamentId: tournament.id,
           },
         },
       },

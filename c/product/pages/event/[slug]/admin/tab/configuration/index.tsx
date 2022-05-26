@@ -4,6 +4,7 @@ import {
   Tournament as TournamentType,
   Team as TeamType,
   UserTeamRelationship,
+  DebateRound,
 } from "@prisma/client";
 import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../../components/nav";
@@ -13,7 +14,9 @@ import Link from "next/link";
 
 export default function TabConfiguration(props: {
   user: UserType | undefined;
-  tournament: TournamentType;
+  tournament: TournamentType & {
+    rounds: DebateRound[]
+  };
   organisers: UserType[];
   teams: (TeamType & {
     members: (UserTeamRelationship & { user: UserType })[];
@@ -77,19 +80,11 @@ export default function TabConfiguration(props: {
                 type="number"
               />
               <small className={styles.emailsLabel}>
-                Speeches Missable for Standings Eligibility
-              </small>
-              <input
-                name={`missableSpeeches`}
-                defaultValue={props.tournament.missableSpeeches}
-                type="number"
-              />
-              <small className={styles.emailsLabel}>
                 Amount of Rounds
               </small>
               <input
-                name={`rounds` /*@ts-ignore*/}
-                defaultValue={props.tournament.rounds.length /*@ts-ignore*/}
+                name={`rounds`}
+                defaultValue={props.tournament.rounds.length}
                 type="number"
               />
               <button>Update Tab</button>

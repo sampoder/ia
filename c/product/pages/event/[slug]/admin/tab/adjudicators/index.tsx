@@ -42,7 +42,9 @@ function Adjudicator(props: {
 
 export default function TabAdjudicators(props: {
   user: UserType | undefined;
-  tournament: TournamentType;
+  tournament: TournamentType & {
+    adjudicators: (AdjudicatorType & { user: UserType })[];
+  };
   organisers: UserType[];
   teams: (TeamType & {
     members: (UserTeamRelationship & { user: UserType })[];
@@ -59,16 +61,13 @@ export default function TabAdjudicators(props: {
         <>
           <div>
             <h1 className="adminHeader">Adjudicators</h1>
-            {
-              //@ts-ignore
-              props.tournament.adjudicators.map((adjudicator) => (
-                <Adjudicator
-                  user={adjudicator.user}
-                  adjudicator={adjudicator}
-                  tournament={props.tournament}
-                />
-              ))
-            }
+            {props.tournament.adjudicators.map((adjudicator) => (
+              <Adjudicator
+                user={adjudicator.user}
+                adjudicator={adjudicator}
+                tournament={props.tournament}
+              />
+            ))}
           </div>
           <div className={styles.form}>
             <form

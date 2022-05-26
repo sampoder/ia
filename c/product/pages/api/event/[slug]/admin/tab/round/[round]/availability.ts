@@ -96,8 +96,90 @@ export default async function handler(
         include: {
           team: {
             include: {
-              propositionDebates: true,
-              oppositionDebates: true
+              propositionDebates: {
+                include: {
+                  scores:  {
+                    include: {
+                      user: true
+                    }
+                  },
+                  replyScores: true,
+                  proposition: {
+                    include: {
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                      oppositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                    }
+                  },
+                  opposition: {
+                    include: {
+                      propositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                      oppositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      }
+                    }
+                  },
+                }
+              },
+              oppositionDebates: {
+                include: {
+                  scores: {
+                    include: {
+                      user: true
+                    }
+                  },
+                  replyScores: true,
+                  proposition: {
+                    include: {
+                      propositionDebates: {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                      oppositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                    }
+                  },
+                  opposition: {
+                    include: {
+                      propositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      },
+                      oppositionDebates:  {
+                        include: {
+                          proposition: true,
+                          opposition: true
+                        }
+                      }
+                    }
+                  },
+                }
+              },
             }
           },
         },
@@ -114,21 +196,20 @@ export default async function handler(
       },
     },
   });
-  if(round == null){
-    res.send("Invalid ID")
+  if(round == null || !round){
+    return res.send("Invalid ID")
   }
   await prisma.roomRoundRelationship.deleteMany({
     where: {
       roundId: req.query.round.toString()
     }
   })
-  // @ts-ignore
-  let pairings = generateRound(round)
-  if(pairings?.error != undefined){
-    res.send(pairings.error)
+  let pairings : { error: null; pairs?: any[]; } | { error: string; pairs?: undefined; }  = generateRound(round)
+  if(pairings.error || pairings.pairs == undefined){
+    return res.send(pairings.error)
   }
   for(let index in pairings){
-    let pair = pairings[index]
+    let pair = pairings.pairs[parseInt(index)]
     let debate = await prisma.debate.create({
       data: {
         propositionId: pair.proposition.id,

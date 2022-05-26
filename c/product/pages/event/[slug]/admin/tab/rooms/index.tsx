@@ -28,7 +28,9 @@ function Room(props: {
 
 export default function TabRooms(props: {
   user: UserType | undefined;
-  tournament: TournamentType;
+  tournament: TournamentType & {
+    rooms: RoomType[]
+  };
   organisers: UserType[];
   teams: (TeamType & {
     members: (UserTeamRelationship & { user: UserType })[];
@@ -42,7 +44,6 @@ export default function TabRooms(props: {
           <div>
             <h1 className="adminHeader">Rooms</h1>
             {
-            // @ts-ignore
             props.tournament.rooms.map((room) => (
               <Room room={room} tournament={props.tournament} />
             ))}

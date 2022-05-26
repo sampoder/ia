@@ -4,7 +4,7 @@ import { Team, User } from "../../../../lib/classes";
 import { fetchUser } from "../../user";
 import { prisma, alreadyParticipatingFilter } from "../../../../lib/prisma";
 import mail from "../../../../lib/methods/mail";
-import { Tournament } from "@prisma/client";
+import { OrganiserTournamentRelationship, Tournament, UserTeamRelationship } from "@prisma/client";
 
 const stripe = require("stripe")(process.env.STRIPE);
 
@@ -24,8 +24,8 @@ export default async function handler(
       return res.status(401).redirect("/login");
     }
     if (
-      req.query.organiser && // @ts-ignore
-      !tournament.organisers.map((x) => x.organiserId).includes(currentUser.id)
+      req.query.organiser &&
+      !tournament.organisers.map((x: OrganiserTournamentRelationship) => x.organiserId).includes(currentUser.id)
     ) {
       return res.status(401).redirect("/");
     }
@@ -57,8 +57,8 @@ export default async function handler(
       team.paid = true;
       await team.addToDB();
       await mail({
-        from: '"debate.sh" <noreply@example.com>', // @ts-ignore
-        to: team.dbItem.members.map((member) => member.user.email).join(","),
+        from: '"debate.sh" <noreply@example.com>', 
+        to: team.dbItem?.members.map((member) => member.user.email).join(","),
         subject: `Registration confirmed for ${tournament.name}.`,
         html: `<p>👋 Hey!</p>
 
@@ -74,8 +74,8 @@ export default async function handler(
       team.paid = true;
       await team.addToDB();
       await mail({
-        from: '"debate.sh" <noreply@example.com>', // @ts-ignore
-        to: team.dbItem.members.map((member) => member.user.email).join(","),
+        from: '"debate.sh" <noreply@example.com>',
+        to: team.dbItem?.members.map((member) => member.user.email).join(","),
         subject: `Registration confirmed for ${tournament.name}.`,
         html: `<p>👋 Hey!</p>
 
@@ -104,8 +104,7 @@ export default async function handler(
         payment_intent_data: {
           application_fee_amount: 0,
           transfer_data: {
-            // @ts-ignore
-            destination: tournament?.stripeAccount.stripeId,
+            destination: tournament?.stripeAccount?.stripeId,
           },
         },
         mode: "payment",

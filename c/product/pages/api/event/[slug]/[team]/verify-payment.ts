@@ -20,8 +20,8 @@ export default async function handler(
     team.paid = true;
     await team.updateInDB();
     await mail({
-      from: '"debate.sh" <noreply@example.com>', // @ts-ignore
-      to: team.dbItem.members.map(member => member.user.email).join(','),
+      from: '"debate.sh" <noreply@example.com>',
+      to: team.dbItem?.members.map(member => member.user.email).join(','),
       subject: `Registration confirmed for ${tournament.name}.`,
       html: `<p>👋 Hey!</p>
 

@@ -1,3 +1,4 @@
+import { OrganiserTournamentRelationship } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { User } from "../classes";
 import { prisma } from "../prisma";
@@ -24,9 +25,8 @@ export const getAdminProps: GetServerSideProps = async (context) => {
     adjudicators: {
        include: { user: true } 
     }
-  }); //@ts-ignore
-  let isOrganising = false
-  tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
+  });
+  tournament.organiserIDs = tournament.organisers.map((x: OrganiserTournamentRelationship) => x.organiserId);
   if (tournament.organiserIDs == null || user.id == null) {
     res.setHeader("location", "/");
     res.statusCode = 302;

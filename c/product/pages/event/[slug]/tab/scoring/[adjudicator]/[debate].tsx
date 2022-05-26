@@ -4,7 +4,7 @@ import Nav from "../../../../../../components/nav";
 export default function ScoreInput() {
   return (
     <>
-      <Nav />
+      <Nav user={undefined} />
       <h1 style={{textAlign: 'center', marginTop: '16px'}}>Scoring Debate</h1>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', padding: '24px 32px'}}>
       <form className="flexFormWrapper">

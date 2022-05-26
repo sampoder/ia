@@ -1,13 +1,13 @@
 import { GetServerSideProps } from "next";
 import Nav from "../../../../components/nav";
-import { Tournament, User as UserType } from "@prisma/client";
+import { Tournament, User as UserType, DebateRound } from "@prisma/client";
 import styles from "./styles.module.css";
 import Link from "next/link";
 import { fetchTournament } from "../../../api/event/[slug]";
 
 export default function TabIndex(props: {
   user: UserType | undefined;
-  tournament: Tournament | undefined;
+  tournament: (Tournament & { rounds: DebateRound[] }) | undefined;
 }) {
   return (
     <>
@@ -16,12 +16,11 @@ export default function TabIndex(props: {
         <div className={styles.adminBar}>
           <Link
             href={`/event/wtp-2/tab/round/${
-              //@ts-ignore
               props.tournament?.rounds
-                .sort((a, b) =>
+                .sort((a: DebateRound, b: DebateRound) =>
                   a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
                 )
-                .filter((round) => !round.completed)[0].id
+                .filter((round: DebateRound) => !round.complete)[0].id
             }/availability`}
           >
             <button>Generate Next Round</button>
@@ -52,19 +51,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res.end();
     return { props: {} };
   }
-  let tournament = await fetchTournament(context?.params?.slug);
-  if (
-    tournament?.rounds
-      .sort((a, b) =>
-        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
-      )
-      .filter((round) => !round.completed)[0].debates.length != 0
-  ) {
-    res.setHeader("location", `/event/${context?.params?.slug}/tab/round/${tournament?.rounds
-      .sort((a, b) =>
-        a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
-      )
-      .filter((round) => !round.completed)[0].id}`);
+  let tournament = await fetchTournament(context?.params?.slug.toString());
+  let upcomingRound = tournament?.rounds
+    .sort((a, b) =>
+      a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+    )
+    .filter((round) => !round.complete)[0];
+  if (upcomingRound?.debates.length != 0) {
+    res.setHeader(
+      "location",
+      `/event/${context?.params?.slug}/tab/round/${upcomingRound?.id}`
+    );
     res.statusCode = 302;
     res.end();
     return { props: {} };
