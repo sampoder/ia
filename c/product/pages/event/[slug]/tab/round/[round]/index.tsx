@@ -52,6 +52,7 @@ export default function Availability(props: {
       room: RoomDebateRelationship & {
         room: Room;
       };
+      scores: (Score & { user: UserType })[];
       adjudicators: (AdjudicatorDebateRelationship & {
         adjudicator: Adjudicator & {
           user: UserType;
@@ -65,28 +66,34 @@ export default function Availability(props: {
   })[];
 }) {
   const [viewing, setViewing] = useState("draw");
+  let upcomingRounds = props.tournament?.rounds
+    .sort((a, b) =>
+      a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+    )
+    .filter((round) => !round.complete);
   return (
     <>
       <Nav user={props.user} />
       <div className={styles.holder}>
         {props.isOrganising && (
           <div className={styles.adminBar}>
-            <Link
-              href={`/event/wtp-2/tab/round/${
-                props.tournament?.rounds
-                  .sort((a, b) =>
-                    a.sequence > b.sequence
-                      ? 1
-                      : b.sequence > a.sequence
-                      ? -1
-                      : 0
-                  )
-                  .filter((round) => !round.complete)[0].id
-              }/availability`}
-            >
-              <button>Generate Next Round</button>
-            </Link>
-            <button>Scoring Status</button>
+            {upcomingRounds[1] ? (
+              <Link
+                href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete?nextRound=${upcomingRounds[1].id}`}
+              >
+                <button>
+                  Generate Next Round & Mark This Round As Complete
+                </button>
+              </Link>
+            ) : (
+              <Link
+                href={`/event/${props.tournament.slug}/tab/round/${props.round.id}/complete`}
+              >
+                <button>
+                  Mark This Round As Complete & Generate The Break
+                </button>
+              </Link>
+            )}
           </div>
         )}
         <div className={styles.bar}>
@@ -114,11 +121,25 @@ export default function Availability(props: {
             <h3>Draw</h3>
             {props.round.debates.map((debate) => (
               <div className={styles.bar}>
-                {debate.proposition.name} vs {debate.opposition.name}{" "}
-                (Adjudicated by{" "}
-                {debate.adjudicators[0].adjudicator.user.firstName}{" "}
-                {debate.adjudicators[0].adjudicator.user.lastName} in{" "}
-                <i>{debate.room.room.label}</i>)
+                <span>
+                  {debate.proposition.name} vs {debate.opposition.name}{" "}
+                  (Adjudicated by{" "}
+                  {debate.adjudicators[0].adjudicator.user.firstName}{" "}
+                  {debate.adjudicators[0].adjudicator.user.lastName} in{" "}
+                  <u>{debate.room.room.label}</u>)
+                </span>
+                <span
+                  style={{
+                    height: "8px",
+                    width: "8px",
+                    backgroundColor:
+                      debate.scores.length == props.tournament.amountPerTeam * 2
+                        ? "var(--green)"
+                        : "var(--orange)",
+                    borderRadius: "50%",
+                    display: "inline-block",
+                  }}
+                ></span>
               </div>
             ))}
           </>
@@ -165,6 +186,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     include: {
       debates: {
         include: {
+          scores: true,
           proposition: true,
           opposition: true,
           adjudicators: {

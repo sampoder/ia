@@ -70,6 +70,15 @@ export default async function handler(
       roundId: req.query.round.toString()
     }
   })
+  await prisma.roomDebateRelationship.deleteMany({
+    where: {
+      debate: {
+        round: {
+          id: req.query.round.toString()
+        }
+      }
+    }
+  })
   await prisma.debate.deleteMany({
     where: {
       debateRoundId: req.query.round.toString()
@@ -208,7 +217,7 @@ export default async function handler(
   if(pairings.error || pairings.pairs == undefined){
     return res.send(pairings.error)
   }
-  for(let index in pairings){
+  for(let index in pairings.pairs){
     let pair = pairings.pairs[parseInt(index)]
     let debate = await prisma.debate.create({
       data: {

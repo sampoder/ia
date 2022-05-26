@@ -189,7 +189,7 @@ model DebateRound {
   tournamentId          String
   tournament            Tournament                                 @relation(fields: [tournamentId], references: [id])
   debates               Debate[]
-  availableRooms        RoomRoundRelationship[]
+  availableRooms        RoomRoundRelationship[] 
   availableTeams        TeamRoundAvailabilityRelationship[]
   availableAdjudicators AdjudicatorRoundAvailabilityRelationship[]
   breakRound            Boolean                                    @default(false)

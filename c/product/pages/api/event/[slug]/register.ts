@@ -3,8 +3,8 @@ import { fetchTournament } from ".";
 import { Team, User } from "../../../../lib/classes";
 import { fetchUser } from "../../user";
 import { prisma, alreadyParticipatingFilter } from "../../../../lib/prisma";
+import { OrganiserTournamentRelationship } from "@prisma/client";
 import mail from "../../../../lib/methods/mail";
-import { OrganiserTournamentRelationship, Tournament, UserTeamRelationship } from "@prisma/client";
 
 const stripe = require("stripe")(process.env.STRIPE);
 

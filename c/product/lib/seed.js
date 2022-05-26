@@ -16,5 +16,5 @@ let data = [...Array(100).keys()].map(x => (
 prisma.user.createMany({
   data
 }).then(r=> (
-  console.log(r)
+  console.log('Created 100 users!')
 ))

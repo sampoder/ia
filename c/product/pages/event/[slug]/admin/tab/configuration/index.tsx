@@ -10,7 +10,6 @@ import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../../components/nav";
 import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
-import Link from "next/link";
 
 export default function TabConfiguration(props: {
   user: UserType | undefined;
