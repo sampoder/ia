@@ -9,6 +9,7 @@ import {
   Room,
   AdjudicatorRoundAvailabilityRelationship,
   Adjudicator,
+  User,
 } from "@prisma/client";
 
 type TeamWithDebate = Team & {
@@ -17,7 +18,7 @@ type TeamWithDebate = Team & {
 };
 
 type DebateWithScores = Debate & {
-  scores: Score[];
+  scores: (Score & {user: User})[];
   replyScores: ReplyScore[];
   proposition: TeamWithDebate;
   opposition: TeamWithDebate;
@@ -59,13 +60,52 @@ function calculateSpeakerPoints(team: TeamWithDebate) {
   return speakerPoints
 }
 
-export function rankSpeakers(debates: DebateWithScores[]) {
-  let speakers = {}
-  debates.map(debate => {
-    debate.scores.map(score => {
-      
+export function rankSpeakers(rounds: DebateRound[], speakersInput: User[]) {
+  console.log(rounds)
+  let debates = []
+  rounds.map(round => {
+    console.log(round)
+    round.debates.map(debate => {
+      debates.push(debate)
     })
   })
+  let speakers = {}
+  speakersInput.map(speaker => {
+    if(speakers[speaker.id] === undefined){
+      speakers[speaker.id] = {
+        score: 0,
+        user: speaker
+      }
+    }
+  })
+  debates.map(debate => {
+    debate.scores.map(score => {
+      if(speakers[score.userId] === undefined){
+        speakers[score.userId] = {
+          score: score.score,
+          user: score.user
+        }
+      }
+      else {
+        speakers[score.userId].score += score.score
+      }
+    })
+  })
+  let rankedSpeakers = Object.values(speakers)
+  for (let x in rankedSpeakers) {
+    let maxIndex = x;
+    for (let y in rankedSpeakers) {
+      if (rankedSpeakers[x].score > rankedSpeakers[y].score) {
+        maxIndex = y;
+      }
+    }
+    // @ts-ignore
+    let temp = rankedSpeakers[maxIndex];
+    // @ts-ignore
+    rankedSpeakers[maxIndex] = rankedSpeakers[x];
+    rankedSpeakers[x] = temp;
+  }
+  return rankedSpeakers
 }
 
 export function rankTeams(teams: TeamWithDebate[]) {

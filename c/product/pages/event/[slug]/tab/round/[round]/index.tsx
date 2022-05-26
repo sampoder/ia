@@ -18,10 +18,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { prisma } from "../../../../../../lib/prisma";
 import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
-import { rankTeams } from "../../../../../../lib/methods/generate-round";
+import {
+  rankTeams,
+  rankSpeakers,
+} from "../../../../../../lib/methods/generate-round";
+import { useState } from "react";
 
 export default function Availability(props: {
   user: UserType | undefined;
+  speakers: UserType[];
+  isOrganising: boolean;
   tournament: TournamentType & {
     rooms: (Room & {
       availableFor: RoomRoundRelationship[];
@@ -51,52 +57,93 @@ export default function Availability(props: {
   })[];
 }) {
   const router = useRouter();
+  const [viewing, setViewing] = useState("draw");
   return (
     <>
       <Nav user={props.user} />
-      <form
-        className={styles.holder}
-        action={`/api/event/${props.tournament.slug}/admin/tab/round/${router.query.round}/availability`}
-        method="POST"
-      >
-        <div className={styles.adminBar}>
-          <Link
-            href={`/event/wtp-2/tab/round/${
-              //@ts-ignore
-              props.tournament?.rounds
-                .sort((a, b) =>
-                  a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
-                )
-                .filter((round) => !round.completed)[0].id
-            }/availability`}
-          >
-            <button>Generate Next Round</button>
-          </Link>
-          <button>Scoring Status</button>
-        </div>
+      <div className={styles.holder}>
+        {props.isOrganising && (
+          <div className={styles.adminBar}>
+            <Link
+              href={`/event/wtp-2/tab/round/${
+                //@ts-ignore
+                props.tournament?.rounds
+                  .sort((a, b) =>
+                    a.sequence > b.sequence
+                      ? 1
+                      : b.sequence > a.sequence
+                      ? -1
+                      : 0
+                  )
+                  .filter((round) => !round.completed)[0].id
+              }/availability`}
+            >
+              <button>Generate Next Round</button>
+            </Link>
+            <button>Scoring Status</button>
+          </div>
+        )}
         <div className={styles.bar}>
-          <button>Draw</button>
-          <button>Team Standings</button>
-          <button>Speaker Standings</button>
+          <button
+            onClick={() => setViewing("draw")}
+            style={{ background: viewing == "draw" ? "var(--green)" : "" }}
+          >
+            Draw
+          </button>
+          <button
+            onClick={() => setViewing("team")}
+            style={{ background: viewing == "team" ? "var(--green)" : "" }}
+          >
+            Team Standings
+          </button>
+          <button
+            onClick={() => setViewing("speaker")}
+            style={{ background: viewing == "speaker" ? "var(--green)" : "" }}
+          >
+            Speaker Standings
+          </button>
         </div>
-        <h3>Draw</h3>
-        {props.round.debates.map((debate) => (
-          <div className={styles.bar}>
-            {debate.proposition.name} vs {debate.opposition.name} (Adjudicated
-            by {" "}
-            {debate.adjudicators[0].adjudicator.user.firstName}{" "}
-            {debate.adjudicators[0].adjudicator.user.lastName} in{" "}
-            <i>{debate.room.room.label}</i>)
-          </div>
-        ))}
-        <h3>Team Standings</h3>
-        {rankTeams(props.tournament.participatingTeams).map((team, index) => (
-          <div className={styles.bar}>
-            <b>#{index + 1}</b> {team.name} (Wins: {team.wins}) (Points: {team.speakerPoints}) (Draw Strength: {team.drawStrength})
-          </div>
-        ))}
-        <button>Proceed</button>
-      </form>
+        {viewing == "draw" && (
+          <>
+            <h3>Draw</h3>
+            {props.round.debates.map((debate) => (
+              <div className={styles.bar}>
+                {debate.proposition.name} vs {debate.opposition.name}{" "}
+                (Adjudicated by{" "}
+                {debate.adjudicators[0].adjudicator.user.firstName}{" "}
+                {debate.adjudicators[0].adjudicator.user.lastName} in{" "}
+                <i>{debate.room.room.label}</i>)
+              </div>
+            ))}
+          </>
+        )}
+        {viewing == "team" && (
+          <>
+            <h3>Team Standings</h3>
+            {rankTeams(props.tournament.participatingTeams).map(
+              (team, index) => (
+                <div className={styles.bar}>
+                  <b>#{index + 1}</b> {team.name} (Wins: {team.wins}) (Points:{" "}
+                  {team.speakerPoints}) (Draw Strength: {team.drawStrength})
+                </div>
+              )
+            )}
+          </>
+        )}
+        {viewing == "speaker" && (
+          <>
+            <h3>Speaker Standings</h3>
+            {rankSpeakers(props.tournament.rounds, props.speakers).map(
+              (speaker, index) => (
+                <div className={styles.bar}>
+                  <b>#{index + 1}</b> {speaker.user.firstName}{" "}
+                  {speaker.user.lastName} (Points: {speaker.score})
+                </div>
+              )
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 }
@@ -133,5 +180,45 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
-  return { props: { round, ...ogProps.props } };
+  const {
+    fetchTournament,
+  } = require("../../../../../../pages/api/event/[slug]/index");
+  const { fetchUser } = require("../../../../../../pages/api/user");
+  let user: UserType = await fetchUser(ctx.req.cookies["auth"]);
+  const { res } = ctx;
+  let tournament = await fetchTournament(ctx.params?.slug, {
+    stripeAccount: true,
+    rounds: {
+      include: {
+        debates: {
+          include: {
+            scores: true,
+          },
+        },
+      },
+    },
+    rooms: {
+      include: { availableFor: true },
+    },
+    adjudicators: {
+      include: { user: true },
+    },
+  }); //@ts-ignore
+  let isOrganising = false;
+  tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
+  if (tournament.organiserIDs.includes(user.id)) {
+    isOrganising = true;
+  }
+  let speakers = await prisma.user.findMany({
+    where: {
+      Teams: {
+        some: {
+          team: {
+            tournamentId: ogProps.props.tournament.id,
+          },
+        },
+      },
+    },
+  });
+  return { props: { round, speakers, isOrganising, tournament, user } };
 };

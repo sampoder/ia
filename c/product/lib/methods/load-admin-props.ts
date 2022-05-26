@@ -9,7 +9,15 @@ export const getAdminProps: GetServerSideProps = async (context) => {
   const { res } = context;
   let tournament = await fetchTournament(context.params?.slug, {
     stripeAccount: true,
-    rounds: true,
+    rounds: {
+     include: {
+       debates: {
+         include: {
+           scores: true
+         }
+       }
+     }
+    },
     rooms: {
       include: { availableFor: true } 
    },
@@ -17,6 +25,7 @@ export const getAdminProps: GetServerSideProps = async (context) => {
        include: { user: true } 
     }
   }); //@ts-ignore
+  let isOrganising = false
   tournament.organiserIDs = tournament.organisers.map((x) => x.organiserId);
   if (tournament.organiserIDs == null || user.id == null) {
     res.setHeader("location", "/");
