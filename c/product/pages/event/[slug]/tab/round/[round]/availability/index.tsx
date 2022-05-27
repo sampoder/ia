@@ -10,7 +10,7 @@ import {
   DebateRound,
   RoomRoundRelationship,
   Room,
-  Adjudicator
+  Adjudicator,
 } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -22,8 +22,8 @@ export default function Availability(props: {
       availableFor: RoomRoundRelationship[];
     })[];
     adjudicators: (Adjudicator & {
-      user: UserType 
-    })[]
+      user: UserType;
+    })[];
     rounds: DebateRound[];
   };
   organisers: UserType[];
@@ -31,11 +31,15 @@ export default function Availability(props: {
     members: (UserTeamRelationship & { user: UserType })[];
   })[];
 }) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <>
       <Nav user={props.user} />
-      <form className={styles.holder} action={`/api/event/${props.tournament.slug}/admin/tab/round/${router.query.round}/availability`} method="POST">
+      <form
+        className={styles.holder}
+        action={`/api/event/${props.tournament.slug}/admin/tab/round/${router.query.round}/availability`}
+        method="POST"
+      >
         <div className={styles.adminBar}>
           <h2>Availability (Generate New Round)</h2>
         </div>

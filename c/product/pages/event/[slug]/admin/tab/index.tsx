@@ -25,7 +25,9 @@ function Team(props: {
           </li>
         ))}
       </ul>
-      <Link href={`/api/event/${props.tournament.slug}/${props.team.id}/deregister`}>
+      <Link
+        href={`/api/event/${props.tournament.slug}/${props.team.id}/deregister`}
+      >
         Remove From Tournament
       </Link>
     </details>
@@ -43,8 +45,12 @@ export default function AdminTeam(props: {
   return (
     <>
       <Nav user={props.user} />
-      <Wrapper tab={true} slug={props.tournament?.slug} name={props.tournament?.name}>
-       <></>
+      <Wrapper
+        tab={true}
+        slug={props.tournament?.slug}
+        name={props.tournament?.name}
+      >
+        <></>
       </Wrapper>
     </>
   );

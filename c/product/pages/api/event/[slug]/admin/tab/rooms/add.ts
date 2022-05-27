@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../user";
-import { prisma, alreadyParticipatingFilter } from "../../../../../../../lib/prisma";
+import {
+  prisma,
+  alreadyParticipatingFilter,
+} from "../../../../../../../lib/prisma";
 import { User } from "../../../../../../../lib/classes";
 export default async function handler(
   req: NextApiRequest,
@@ -32,9 +35,8 @@ export default async function handler(
     data: {
       tournamentId: tournament.id,
       label: req.body.label,
-      priority: 2
-    }
-  })
+      priority: 2,
+    },
+  });
   res.redirect(`/event/${tournament.slug}/admin/tab/rooms`);
-
 }

@@ -25,7 +25,9 @@ export default async function handler(
     }
     if (
       req.query.organiser &&
-      !tournament.organisers.map((x: OrganiserTournamentRelationship) => x.organiserId).includes(currentUser.id)
+      !tournament.organisers
+        .map((x: OrganiserTournamentRelationship) => x.organiserId)
+        .includes(currentUser.id)
     ) {
       return res.status(401).redirect("/");
     }
@@ -57,7 +59,7 @@ export default async function handler(
       team.paid = true;
       await team.addToDB();
       await mail({
-        from: '"debate.sh" <noreply@example.com>', 
+        from: '"debate.sh" <noreply@example.com>',
         to: team.dbItem?.members.map((member) => member.user.email).join(","),
         subject: `Registration confirmed for ${tournament.name}.`,
         html: `<p>👋 Hey!</p>

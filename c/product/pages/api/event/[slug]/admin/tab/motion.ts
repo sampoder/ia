@@ -29,11 +29,11 @@ export default async function handler(
   }
   await prisma.debateRound.update({
     where: {
-      id: req.query.id.toString()
+      id: req.query.id.toString(),
     },
     data: {
-      motion: req.body.motion
-    }
-  })
+      motion: req.body.motion,
+    },
+  });
   res.redirect(`/event/${tournament.slug}/admin/tab/motions`);
 }

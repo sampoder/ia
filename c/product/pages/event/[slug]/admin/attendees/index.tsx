@@ -25,7 +25,9 @@ function Team(props: {
           </li>
         ))}
       </ul>
-      <Link href={`/api/event/${props.tournament.slug}/${props.team.id}/deregister`}>
+      <Link
+        href={`/api/event/${props.tournament.slug}/${props.team.id}/deregister`}
+      >
         Remove From Tournament
       </Link>
     </details>

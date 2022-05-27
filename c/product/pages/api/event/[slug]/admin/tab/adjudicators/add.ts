@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../user";
-import { prisma, alreadyParticipatingFilter } from "../../../../../../../lib/prisma";
+import {
+  prisma,
+  alreadyParticipatingFilter,
+} from "../../../../../../../lib/prisma";
 import { User } from "../../../../../../../lib/classes";
 export default async function handler(
   req: NextApiRequest,
@@ -28,13 +31,14 @@ export default async function handler(
     res.end();
     return;
   }
-  
+
   let alreadyParticipating = (
-    await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))).map((user) => user.id);
+    await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))
+  ).map((user) => user.id);
   let adjudicator = new User();
   adjudicator.email = req.body["email"];
   await adjudicator.loadFromDB();
-  if(adjudicator.dbItem){
+  if (adjudicator.dbItem) {
     if (alreadyParticipating.includes(adjudicator.dbItem.id)) {
       return res.send(
         adjudicator.firstName +
@@ -47,12 +51,11 @@ export default async function handler(
       data: {
         userId: adjudicator.dbItem.id,
         tournamentId: tournament.id,
-        priority: 2
-      }
-    })
+        priority: 2,
+      },
+    });
     res.redirect(`/event/${tournament.slug}/admin/tab/adjudicators`);
-  }
-  else{
-    res.send("User not found.")
+  } else {
+    res.send("User not found.");
   }
 }

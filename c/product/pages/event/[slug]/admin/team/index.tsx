@@ -69,4 +69,4 @@ export default function AdminTeam(props: {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = getAdminProps
+export const getServerSideProps: GetServerSideProps = getAdminProps;

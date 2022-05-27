@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Team, Tournament } from "../../../../../lib/classes";
 import mail from "../../../../../lib/methods/mail";
-const stripe = require("stripe")(
-  process.env.STRIPE
-);
+const stripe = require("stripe")(process.env.STRIPE);
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,14 +12,14 @@ export default async function handler(
   const session = await stripe.checkout.sessions.retrieve(
     team.dbItem?.paymentSessionID
   );
-  let tournament = new Tournament(team.dbItem?.tournamentId)
-  await tournament.loadFromDB()
+  let tournament = new Tournament(team.dbItem?.tournamentId);
+  await tournament.loadFromDB();
   if (session.status == "complete") {
     team.paid = true;
     await team.updateInDB();
     await mail({
       from: '"debate.sh" <noreply@example.com>',
-      to: team.dbItem?.members.map(member => member.user.email).join(','),
+      to: team.dbItem?.members.map((member) => member.user.email).join(","),
       subject: `Registration confirmed for ${tournament.name}.`,
       html: `<p>👋 Hey!</p>
 
@@ -31,7 +29,7 @@ export default async function handler(
 
 <p>debate.sh</p>
       `,
-    })
+    });
     res.redirect(`/event/${req.query.slug}`);
   } else {
     res.send("Not paid.");

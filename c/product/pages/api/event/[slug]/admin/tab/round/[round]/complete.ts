@@ -32,14 +32,18 @@ export default async function handler(
   }
   await prisma.debateRound.update({
     where: {
-      id: req.query.round.toString()
+      id: req.query.round.toString(),
     },
     data: {
-      complete: true
-    }
-  })
-  if(req.query.nextRound){
-    return res.redirect("/event/wtp-2/tab/round/" + req.query.nextRound.toString() + "/availability")
+      complete: true,
+    },
+  });
+  if (req.query.nextRound) {
+    return res.redirect(
+      "/event/wtp-2/tab/round/" +
+        req.query.nextRound.toString() +
+        "/availability"
+    );
   }
-  return res.redirect("/event/wtp-2/tab/breaks")
+  return res.redirect("/event/wtp-2/tab/breaks");
 }

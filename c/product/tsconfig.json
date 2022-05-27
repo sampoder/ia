@@ -22,7 +22,9 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.js",
-    "pages/hello.js"
-, "pages/api/emails/[id].js", "lib/seed.js"  ],
+    "pages/hello.js",
+    "pages/api/emails/[id].js",
+    "lib/seed.js"
+  ],
   "exclude": ["node_modules"]
 }

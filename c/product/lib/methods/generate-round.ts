@@ -23,21 +23,25 @@ type TeamWithDebateMin = Team & {
 };
 
 type DebateWithTeams = Debate & {
-  proposition: Team | null
-  opposition: Team | null
-}
+  proposition: Team | null;
+  opposition: Team | null;
+};
 
 export type DebateWithScores = Debate & {
   scores: (Score & { user: User })[];
   replyScores: ReplyScore[];
-  proposition: (Team & {
-    propositionDebates: DebateWithTeams[];
-    oppositionDebates: DebateWithTeams[];
-  }) | null;
-  opposition: (Team & {
-    propositionDebates: DebateWithTeams[];
-    oppositionDebates: DebateWithTeams[];
-  }) | null;
+  proposition:
+    | (Team & {
+        propositionDebates: DebateWithTeams[];
+        oppositionDebates: DebateWithTeams[];
+      })
+    | null;
+  opposition:
+    | (Team & {
+        propositionDebates: DebateWithTeams[];
+        oppositionDebates: DebateWithTeams[];
+      })
+    | null;
 };
 
 type DebateRoundWithIncludes = DebateRound & {
@@ -53,8 +57,8 @@ type DebateRoundWithIncludes = DebateRound & {
 };
 
 function calculateWins(team: TeamWithDebate | TeamWithDebateMin | null) {
-  if(team == null){
-    return 0
+  if (team == null) {
+    return 0;
   }
   return (
     team.propositionDebates.filter((debate) => debate.carried).length +
@@ -169,7 +173,7 @@ export function rankTeams(teams: TeamWithDebate[]) {
 }
 
 export function generateRound(round: DebateRoundWithIncludes | null) {
-  if(round == null){
+  if (round == null) {
     return { error: "Round doesn't exist." };
   }
   let teams = rankTeams(round.availableTeams.map((x) => x.team));
@@ -197,5 +201,5 @@ export function generateRound(round: DebateRoundWithIncludes | null) {
       });
     }
   }
-  return {error: null, pairs};
+  return { error: null, pairs };
 }

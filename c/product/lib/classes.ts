@@ -631,7 +631,9 @@ export class Tournament {
 }
 
 export class Team {
-  dbItem?: TeamType & {members: (UserTeamRelationship & {user: UserType})[]} | null;
+  dbItem?:
+    | (TeamType & { members: (UserTeamRelationship & { user: UserType })[] })
+    | null;
   name?: string;
   tournamentId?: string;
   memberIDs?: string[];

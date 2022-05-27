@@ -38,12 +38,12 @@
 }
 
 .adjudicatorKeyInfo {
-  flex-grow: 1
+  flex-grow: 1;
 }
 
 .plus {
   transform: rotate(45deg);
-  display: block
+  display: block;
 }
 
 .removeWrapper {

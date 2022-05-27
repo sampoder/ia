@@ -5,7 +5,10 @@ type TournamentInclude = {
   stripeAccount?: boolean;
 };
 
-export async function fetchTournament(slug: string, include?: TournamentInclude) {
+export async function fetchTournament(
+  slug: string,
+  include?: TournamentInclude
+) {
   let tournament = new Tournament();
   tournament.slug = slug;
   await tournament.loadFromDB(include);

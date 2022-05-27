@@ -19,10 +19,11 @@ export default async function handler(
     tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)
   ) {
     await team.deleteFromDB();
-    if(tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)){
+    if (
+      tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)
+    ) {
       res.redirect(`/event/${tournament?.slug}/admin/attendees`);
-    }
-    else{
+    } else {
       res.redirect(`/event/${tournament?.slug}`);
     }
   } else {

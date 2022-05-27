@@ -11,13 +11,13 @@
 }
 
 .header > div > p > button {
-  padding: calc( var(--spacing-2) + var(--spacing-1)) var(--spacing-3);
-  font-size: 20px!important;
+  padding: calc(var(--spacing-2) + var(--spacing-1)) var(--spacing-3);
+  font-size: 20px !important;
   border-radius: var(--radii-default);
 }
 
 .join {
-  background: var(--green)!important;
+  background: var(--green) !important;
   margin-right: 10px;
   margin-bottom: 10px;
 }

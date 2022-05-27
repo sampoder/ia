@@ -33,7 +33,7 @@ export default async function handler(
     await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))
   ).map((user) => user.email);
   await mail({
-    from: '"debate.sh" <noreply@example.com>', 
+    from: '"debate.sh" <noreply@example.com>',
     bcc: alreadyParticipating.join(","),
     subject: req.body.subject,
     html: req.body.text,

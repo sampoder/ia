@@ -29,16 +29,16 @@ export default function Profile(props: { user: UserType | undefined }) {
           </small>
           <button>Save</button>
           <Link href="/api/logout">
-            <button type="button" className="logout">Logout</button>
+            <button type="button" className="logout">
+              Logout
+            </button>
           </Link>
         </form>
       </div>
       <style>
-        {
-          `.logout {
+        {`.logout {
             background: var(--red)
-          }`
-        }
+          }`}
       </style>
     </>
   );

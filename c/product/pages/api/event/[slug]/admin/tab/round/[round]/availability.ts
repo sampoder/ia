@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../../user";
 import { prisma } from "../../../../../../../../lib/prisma";
-import { getCurrentRound } from "../../../../../../../../lib/methods/get-current-round";
 import { generateRound } from "../../../../../../../../lib/methods/generate-round";
 
 export default async function handler(
@@ -57,33 +56,33 @@ export default async function handler(
   }
   await prisma.teamRoundAvailabilityRelationship.deleteMany({
     where: {
-      roundId: req.query.round.toString()
-    }
-  })
+      roundId: req.query.round.toString(),
+    },
+  });
   await prisma.adjudicatorRoundAvailabilityRelationship.deleteMany({
     where: {
-      roundId: req.query.round.toString()
-    }
-  })
+      roundId: req.query.round.toString(),
+    },
+  });
   await prisma.roomRoundRelationship.deleteMany({
     where: {
-      roundId: req.query.round.toString()
-    }
-  })
+      roundId: req.query.round.toString(),
+    },
+  });
   await prisma.roomDebateRelationship.deleteMany({
     where: {
       debate: {
         round: {
-          id: req.query.round.toString()
-        }
-      }
-    }
-  })
+          id: req.query.round.toString(),
+        },
+      },
+    },
+  });
   await prisma.debate.deleteMany({
     where: {
-      debateRoundId: req.query.round.toString()
-    }
-  })
+      debateRoundId: req.query.round.toString(),
+    },
+  });
   await prisma.teamRoundAvailabilityRelationship.createMany({
     data: availableTeams,
     skipDuplicates: true,
@@ -107,10 +106,10 @@ export default async function handler(
             include: {
               propositionDebates: {
                 include: {
-                  scores:  {
+                  scores: {
                     include: {
-                      user: true
-                    }
+                      user: true,
+                    },
                   },
                   replyScores: true,
                   proposition: {
@@ -118,41 +117,41 @@ export default async function handler(
                       propositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                      oppositionDebates:  {
+                      oppositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                    }
+                    },
                   },
                   opposition: {
                     include: {
-                      propositionDebates:  {
+                      propositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                      oppositionDebates:  {
+                      oppositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
-                      }
-                    }
+                          opposition: true,
+                        },
+                      },
+                    },
                   },
-                }
+                },
               },
               oppositionDebates: {
                 include: {
                   scores: {
                     include: {
-                      user: true
-                    }
+                      user: true,
+                    },
                   },
                   replyScores: true,
                   proposition: {
@@ -160,36 +159,36 @@ export default async function handler(
                       propositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                      oppositionDebates:  {
+                      oppositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                    }
+                    },
                   },
                   opposition: {
                     include: {
-                      propositionDebates:  {
+                      propositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
+                          opposition: true,
+                        },
                       },
-                      oppositionDebates:  {
+                      oppositionDebates: {
                         include: {
                           proposition: true,
-                          opposition: true
-                        }
-                      }
-                    }
+                          opposition: true,
+                        },
+                      },
+                    },
                   },
-                }
+                },
               },
-            }
+            },
           },
         },
       },
@@ -205,39 +204,41 @@ export default async function handler(
       },
     },
   });
-  if(round == null || !round){
-    return res.send("Invalid ID")
+  if (round == null || !round) {
+    return res.send("Invalid ID");
   }
   await prisma.roomRoundRelationship.deleteMany({
     where: {
-      roundId: req.query.round.toString()
-    }
-  })
-  let pairings : { error: null; pairs?: any[]; } | { error: string; pairs?: undefined; }  = generateRound(round)
-  if(pairings.error || pairings.pairs == undefined){
-    return res.send(pairings.error)
+      roundId: req.query.round.toString(),
+    },
+  });
+  let pairings:
+    | { error: null; pairs?: any[] }
+    | { error: string; pairs?: undefined } = generateRound(round);
+  if (pairings.error || pairings.pairs == undefined) {
+    return res.send(pairings.error);
   }
-  for(let index in pairings.pairs){
-    let pair = pairings.pairs[parseInt(index)]
+  for (let index in pairings.pairs) {
+    let pair = pairings.pairs[parseInt(index)];
     let debate = await prisma.debate.create({
       data: {
         propositionId: pair.proposition.id,
         oppositionId: pair.opposition.id,
         debateRoundId: round.id,
-      }
-    })
+      },
+    });
     await prisma.adjudicatorDebateRelationship.create({
       data: {
         adjudicatorId: pair.adjudicator.id,
-        debateId: debate.id
-      }
-    })
+        debateId: debate.id,
+      },
+    });
     await prisma.roomDebateRelationship.create({
       data: {
         roomId: pair.room.id,
-        debateId: debate.id
-      }
-    })
+        debateId: debate.id,
+      },
+    });
   }
   res.json(pairings);
 }

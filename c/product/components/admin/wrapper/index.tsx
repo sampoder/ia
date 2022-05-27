@@ -50,7 +50,7 @@ export default function AdminWrapper(props: {
             <div className={styles.links}>
               <div>
                 <Link href={`/event/${props.slug}/admin/configure`}>
-                ↪ Admin Dashboard
+                  ↪ Admin Dashboard
                 </Link>
               </div>
               <div>
@@ -69,9 +69,7 @@ export default function AdminWrapper(props: {
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/tab/rooms`}>
-                  Rooms
-                </Link>
+                <Link href={`/event/${props.slug}/admin/tab/rooms`}>Rooms</Link>
               </div>
             </div>
           )}
