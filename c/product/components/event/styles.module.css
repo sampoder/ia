@@ -1,3 +1,5 @@
+/* This file contains styles for the events details card. */
+
 .event {
   background: var(--sunken);
   border-radius: var(--radii-small);

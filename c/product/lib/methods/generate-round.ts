@@ -97,11 +97,14 @@ export function rankSpeakers(
       debates.push(debate);
     });
   });
-  let speakers: { [x: string]: { score: number; user: User } } = {};
+  let speakers: {
+    [x: string]: { score: number; debates: number; user: User };
+  } = {};
   speakersInput.map((speaker) => {
     if (speakers[speaker.id] === undefined) {
       speakers[speaker.id] = {
         score: 0,
+        debates: 0,
         user: speaker,
       };
     }
@@ -111,6 +114,7 @@ export function rankSpeakers(
       if (speakers[score.userId] === undefined) {
         speakers[score.userId] = {
           score: score.score,
+          debates: 1,
           user: score.user,
         };
       } else {
@@ -122,7 +126,10 @@ export function rankSpeakers(
   for (let x in rankedSpeakers) {
     let maxIndex: number = parseInt(x);
     for (let y in rankedSpeakers) {
-      if (rankedSpeakers[x].score > rankedSpeakers[y].score) {
+      if (
+        rankedSpeakers[x].score / rankedSpeakers[x].debates >
+        rankedSpeakers[y].score / rankedSpeakers[y].debates
+      ) {
         maxIndex = parseInt(y);
       }
     }

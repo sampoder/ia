@@ -65,7 +65,7 @@ export default function AdminAttendees(props: {
               <small className={styles.emailsLabel}>
                 Team Members' Emails:{" "}
               </small>
-              {[...Array(3)].map((_, index) => (
+              {[...Array(props.tournament.amountPerTeam)].map((_, index) => (
                 <input
                   placeholder={`Team Member ${index + 1}'s Email`}
                   name={`email${index}`}

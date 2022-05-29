@@ -2,6 +2,9 @@ import React, { ReactChildren, ReactChild } from "react";
 import Link from "next/link";
 import styles from "./styles.module.css";
 
+/* This file exports a wrapper used for each event's admin configuration page. 
+It has a sidebar navigation panel with a collection of links. */
+
 export default function AdminWrapper(props: {
   children: ReactChild | ReactChildren;
   slug: string;

@@ -2,7 +2,7 @@ import { User as UserType } from "@prisma/client";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
-export default function Nav(props: { user: UserType | undefined }) {
+export default function Nav(props: { user: UserType | undefined | null }) {
   return (
     <div className={styles.nav}>
       <div className={styles.logoType}>
@@ -11,7 +11,7 @@ export default function Nav(props: { user: UserType | undefined }) {
         </Link>
       </div>
       <div>
-        {props.user ? (
+        {props.user && props.user != null ? (
           <div>
             <Link href="/profile">
               <img src={props.user?.avatarURL || ""} />

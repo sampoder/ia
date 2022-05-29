@@ -1,6 +1,6 @@
+let GeoPattern = require("geopattern");
 import styles from "./styles.module.css";
 import Link from "next/link";
-let GeoPattern = require("geopattern");
 
 export default function Header() {
   return (

@@ -2,6 +2,9 @@ import { Tournament as TournamentType } from "@prisma/client";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* This file exports a card that contains details about the debate tournament
+provided in the props. */
+
 export default function Event(props: { tournament: TournamentType }) {
   return (
     <Link href={"/event/" + props.tournament.slug}>

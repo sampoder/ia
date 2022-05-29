@@ -1,0 +1,15 @@
+
+.holder {
+  max-width: 95vw;
+  margin: 16px auto;
+}
+
+.bar {
+  background: var(--sunken);
+  padding: 16px;
+  margin: 16px 0px;
+  display: flex;
+  gap: 8px;
+  border-radius: var(--radii-default);
+  align-items: center;
+}

@@ -1,7 +1,6 @@
 import { GetServerSideProps } from "next";
 import Nav from "../../../components/nav";
 import {
-  PrismaClient,
   User as UserType,
   Tournament as TournamentType,
   Team as TeamType,
@@ -145,7 +144,7 @@ export default function Event(props: {
               >
                 Your Other Team Members' Emails:{" "}
               </small>
-              {[...Array(props.tournament.amountPerTeam)].map(
+              {[...Array(props.tournament.amountPerTeam + 1)].map(
                 (_, index) =>
                   index != 0 && (
                     <input
@@ -263,7 +262,6 @@ export default function Event(props: {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../api/event/[slug]/index");
   const { fetchUser } = require("../../api/user");
-  const { prisma: PrismaClient } = require("../../../lib/prisma");
   const { res } = context;
   let user = await fetchUser(context.req.cookies["auth"]);
   let tournament = await fetchTournament(context.params?.slug);
