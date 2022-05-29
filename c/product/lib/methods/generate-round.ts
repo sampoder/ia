@@ -10,11 +10,13 @@ import {
   AdjudicatorRoundAvailabilityRelationship,
   Adjudicator,
   User,
+  UserTeamRelationship,
 } from "@prisma/client";
 
 type TeamWithDebate = Team & {
   propositionDebates: DebateWithScores[];
   oppositionDebates: DebateWithScores[];
+  members: UserTeamRelationship[];
 };
 
 type TeamWithDebateMin = Team & {
@@ -72,12 +74,16 @@ function calculateSpeakerPoints(team: TeamWithDebate) {
   let speakerPoints = 0;
   team.propositionDebates.map((debate) => {
     debate.scores.map((score) => {
-      speakerPoints += score.score;
+      if(team.members.map(member=>member.userId).includes(score.userId)){
+        speakerPoints += score.score;
+      }
     });
   });
   team.oppositionDebates.map((debate) => {
     debate.scores.map((score) => {
-      speakerPoints += score.score;
+      if(team.members.map(member=>member.userId).includes(score.userId)){
+        speakerPoints += score.score;
+      }
     });
   });
   return speakerPoints;
@@ -119,18 +125,19 @@ export function rankSpeakers(
         };
       } else {
         speakers[score.userId].score += score.score;
+        speakers[score.userId].debates += 1;
       }
     });
   });
   let rankedSpeakers = Object.values(speakers);
-  for (let x in rankedSpeakers) {
-    let maxIndex: number = parseInt(x);
-    for (let y in rankedSpeakers) {
+  for (let x = 0; x < rankedSpeakers.length-1; x++){
+    let maxIndex: number = x;
+    for (let y = maxIndex + 1; y < rankedSpeakers.length; y++){
       if (
-        rankedSpeakers[x].score / rankedSpeakers[x].debates >
-        rankedSpeakers[y].score / rankedSpeakers[y].debates
+        (rankedSpeakers[maxIndex].score / rankedSpeakers[maxIndex].debates) <
+        (rankedSpeakers[y].score / rankedSpeakers[y].debates)
       ) {
-        maxIndex = parseInt(y);
+        maxIndex =y;
       }
     }
     let temp = rankedSpeakers[maxIndex];
@@ -159,17 +166,17 @@ export function rankTeams(teams: TeamWithDebate[]) {
       }
     }
   }
-  for (let x in rankedTeams) {
-    let maxIndex = parseInt(x);
-    for (let y in rankedTeams) {
-      if (rankedTeams[x].wins > rankedTeams[y].wins) {
-        maxIndex = parseInt(y);
+  for (let x = 0; x < rankedTeams.length-1; x++){
+    let maxIndex = x;
+    for (let y = maxIndex + 1; y < rankedTeams.length; y++){
+      if (rankedTeams[maxIndex].wins < rankedTeams[y].wins) {
+        maxIndex = (y);
       }
-      if (rankedTeams[x].speakerPoints > rankedTeams[y].speakerPoints) {
-        maxIndex = parseInt(y);
+      if (rankedTeams[maxIndex].speakerPoints < rankedTeams[y].speakerPoints) {
+        maxIndex = (y);
       }
-      if (rankedTeams[x].drawStrength > rankedTeams[y].drawStrength) {
-        maxIndex = parseInt(y);
+      if (rankedTeams[maxIndex].drawStrength < rankedTeams[y].drawStrength) {
+        maxIndex = (y);
       }
     }
     let temp = rankedTeams[maxIndex];

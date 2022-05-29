@@ -5,6 +5,7 @@ import {
   Tournament as TournamentType,
   Team as TeamType,
   OrganiserTournamentRelationship,
+  Adjudicator,
 } from "@prisma/client";
 import Link from "next/link";
 import { compile } from "@mdx-js/mdx";
@@ -38,10 +39,11 @@ const inputOpacity = (user: UserType | undefined, organising: boolean) => {
 
 export default function Event(props: {
   user: UserType | undefined;
-  tournament: TournamentType;
+  tournament: TournamentType & {adjudicators: Adjudicator[]};
   description: string;
   team: ModifiedTeamType | null;
   organising: boolean;
+  adjudicating: boolean;
 }) {
   return (
     <>
@@ -131,15 +133,23 @@ export default function Event(props: {
               <input
                 name="name"
                 placeholder="Your Team Name"
-                disabled={props.user == null || props.organising}
+                disabled={
+                  props.user == null || props.organising || props.adjudicating
+                }
                 style={{
-                  opacity: inputOpacity(props.user, props.organising),
+                  opacity: inputOpacity(
+                    props.user,
+                    props.organising || props.adjudicating
+                  ),
                 }}
               />
               <small
                 className={styles.emailsLabel}
                 style={{
-                  opacity: inputOpacity(props.user, props.organising),
+                  opacity: inputOpacity(
+                    props.user,
+                    props.organising || props.adjudicating
+                  ),
                 }}
               >
                 Your Other Team Members' Emails:{" "}
@@ -151,9 +161,16 @@ export default function Event(props: {
                       placeholder={`Team Member ${index}'s Email`}
                       name={`email${index}`}
                       key={`email${index}`}
-                      disabled={props.user == null || props.organising}
+                      disabled={
+                        props.user == null ||
+                        props.organising ||
+                        props.adjudicating
+                      }
                       style={{
-                        opacity: inputOpacity(props.user, props.organising),
+                        opacity: inputOpacity(
+                          props.user,
+                          props.organising || props.adjudicating
+                        ),
                       }}
                     />
                   )
@@ -164,9 +181,9 @@ export default function Event(props: {
                 </Link>
               ) : (
                 <button
-                  disabled={props.organising}
+                  disabled={props.organising || props.adjudicating}
                   style={
-                    props.organising
+                    props.organising || props.adjudicating
                       ? {
                           opacity: 0.6,
                           pointerEvents: "none",
@@ -178,6 +195,7 @@ export default function Event(props: {
                     <>
                       Register{" "}
                       {props.organising && <>(disabled for organisers)</>}
+                      {props.adjudicating && <>(disabled for adjudicators)</>}
                     </>
                   )}
                   {props.tournament?.price != 0 && (
@@ -190,6 +208,7 @@ export default function Event(props: {
                           ? 1
                           : 0.01)}
                       ) {props.organising && <>(disabled for organisers)</>}
+                      {props.adjudicating && <>(disabled for adjudicators)</>}
                     </>
                   )}
                 </button>
@@ -245,7 +264,21 @@ export default function Event(props: {
             {props.organising && (
               <div>
                 <Link href={`/event/${props.tournament?.slug}/admin/configure`}>
-                  <button>Admin Dashboard</button>
+                  <button style={{ marginRight: "8px" }}>
+                    Admin Dashboard
+                  </button>
+                </Link>
+                <Link href={`/event/${props.tournament?.slug}/tab`}>
+                  <button>Tab</button>
+                </Link>
+              </div>
+            )}
+            {props.adjudicating && (
+              <div>
+                <Link href={`/event/${props.tournament?.slug}/tab/scoring/${props.tournament.adjudicators.filter(x=> x.userId == props.user?.id)[0].id}`}>
+                  <button style={{ marginRight: "8px" }}>
+                    Adjudicator Dashboard
+                  </button>
                 </Link>
                 <Link href={`/event/${props.tournament?.slug}/tab`}>
                   <button>Tab</button>
@@ -301,6 +334,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     )
   );
+
   return {
     props: {
       tournament,
@@ -312,6 +346,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             .map((x: OrganiserTournamentRelationship) => x.tournamentId)
             .includes(tournament.id)
         : false,
+      adjudicating: user
+        ? tournament.adjudicators
+            .map((adj: Adjudicator) => adj.userId)
+            .includes(user.id)
+        : false,
+
     },
   };
 };

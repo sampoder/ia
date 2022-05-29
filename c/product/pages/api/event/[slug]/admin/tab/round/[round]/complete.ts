@@ -45,5 +45,10 @@ export default async function handler(
         "/availability"
     );
   }
+  if (req.query.standings) {
+    return res.redirect(
+      "/event/wtp-2/tab/standings"
+    );
+  }
   return res.redirect("/event/wtp-2/tab/breaks");
 }

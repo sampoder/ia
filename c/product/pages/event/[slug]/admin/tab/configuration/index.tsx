@@ -5,6 +5,7 @@ import {
   Team as TeamType,
   UserTeamRelationship,
   DebateRound,
+  Break,
 } from "@prisma/client";
 import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../../components/nav";
@@ -15,6 +16,7 @@ export default function TabConfiguration(props: {
   user: UserType | undefined;
   tournament: TournamentType & {
     rounds: DebateRound[];
+    breaks: Break[]
   };
   organisers: UserType[];
   teams: (TeamType & {
@@ -78,6 +80,12 @@ export default function TabConfiguration(props: {
             <input
               name={`rounds`}
               defaultValue={props.tournament.rounds.length}
+              type="number"
+            />
+            <small className={styles.emailsLabel}>Amount of Break Rounds</small>
+            <input
+              name={`breakLevel`}
+              defaultValue={props.tournament.breakLevel}
               type="number"
             />
             <button>Update Tab</button>

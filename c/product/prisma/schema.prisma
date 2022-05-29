@@ -169,6 +169,8 @@ model Tournament {
   adjudicators        Adjudicator[]
   rooms               Room[]
   breaks              Break[]
+  breakStatus         Json?
+  breakLevel          Int                               @default(1)
   stripeAccount       StripeAccount?
 }
 

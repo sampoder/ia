@@ -16,6 +16,8 @@ import {
   OrganiserTournamentRelationship,
   Score,
   Team,
+  Break,
+  BreakDebate,
 } from "@prisma/client";
 import Link from "next/link";
 import { prisma } from "../../../../../../lib/prisma";
@@ -34,6 +36,7 @@ export default function Availability(props: {
     participatingTeams: (Team & {
       propositionDebates: DebateWithScores[];
       oppositionDebates: DebateWithScores[];
+      members: UserTeamRelationship[];
     })[];
     rooms: (Room & {
       availableFor: RoomRoundRelationship[];
@@ -43,6 +46,13 @@ export default function Availability(props: {
     })[];
     rounds: (DebateRound & {
       debates: (Debate & { scores: (Score & { user: UserType })[] })[];
+    })[];
+    breaks: (Break & {
+      debates: (BreakDebate & {
+        debate: Debate & {
+          scores: (Score & { user: UserType })[];
+        };
+      })[];
     })[];
   };
   round: DebateRound & {
@@ -78,21 +88,35 @@ export default function Availability(props: {
         {props.isOrganising && (
           <div className={styles.adminBar}>
             {upcomingRounds[1] ? (
-              <Link
-                href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete?nextRound=${upcomingRounds[1].id}`}
-              >
-                <button>
-                  Generate Next Round & Mark This Round As Complete
-                </button>
-              </Link>
+              <>
+                <Link
+                  href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete?nextRound=${upcomingRounds[1].id}`}
+                >
+                  <button>
+                    Generate Next Round & Mark This Round As Complete
+                  </button>
+                </Link>
+              </>
             ) : (
-              <Link
-                href={`/event/${props.tournament.slug}/tab/round/${props.round.id}/complete`}
-              >
-                <button>
-                  Mark This Round As Complete & Generate The Break
-                </button>
-              </Link>
+              <>
+                {props.tournament.breaks.length == 0 ? (
+                  <Link
+                    href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete?standings=true`}
+                  >
+                    <button>
+                      Mark This Round As Complete & Show Final Standings
+                    </button>
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/event/${props.tournament.slug}/tab/round/${props.round.id}/complete`}
+                  >
+                    <button>
+                      Mark This Round As Complete & Generate The Break
+                    </button>
+                  </Link>
+                )}
+              </>
             )}
           </div>
         )}

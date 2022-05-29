@@ -57,7 +57,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
     )
     .filter((round) => !round.complete)[0];
-  if (upcomingRound?.debates.length != 0) {
+  console.log(upcomingRound);
+  let completedRounds = tournament?.rounds
+    .sort((a, b) =>
+      a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
+    )
+    .filter((round) => round.complete);
+  if (upcomingRound?.debates.length != 0 && upcomingRound != undefined) {
     res.setHeader(
       "location",
       `/event/${context?.params?.slug}/tab/round/${upcomingRound?.id}`
@@ -65,6 +71,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res.statusCode = 302;
     res.end();
     return { props: {} };
+  }
+  if (completedRounds?.length == tournament?.rounds.length) {
+    if (tournament?.breakLevel == 0) {
+      res.setHeader(
+        "location",
+        `/event/${context?.params?.slug}/tab/standings`
+      );
+      res.statusCode = 302;
+      res.end();
+      return { props: {} };
+    } else {
+      res.setHeader("location", `/event/${context?.params?.slug}/tab/break`);
+      res.statusCode = 302;
+      res.end();
+      return { props: {} };
+    }
   }
   return { props: { user, tournament } };
 };

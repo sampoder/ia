@@ -9,8 +9,21 @@ import {
   Debate,
   OrganiserTournamentRelationship,
   UserTeamRelationship,
+  Adjudicator,
 } from "@prisma/client";
+import { JSONObject, JSONArray } from "superjson/dist/types";
 import mail from "./methods/mail";
+
+type InputJsonValue =
+  | string
+  | number
+  | boolean
+  | InputJsonObject
+  | InputJsonArray;
+
+interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
+
+type InputJsonObject = { readonly [Key in string]?: InputJsonValue | null };
 
 type UserInclude = {
   Teams?: boolean;
@@ -196,10 +209,12 @@ export class Tournament {
         stripeAccount?: StripeAccount;
         rounds: (DebateRoundType & { debates: Debate[] })[];
         organisers: OrganiserTournamentRelationship[];
+        adjudicators: Adjudicator[];
       })
     | (TournamentTypeWithStripeAccount & {
         rounds: (DebateRoundType & { debates: Debate[] })[];
         organisers: OrganiserTournamentRelationship[];
+        adjudicators: Adjudicator[];
       })
     | null;
   name?: string;
@@ -227,6 +242,8 @@ export class Tournament {
   maxSpeakerScore?: number;
   speakerScoreStep?: number;
   missableSpeeches?: number;
+  breakLevel?: number;
+  breakStatus?: InputJsonValue;
   rounds?: DebateRoundType[];
   async addToDB() {
     if (
@@ -254,6 +271,8 @@ export class Tournament {
           timezone: this.timezone,
           cover: this.cover,
           managerEmail: this.managerEmail,
+          breakLevel: this.breakLevel,
+          breakStatus: this.breakStatus,
           organisers: {
             create: this.organiserIDs.map((x) => {
               return { organiserId: x };
@@ -267,6 +286,7 @@ export class Tournament {
               debates: true,
             },
           },
+          adjudicators: true
         },
       });
 
@@ -280,6 +300,9 @@ export class Tournament {
       this.endingDate = this.dbItem.endingDate;
       this.online = this.dbItem.online;
       this.format = this.dbItem.format ? this.dbItem.format : undefined;
+      this.breakStatus = this.dbItem.breakStatus
+        ? this.dbItem.breakStatus
+        : undefined;
       this.timezone = this.dbItem.timezone ? this.dbItem.timezone : undefined;
       this.prizeValue = this.dbItem.prizeValue
         ? this.dbItem.prizeValue
@@ -287,6 +310,9 @@ export class Tournament {
       this.avatar = this.dbItem.avatar ? this.dbItem.avatar : undefined;
       this.eligibility = this.dbItem.eligibility
         ? this.dbItem.eligibility
+        : undefined;
+      this.breakLevel = this.dbItem.breakLevel
+        ? this.dbItem.breakLevel
         : undefined;
       this.organisedBy = this.dbItem.organisedBy
         ? this.dbItem.organisedBy
@@ -375,6 +401,8 @@ export class Tournament {
           minSpeakerScore: this.minSpeakerScore,
           maxSpeakerScore: this.maxSpeakerScore,
           speakerScoreStep: this.speakerScoreStep,
+          breakLevel: this.breakLevel,
+          breakStatus: this.breakStatus,
         },
         include: {
           rounds: {
@@ -383,6 +411,7 @@ export class Tournament {
             },
           },
           organisers: true,
+          adjudicators: true
         },
       });
       this.dbItem = dbItem;
@@ -395,6 +424,12 @@ export class Tournament {
         : undefined;
       this.name = this.dbItem.name;
       this.slug = this.dbItem.slug;
+      this.breakLevel = this.dbItem.breakLevel
+        ? this.dbItem.breakLevel
+        : undefined;
+      this.breakStatus = this.dbItem.breakStatus
+        ? this.dbItem.breakStatus
+        : undefined;
       this.avatar = this.dbItem.avatar ? this.dbItem.avatar : undefined;
       this.description =
         this.dbItem.description != null ? this.dbItem.description : undefined;
@@ -471,8 +506,15 @@ export class Tournament {
               debates: true,
             },
           },
+          adjudicators: true,
+          breaks: {
+            include: {
+              debates: true,
+            },
+          },
           participatingTeams: {
             include: {
+              members: true,
               oppositionDebates: {
                 include: {
                   scores: true,
@@ -586,6 +628,9 @@ export class Tournament {
           : undefined;
         this.startingDate = this.dbItem?.startingDate;
         this.endingDate = this.dbItem?.endingDate;
+        this.breakLevel = this.dbItem?.breakLevel
+          ? this.dbItem?.breakLevel
+          : undefined;
         this.online = this.dbItem?.online;
         this.amountPerTeam = dbItem.amountPerTeam
           ? dbItem.amountPerTeam
@@ -596,6 +641,7 @@ export class Tournament {
         this.opposingSideLabel = dbItem.opposingSideLabel
           ? dbItem.opposingSideLabel
           : undefined;
+        this.breakStatus = dbItem.breakStatus ? dbItem.breakStatus : undefined;
         this.minSpeakerScore = dbItem.minSpeakerScore
           ? dbItem.minSpeakerScore
           : undefined;

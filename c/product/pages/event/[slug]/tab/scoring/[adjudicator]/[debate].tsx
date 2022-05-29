@@ -114,6 +114,16 @@ export default function ScoreInput(props: {
             ))}
           </div>
         </div>
+        <div style={{ textAlign: "center", margin: "auto"  }}>
+        <label style={{fontWeight: 600}}>Winner:</label>
+        <br />
+        <select name={`result`}
+                    id={`result`}>
+          <option>Proposition</option>
+          <option>Opposition</option>
+        </select>
+        <br /><br />
+        </div>
         <div style={{ textAlign: "center" }}>
           <button style={{ margin: "auto" }}>Submit Scores</button>
         </div>

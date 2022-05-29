@@ -33,6 +33,8 @@ export default async function handler(
   tournament.maxSpeakerScore = parseInt(req.body.maxSpeakerScore);
   tournament.speakerScoreStep = parseInt(req.body.speakerScoreStep);
   tournament.missableSpeeches = parseInt(req.body.missableSpeeches);
+  tournament.breakLevel = parseInt(req.body.breakLevel)
+  console.log('he')
   if (tournament.rounds != undefined) {
     let length = tournament.rounds.length;
     if (parseInt(req.body.rounds) > length) {

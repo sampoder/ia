@@ -100,5 +100,13 @@ export default async function handler(
       },
     ],
   });
+  await prisma.debate.update({
+    where: {
+      id: debate.id
+    },
+    data: {
+      carried: req.body["result"] == "Proposition" ? true : false
+    }
+  })
   res.redirect(`/event/${req.query.slug.toString()}/tab/scoring/${adjudicator?.id}`);
 }
