@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../../../../../../lib/prisma";
+import { fetchUser } from "../../../../../../../user";
 
 export default async function handler(
   req: NextApiRequest,
@@ -56,13 +57,12 @@ export default async function handler(
       },
     },
   });
-  console.log(debate?.adjudicators)
-  console.log(adjudicator)
+  let user = await fetchUser(req.cookies["auth"]);
   if (
     !debate?.adjudicators
       .map((adj) => adj.adjudicatorId)
       .includes(adjudicator?.id || "fake")
-    // || adjudicator?.id != user?.id
+    || adjudicator?.id != user?.id
   ) {
     return res.redirect("/");
   }

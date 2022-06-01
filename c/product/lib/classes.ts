@@ -11,8 +11,11 @@ import {
   UserTeamRelationship,
   Adjudicator,
 } from "@prisma/client";
-import { JSONObject, JSONArray } from "superjson/dist/types";
 import mail from "./methods/mail";
+
+/* This file exports four classes used throughout the program:
+User, Token, Tournament & Team. Each class has CRUD methods for
+database interactions. */
 
 type InputJsonValue =
   | string

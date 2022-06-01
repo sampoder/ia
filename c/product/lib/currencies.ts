@@ -1,3 +1,5 @@
+/* These are a data reference required by Stripe */
+
 export const zeroDecimalCurrencies = [
   "BIF",
   "CLP",

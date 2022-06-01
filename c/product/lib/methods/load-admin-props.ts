@@ -3,6 +3,9 @@ import { GetServerSideProps } from "next";
 import { User } from "../classes";
 import { prisma } from "../prisma";
 
+/* This file exports a function that conforms to the GetServerSideProps
+it is used to fetch data for all of the admin configuration pages. */
+
 export const getAdminProps: GetServerSideProps = async (context) => {
   const { fetchTournament } = require("../../pages/api/event/[slug]/index");
   const { fetchUser } = require("../../pages/api/user");

@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+/* This API route provides an error message in case of a 
+Stripe-side error. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

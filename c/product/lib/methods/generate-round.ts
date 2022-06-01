@@ -13,6 +13,11 @@ import {
   UserTeamRelationship,
 } from "@prisma/client";
 
+/* This file exports a collection of functions that each play a role
+in the generation of rounds (round-robin) / break rounds (finals). This
+includes ranking the teams and speakers and then pairing them based on 
+rankings. */
+
 type TeamWithDebate = Team & {
   propositionDebates: DebateWithScores[];
   oppositionDebates: DebateWithScores[];
@@ -58,6 +63,8 @@ type DebateRoundWithIncludes = DebateRound & {
   })[];
 };
 
+/* This function calculates the wins a team has had */
+
 function calculateWins(team: TeamWithDebate | TeamWithDebateMin | null) {
   if (team == null) {
     return 0;
@@ -69,6 +76,9 @@ function calculateWins(team: TeamWithDebate | TeamWithDebateMin | null) {
     ).length
   );
 }
+
+/* This function calculates the total speaker points received by
+a team in the tournament */
 
 function calculateSpeakerPoints(team: TeamWithDebate) {
   let speakerPoints = 0;
@@ -89,16 +99,17 @@ function calculateSpeakerPoints(team: TeamWithDebate) {
   return speakerPoints;
 }
 
+/* This function returns a sorted / ranked array of the speakers in
+descending order based on average score. */
+
 export function rankSpeakers(
   rounds: (DebateRound & {
     debates: (Debate & { scores: (Score & { user: User })[] })[];
   })[],
   speakersInput: User[]
 ) {
-  console.log(rounds);
   let debates: (Debate & { scores: (Score & { user: User })[] })[] = [];
   rounds.map((round) => {
-    console.log(round);
     round.debates.map((debate) => {
       debates.push(debate);
     });
@@ -133,11 +144,17 @@ export function rankSpeakers(
   for (let x = 0; x < rankedSpeakers.length-1; x++){
     let maxIndex: number = x;
     for (let y = maxIndex + 1; y < rankedSpeakers.length; y++){
-      if (
+      if(rankedSpeakers[maxIndex].debates == 0){
+        maxIndex = y;
+      }
+      else if(rankedSpeakers[y].debates == 0){
+        maxIndex = maxIndex;
+      }
+      else if (
         (rankedSpeakers[maxIndex].score / rankedSpeakers[maxIndex].debates) <
         (rankedSpeakers[y].score / rankedSpeakers[y].debates)
       ) {
-        maxIndex =y;
+        maxIndex = y;
       }
     }
     let temp = rankedSpeakers[maxIndex];
@@ -146,6 +163,9 @@ export function rankSpeakers(
   }
   return rankedSpeakers;
 }
+
+/* This function returns a sorted / ranked array of teams in
+descending order based on wins, speaker points & draw strength. */
 
 export function rankTeams(teams: TeamWithDebate[]) {
   let rankedTeams = teams.map((team) => ({
@@ -185,6 +205,10 @@ export function rankTeams(teams: TeamWithDebate[]) {
   }
   return rankedTeams;
 }
+
+/* This function returns an array of objects with information about a 
+debate pairing (which teams, which room and which adjudicator). It
+makes these pairs based on rankings. */
 
 export function generateRound(round: DebateRoundWithIncludes | null) {
   if (round == null) {

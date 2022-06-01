@@ -5,6 +5,9 @@ type RankedTournamentType = {
   score: number;
 };
 
+/* This file exports a function that returns a sorted 
+array of events based on relevance to a search query. */
+
 export default function search(tournaments: TournamentType[], query: string) {
   if (query == "") {
     return tournaments;

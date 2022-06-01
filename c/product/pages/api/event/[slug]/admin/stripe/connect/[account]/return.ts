@@ -4,6 +4,10 @@ import { prisma } from "../../../../../../../../lib/prisma";
 import { fetchUser } from "../../../../../../user";
 const stripe = require("stripe")(process.env.STRIPE);
 
+/* This API route handles a user returning from the 
+Stripe Connect process and checks that the 
+onboarding has been completed correctly. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -19,7 +23,7 @@ export default async function handler(
     tournament.id &&
     tournament.organiserIDs?.includes(user.id)
   ) {
-    let dbItem = await prisma.stripeAccount.create({
+    await prisma.stripeAccount.create({
       data: {
         stripeId: req.query.account.toString(),
         tournamentId: tournament.id,

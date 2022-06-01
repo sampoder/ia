@@ -15,7 +15,6 @@ import {
   User,
 } from "@prisma/client";
 import styles from "./styles.module.css";
-import Link from "next/link";
 
 export default function AdjPrivatePage(props: {
   adjudicator: Adjudicator & {

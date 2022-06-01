@@ -3,6 +3,9 @@ import { fetchUser } from "../../../../../../user";
 import { Tournament } from "../../../../../../../../lib/classes";
 const stripe = require("stripe")(process.env.STRIPE);
 
+/* This API route allows organisers to log into the tournament's
+Stripe Connect account. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

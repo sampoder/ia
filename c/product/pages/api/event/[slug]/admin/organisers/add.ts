@@ -5,6 +5,9 @@ import {
   alreadyParticipatingFilter,
 } from "../../../../../../lib/prisma";
 
+/* This API route adds an organiser to an organising
+team. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

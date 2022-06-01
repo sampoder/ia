@@ -1,5 +1,8 @@
 import { DebateRound, Tournament } from "@prisma/client";
 
+/* This file exports a function that returns information about the 
+current round taking place */
+
 export function getCurrentRound(
   tournament: Tournament & {
     rounds: DebateRound[];

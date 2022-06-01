@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../lib/classes";
 
+/* This API route removes an organiser from an organising
+team. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

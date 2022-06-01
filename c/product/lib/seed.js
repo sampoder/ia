@@ -1,3 +1,6 @@
+/* This is a script used to seed the database
+with fake user data. */
+
 const { faker } = require("@faker-js/faker");
 
 const { PrismaClient } = require("@prisma/client");

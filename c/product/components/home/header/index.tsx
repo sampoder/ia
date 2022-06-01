@@ -2,6 +2,8 @@ let GeoPattern = require("geopattern");
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* This file exports a header component for the home page. */
+
 export default function Header() {
   return (
     <div

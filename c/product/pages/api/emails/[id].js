@@ -1,9 +1,8 @@
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-}
+/* This is an API route used for previewing emails
+sent by the program. */
 
 function replaceAll(str, find, replace) {
-  return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
+  return str.split(find).join(replace)
 }
 
 export default async function handler(req, res) {

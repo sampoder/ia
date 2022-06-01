@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const stripe = require("stripe")(process.env.STRIPE);
 
+/* This API route generates a new Stripe connect account
+and redirects the user to a setup page for it. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

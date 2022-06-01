@@ -2,6 +2,8 @@ import { User as UserType } from "@prisma/client";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* This file exports a navigation bar component. */
+
 export default function Nav(props: { user: UserType | undefined | null }) {
   return (
     <div className={styles.nav}>
