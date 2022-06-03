@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Token } from "../../../lib/classes";
 
+/* This API route generates a new token on request
+and emails it to the user who requested it. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

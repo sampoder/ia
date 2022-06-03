@@ -6,6 +6,9 @@ import {
   alreadyParticipatingFilter,
 } from "../../../../../../../lib/prisma";
 import { User } from "../../../../../../../lib/classes";
+
+/* This API route adds an adjudicator to a tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -31,7 +34,6 @@ export default async function handler(
     res.end();
     return;
   }
-
   let alreadyParticipating = (
     await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))
   ).map((user) => user.id);

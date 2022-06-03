@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../../../../../../lib/prisma";
 import { fetchUser } from "../../../../../../../user";
 
+/* This API route processes the scores inputted by an
+adjudicator and adds them to the database. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

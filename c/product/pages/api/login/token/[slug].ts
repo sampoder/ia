@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Token } from "../../../../lib/classes";
 
+/* This API route is used to check if an authentication
+token is valid and then if it is to store it in a cookie. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

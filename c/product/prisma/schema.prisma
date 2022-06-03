@@ -22,8 +22,6 @@ model User {
   scores                Score[]
   replyScores           ReplyScore[]
   adjudicator           Adjudicator[]
-  institutionId         String?
-  institution           Institution?                      @relation(fields: [institutionId], references: [id])
   tokens                Token[]
 }
 
@@ -60,30 +58,6 @@ model AdjudicatorRoundAvailabilityRelationship {
   teamId        String?
 }
 
-model AdjudicatorTeamConflictsRelationship {
-  id            String      @id @default(cuid())
-  adjudicatorId String      @unique
-  teamId        String      @unique
-  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
-  team          Team        @relation(fields: [teamId], references: [id])
-}
-
-model AdjudicatorInstitutionConflictsRelationship {
-  id            String      @id @default(cuid())
-  adjudicatorId String      @unique
-  institutionId String      @unique
-  adjudicator   Adjudicator @relation(fields: [adjudicatorId], references: [id])
-  institution   Institution @relation(fields: [institutionId], references: [id])
-}
-
-model TeamInstitutionConflictsRelationship {
-  id            String      @id @default(cuid())
-  teamId        String      @unique
-  institutionId String      @unique
-  team          Team        @relation(fields: [teamId], references: [id])
-  institution   Institution @relation(fields: [institutionId], references: [id])
-}
-
 model Adjudicator {
   id                         String                                        @id @default(cuid())
   userId                     String
@@ -93,8 +67,6 @@ model Adjudicator {
   debates                    AdjudicatorDebateRelationship[]
   availableForRounds         AdjudicatorRoundAvailabilityRelationship[]
   priority                   Float
-  conflictedWithTeams        AdjudicatorTeamConflictsRelationship[]
-  conflictedWithInstitutions AdjudicatorInstitutionConflictsRelationship[]
 }
 
 model AdjudicatorDebateRelationship {
@@ -122,12 +94,7 @@ model Team {
   paid                                     Boolean                                    @default(true)
   tournament                               Tournament                                 @relation(fields: [tournamentId], references: [id])
   checkedIn                                Boolean                                    @default(false)
-  conflictedWithAdjudicators               AdjudicatorTeamConflictsRelationship[]
-  conflictedWithInstitutions               TeamInstitutionConflictsRelationship[]
   availableForRounds                       TeamRoundAvailabilityRelationship[]
-  breakId                                  String?
-  break                                    Break?                                     @relation(fields: [breakId], references: [id])
-  stillInBreak                             Boolean?
   propositionDebates                       Debate[]                                   @relation("proposition")
   oppositionDebates                        Debate[]                                   @relation("opposition")
   AdjudicatorRoundAvailabilityRelationship AdjudicatorRoundAvailabilityRelationship[]
@@ -168,10 +135,9 @@ model Tournament {
   rounds              DebateRound[]
   adjudicators        Adjudicator[]
   rooms               Room[]
-  breaks              Break[]
   breakStatus         Json?
-  breakLevel          Int                               @default(1)
   stripeAccount       StripeAccount?
+  breakLevel          Int                               @default(1)
 }
 
 model Email {
@@ -194,7 +160,6 @@ model DebateRound {
   availableRooms        RoomRoundRelationship[] 
   availableTeams        TeamRoundAvailabilityRelationship[]
   availableAdjudicators AdjudicatorRoundAvailabilityRelationship[]
-  breakRound            Boolean                                    @default(false)
   motion                String                                     @default("")
   complete              Boolean                                    @default(false)
 }
@@ -211,7 +176,6 @@ model Debate {
   proposition   Team?                           @relation("proposition", fields: [propositionId], references: [id])
   oppositionId  String?
   opposition    Team?                           @relation("opposition", fields: [oppositionId], references: [id])
-  breakDebate   BreakDebate?
   carried       Boolean?
 }
 
@@ -257,34 +221,6 @@ model Room {
   tournament   Tournament               @relation(fields: [tournamentId], references: [id])
   label        String
   priority     Float
-}
-
-model Institution {
-  id                         String                                        @id @default(cuid())
-  name                       String
-  shorthand                  String
-  users                      User[]
-  conflictedWithAdjudicators AdjudicatorInstitutionConflictsRelationship[]
-  conflictedWithTeams        TeamInstitutionConflictsRelationship[]
-}
-
-model Break {
-  id            String        @id @default(cuid())
-  tournamentId  String
-  tournament    Tournament    @relation(fields: [tournamentId], references: [id])
-  breakingTeams Team[]
-  debates       BreakDebate[]
-}
-
-model BreakDebate {
-  id             String       @id @default(cuid())
-  previousDebate BreakDebate? @relation("debateLink")
-  nextDebate     BreakDebate  @relation("debateLink", fields: [nextDebateId], references: [id])
-  nextDebateId   String       @unique
-  debateId       String       @unique
-  debate         Debate       @relation(fields: [debateId], references: [id])
-  breakId        String
-  break          Break        @relation(fields: [breakId], references: [id])
 }
 
 model Token {

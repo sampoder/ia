@@ -2,6 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../lib/classes";
 import { fetchUser } from "../../../../user";
 
+/* This API route is called within the 
+Tab Configuration section of the Admin Dashboard.
+It takes the input and updates the tournament's DB item
+as needed. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -34,7 +39,6 @@ export default async function handler(
   tournament.speakerScoreStep = parseInt(req.body.speakerScoreStep);
   tournament.missableSpeeches = parseInt(req.body.missableSpeeches);
   tournament.breakLevel = parseInt(req.body.breakLevel)
-  console.log('he')
   if (tournament.rounds != undefined) {
     let length = tournament.rounds.length;
     if (parseInt(req.body.rounds) > length) {

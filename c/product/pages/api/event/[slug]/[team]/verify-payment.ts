@@ -3,6 +3,9 @@ import { Team, Tournament } from "../../../../../lib/classes";
 import mail from "../../../../../lib/methods/mail";
 const stripe = require("stripe")(process.env.STRIPE);
 
+/* This API route can be used to verify that
+a team has paid for a paid tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

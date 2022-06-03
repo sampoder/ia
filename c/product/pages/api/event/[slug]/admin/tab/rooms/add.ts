@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../user";
-import {
-  prisma,
-  alreadyParticipatingFilter,
-} from "../../../../../../../lib/prisma";
-import { User } from "../../../../../../../lib/classes";
+import { prisma } from "../../../../../../../lib/prisma";
+
+/* This API route adds a room to a tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

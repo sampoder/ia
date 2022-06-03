@@ -4,6 +4,8 @@ import { fetchUser } from "../../../user";
 import { prisma, alreadyParticipatingFilter } from "../../../../../lib/prisma";
 import mail from "../../../../../lib/methods/mail";
 
+/* This API route sends an email to all participants in a tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { User, Token } from "../../lib/classes";
 
+/* Returns the logged in user's details. */
+
 export async function fetchUser(authToken: string) {
   if (authToken != undefined) {
     let token = new Token(authToken);

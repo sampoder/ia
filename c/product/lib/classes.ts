@@ -1,5 +1,4 @@
 import {
-  PrismaClient,
   User as UserType,
   Token as TokenType,
   Tournament as TournamentType,
@@ -11,7 +10,10 @@ import {
   UserTeamRelationship,
   Adjudicator,
 } from "@prisma/client";
+import { DebateWithScores, rankTeams } from "./methods/generate-round";
+import { prisma } from "./prisma";
 import mail from "./methods/mail";
+import md5 from "md5";
 
 /* This file exports four classes used throughout the program:
 User, Token, Tournament & Team. Each class has CRUD methods for
@@ -33,7 +35,6 @@ type UserInclude = {
   organisingTournaments?: boolean;
   emailsSent?: boolean;
   scores?: boolean;
-  replyScores?: boolean;
   adjudicator?: boolean;
   institution?: boolean;
   tokens?: boolean;
@@ -44,12 +45,105 @@ type TournamentInclude = {
   participatingTeams?: boolean;
 };
 
-type TournamentTypeWithStripeAccount = TournamentType & {
-  stripeAccount: StripeAccount;
-};
+export type TournamentWithIncludes = (TournamentType & {
+  stripeAccount?: StripeAccount;
+  rounds: (DebateRoundType & { debates: Debate[] })[];
+  organisers?: OrganiserTournamentRelationship[];
+  adjudicators: Adjudicator[];
+  participatingTeams: (TeamType & {
+    propositionDebates: DebateWithScores[];
+    oppositionDebates: DebateWithScores[];
+    members: UserTeamRelationship[];
+  })[];
+})
 
-const prisma = new PrismaClient();
-var md5 = require("md5");
+const participatingTeams = {
+  include: {
+    members: true,
+    oppositionDebates: {
+      include: {
+        scores: {
+          include: {
+            user: true
+          }
+        },
+        proposition: {
+          include: {
+            oppositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+            propositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+          },
+        },
+        opposition: {
+          include: {
+            oppositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+            propositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    propositionDebates: {
+      include: {
+        scores: {
+          include: {
+            user: true
+          }
+        },
+        proposition: {
+          include: {
+            oppositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+            propositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+          },
+        },
+        opposition: {
+          include: {
+            oppositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+            propositionDebates: {
+              include: {
+                proposition: true,
+                opposition: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
 
 export class User {
   dbItem?: UserType | null;
@@ -208,17 +302,7 @@ export class Token {
 
 export class Tournament {
   dbItem?:
-    | (TournamentType & {
-        stripeAccount?: StripeAccount;
-        rounds: (DebateRoundType & { debates: Debate[] })[];
-        organisers: OrganiserTournamentRelationship[];
-        adjudicators: Adjudicator[];
-      })
-    | (TournamentTypeWithStripeAccount & {
-        rounds: (DebateRoundType & { debates: Debate[] })[];
-        organisers: OrganiserTournamentRelationship[];
-        adjudicators: Adjudicator[];
-      })
+  TournamentWithIncludes
     | null;
   name?: string;
   slug?: string;
@@ -274,8 +358,8 @@ export class Tournament {
           timezone: this.timezone,
           cover: this.cover,
           managerEmail: this.managerEmail,
-          breakLevel: this.breakLevel,
           breakStatus: this.breakStatus,
+          breakLevel: this.breakLevel,
           organisers: {
             create: this.organiserIDs.map((x) => {
               return { organiserId: x };
@@ -289,10 +373,10 @@ export class Tournament {
               debates: true,
             },
           },
-          adjudicators: true
+          participatingTeams,
+          adjudicators: true,
         },
       });
-
       this.dbItem = dbItem;
       this.name = this.dbItem.name;
       this.hostRegion = this.dbItem.hostRegion
@@ -313,9 +397,6 @@ export class Tournament {
       this.avatar = this.dbItem.avatar ? this.dbItem.avatar : undefined;
       this.eligibility = this.dbItem.eligibility
         ? this.dbItem.eligibility
-        : undefined;
-      this.breakLevel = this.dbItem.breakLevel
-        ? this.dbItem.breakLevel
         : undefined;
       this.organisedBy = this.dbItem.organisedBy
         ? this.dbItem.organisedBy
@@ -399,12 +480,12 @@ export class Tournament {
           managerEmail: this.managerEmail,
           format: this.format,
           amountPerTeam: this.amountPerTeam,
+          breakLevel: this.breakLevel,
           supportingSideLabel: this.supportingSideLabel,
           opposingSideLabel: this.opposingSideLabel,
           minSpeakerScore: this.minSpeakerScore,
           maxSpeakerScore: this.maxSpeakerScore,
           speakerScoreStep: this.speakerScoreStep,
-          breakLevel: this.breakLevel,
           breakStatus: this.breakStatus,
         },
         include: {
@@ -414,7 +495,8 @@ export class Tournament {
             },
           },
           organisers: true,
-          adjudicators: true
+          adjudicators: true,
+          participatingTeams: participatingTeams,
         },
       });
       this.dbItem = dbItem;
@@ -427,9 +509,6 @@ export class Tournament {
         : undefined;
       this.name = this.dbItem.name;
       this.slug = this.dbItem.slug;
-      this.breakLevel = this.dbItem.breakLevel
-        ? this.dbItem.breakLevel
-        : undefined;
       this.breakStatus = this.dbItem.breakStatus
         ? this.dbItem.breakStatus
         : undefined;
@@ -510,91 +589,8 @@ export class Tournament {
             },
           },
           adjudicators: true,
-          breaks: {
-            include: {
-              debates: true,
-            },
-          },
-          participatingTeams: {
-            include: {
-              members: true,
-              oppositionDebates: {
-                include: {
-                  scores: true,
-                  proposition: {
-                    include: {
-                      oppositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                      propositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                    },
-                  },
-                  opposition: {
-                    include: {
-                      oppositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                      propositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-              propositionDebates: {
-                include: {
-                  scores: true,
-                  proposition: {
-                    include: {
-                      oppositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                      propositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                    },
-                  },
-                  opposition: {
-                    include: {
-                      oppositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                      propositionDebates: {
-                        include: {
-                          proposition: true,
-                          opposition: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
           ...include,
+          participatingTeams: participatingTeams,
         },
       });
       this.dbItem = dbItem;
@@ -631,9 +627,6 @@ export class Tournament {
           : undefined;
         this.startingDate = this.dbItem?.startingDate;
         this.endingDate = this.dbItem?.endingDate;
-        this.breakLevel = this.dbItem?.breakLevel
-          ? this.dbItem?.breakLevel
-          : undefined;
         this.online = this.dbItem?.online;
         this.amountPerTeam = dbItem.amountPerTeam
           ? dbItem.amountPerTeam
@@ -747,10 +740,17 @@ export class Team {
   }
   async linkPaymentSession(session: string) {
     if (this.id) {
-      let dbItem = await prisma.team.update({
+      this.dbItem = await prisma.team.update({
         where: { id: this.id },
         data: {
           paymentSessionID: session,
+        },
+        include: {
+          members: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
     } else console.error("TEAM: Could not update in DB due to missing id.");

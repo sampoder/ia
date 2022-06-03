@@ -2,6 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../../user";
 import { prisma } from "../../../../../../../../lib/prisma";
+
+/* This API route removes an adjudicator from a tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

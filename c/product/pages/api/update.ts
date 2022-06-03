@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { User } from "../../lib/classes";
 import { fetchUser } from "./user";
+
+/* Updates a logged in user's details. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

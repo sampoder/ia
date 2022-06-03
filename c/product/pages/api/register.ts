@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { User, Token } from "../../lib/classes";
 
+/* Creates a new user and then performs
+the login process for them. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

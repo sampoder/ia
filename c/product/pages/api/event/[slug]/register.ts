@@ -6,6 +6,10 @@ import { prisma, alreadyParticipatingFilter } from "../../../../lib/prisma";
 import { OrganiserTournamentRelationship } from "@prisma/client";
 import mail from "../../../../lib/methods/mail";
 
+/* This API route is used to register a team
+for a tournament and if needed redirect them
+to Stripe Checkout. */
+
 const stripe = require("stripe")(process.env.STRIPE);
 
 export default async function handler(
@@ -15,7 +19,7 @@ export default async function handler(
   let tournament = await fetchTournament(req.query.slug.toString(), {
     stripeAccount: true,
   });
-  if (tournament?.id) {
+  if (tournament != null) {
     let alreadyParticipating = (
       await prisma.user.findMany(alreadyParticipatingFilter(tournament?.id))
     ).map((user) => user.id);
@@ -26,7 +30,7 @@ export default async function handler(
     if (
       req.query.organiser &&
       !tournament.organisers
-        .map((x: OrganiserTournamentRelationship) => x.organiserId)
+        ?.map((x: OrganiserTournamentRelationship) => x.organiserId)
         .includes(currentUser.id)
     ) {
       return res.status(401).redirect("/");
@@ -38,8 +42,9 @@ export default async function handler(
         let user = new User();
         user.email = req.body[Object.keys(req.body)[key]];
         await user.loadFromDB();
-        if (user.dbItem) {
-          if (alreadyParticipating.includes(user.dbItem.id)) {
+        let userDbItem = user.dbItem;
+        if (userDbItem) {
+          if (alreadyParticipating.includes(userDbItem.id)) {
             return res.send(
               user.firstName +
                 " " +
@@ -47,7 +52,7 @@ export default async function handler(
                 " is already registered for this competition / is organising this tournament."
             );
           }
-          members.push(user.dbItem.id);
+          members.push(userDbItem.id);
         }
       }
     }
@@ -92,29 +97,31 @@ export default async function handler(
     } else {
       team.paid = false;
       await team.addToDB();
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        customer_email: currentUser.email,
-        line_items: [
-          {
-            name: `${tournament?.name} Registration`,
-            amount: tournament?.price,
-            currency: tournament?.priceISOCode,
-            quantity: 1,
+      if (tournament.stripeAccount != undefined) {
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          customer_email: currentUser.email,
+          line_items: [
+            {
+              name: `${tournament?.name} Registration`,
+              amount: tournament?.price,
+              currency: tournament?.priceISOCode,
+              quantity: 1,
+            },
+          ],
+          payment_intent_data: {
+            application_fee_amount: 0,
+            transfer_data: {
+              destination: tournament.stripeAccount.stripeId || "",
+            },
           },
-        ],
-        payment_intent_data: {
-          application_fee_amount: 0,
-          transfer_data: {
-            destination: tournament?.stripeAccount?.stripeId,
-          },
-        },
-        mode: "payment",
-        success_url: `http://localhost:3000/api/event/${tournament?.slug}/${team.id}/verify-payment`,
-        cancel_url: `http://localhost:3000/event/${tournament?.slug}`,
-      });
-      await team.linkPaymentSession(session.id);
-      res.redirect(session.url);
+          mode: "payment",
+          success_url: `http://localhost:3000/api/event/${tournament?.slug}/${team.id}/verify-payment`,
+          cancel_url: `http://localhost:3000/event/${tournament?.slug}`,
+        });
+        await team.linkPaymentSession(session.id);
+        res.redirect(session.url);
+      }
     }
   } else {
     res.redirect("/");

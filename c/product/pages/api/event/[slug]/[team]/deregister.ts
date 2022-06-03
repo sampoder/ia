@@ -3,6 +3,9 @@ import { fetchTournament } from "..";
 import { Team } from "../../../../../lib/classes";
 import { fetchUser } from "../../../user";
 
+/* This API route can be used to deregister
+a team from a tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,11 +19,11 @@ export default async function handler(
   await team.loadFromDB();
   if (
     team.memberIDs?.includes(currentUser.id) ||
-    tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)
+    tournament?.organisers?.map((x) => x.organiserId).includes(currentUser.id)
   ) {
     await team.deleteFromDB();
     if (
-      tournament?.organisers.map((x) => x.organiserId).includes(currentUser.id)
+      tournament?.organisers?.map((x) => x.organiserId).includes(currentUser.id)
     ) {
       res.redirect(`/event/${tournament?.slug}/admin/attendees`);
     } else {

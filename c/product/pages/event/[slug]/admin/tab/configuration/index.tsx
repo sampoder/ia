@@ -5,7 +5,6 @@ import {
   Team as TeamType,
   UserTeamRelationship,
   DebateRound,
-  Break,
 } from "@prisma/client";
 import { getAdminProps } from "../../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../../components/nav";
@@ -16,7 +15,6 @@ export default function TabConfiguration(props: {
   user: UserType | undefined;
   tournament: TournamentType & {
     rounds: DebateRound[];
-    breaks: Break[]
   };
   organisers: UserType[];
   teams: (TeamType & {

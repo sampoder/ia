@@ -15,9 +15,7 @@ import {
   RoomDebateRelationship,
   OrganiserTournamentRelationship,
   Score,
-  Team,
-  Break,
-  BreakDebate,
+  Team
 } from "@prisma/client";
 import Link from "next/link";
 import { prisma } from "../../../../../../lib/prisma";
@@ -46,13 +44,6 @@ export default function Availability(props: {
     })[];
     rounds: (DebateRound & {
       debates: (Debate & { scores: (Score & { user: UserType })[] })[];
-    })[];
-    breaks: (Break & {
-      debates: (BreakDebate & {
-        debate: Debate & {
-          scores: (Score & { user: UserType })[];
-        };
-      })[];
     })[];
   };
   round: DebateRound & {
@@ -99,7 +90,7 @@ export default function Availability(props: {
               </>
             ) : (
               <>
-                {props.tournament.breaks.length == 0 ? (
+                {props.tournament.breakLevel == 0 ? (
                   <Link
                     href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete?standings=true`}
                   >

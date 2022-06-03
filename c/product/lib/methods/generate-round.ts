@@ -3,7 +3,6 @@ import {
   Team,
   Debate,
   Score,
-  ReplyScore,
   TeamRoundAvailabilityRelationship,
   RoomRoundRelationship,
   Room,
@@ -12,6 +11,7 @@ import {
   User,
   UserTeamRelationship,
 } from "@prisma/client";
+import { Queue } from "../classes/data-types";
 
 /* This file exports a collection of functions that each play a role
 in the generation of rounds (round-robin) / break rounds (finals). This
@@ -36,7 +36,6 @@ type DebateWithTeams = Debate & {
 
 export type DebateWithScores = Debate & {
   scores: (Score & { user: User })[];
-  replyScores: ReplyScore[];
   proposition:
     | (Team & {
         propositionDebates: DebateWithTeams[];
@@ -108,12 +107,15 @@ export function rankSpeakers(
   })[],
   speakersInput: User[]
 ) {
+  // sets up array of debates in the tournament
   let debates: (Debate & { scores: (Score & { user: User })[] })[] = [];
   rounds.map((round) => {
     round.debates.map((debate) => {
       debates.push(debate);
     });
   });
+  /* creates an object with keys for each speaker 
+  and the fill it with data from the inputted array */
   let speakers: {
     [x: string]: { score: number; debates: number; user: User };
   } = {};
@@ -126,6 +128,7 @@ export function rankSpeakers(
       };
     }
   });
+  // loop through debate array to add scores to each speaker's total
   debates.map((debate) => {
     debate.scores.map((score) => {
       if (speakers[score.userId] === undefined) {
@@ -140,7 +143,9 @@ export function rankSpeakers(
       }
     });
   });
+  // create array for sorting
   let rankedSpeakers = Object.values(speakers);
+  // selection sort with multiple if statements
   for (let x = 0; x < rankedSpeakers.length-1; x++){
     let maxIndex: number = x;
     for (let y = maxIndex + 1; y < rankedSpeakers.length; y++){
@@ -168,6 +173,7 @@ export function rankSpeakers(
 descending order based on wins, speaker points & draw strength. */
 
 export function rankTeams(teams: TeamWithDebate[]) {
+  // sets up the teams array with required data
   let rankedTeams = teams.map((team) => ({
     ...team,
     debates: team.propositionDebates.concat(team.oppositionDebates),
@@ -175,6 +181,7 @@ export function rankTeams(teams: TeamWithDebate[]) {
     speakerPoints: calculateSpeakerPoints(team),
     drawStrength: 0,
   }));
+  // loops through the teams array to fill in draw strength data
   for (let teamIndex in rankedTeams) {
     let team = rankedTeams[teamIndex];
     for (let debateIndex in team.debates) {
@@ -186,6 +193,7 @@ export function rankTeams(teams: TeamWithDebate[]) {
       }
     }
   }
+  // selection sort with multiple if statements
   for (let x = 0; x < rankedTeams.length-1; x++){
     let maxIndex = x;
     for (let y = maxIndex + 1; y < rankedTeams.length; y++){
@@ -214,28 +222,37 @@ export function generateRound(round: DebateRoundWithIncludes | null) {
   if (round == null) {
     return { error: "Round doesn't exist." };
   }
-  let teams = rankTeams(round.availableTeams.map((x) => x.team));
+  // create queues of teams, rooms and adjudicators
+  let teams = new Queue(rankTeams(round.availableTeams.map((x) => x.team)));
+  let rooms = new Queue(round.availableRooms)
+  let adjudicators = new Queue(round.availableAdjudicators)
+  // pairs array will contain each debate pairing
   let pairs = [];
+  // error handling
   if (round.availableRooms.length < round.availableTeams.length / 2) {
     return { error: "Too little rooms available for round." };
   }
   if (round.availableAdjudicators.length < round.availableTeams.length / 2) {
     return { error: "Too little adjudicators available for round." };
   }
-  for (let x = 0; x < round.availableTeams.length / 2; x++) {
+  // loop whilst queue has teams and set up pairs
+  while(!teams.isEmpty()){
+    let teamOne = teams.dequeue()
+    let teamTwo = teams.dequeue()
+    // randomize proposition / opposition
     if (Math.random() > 0.5) {
       pairs.push({
-        proposition: teams[x * 2],
-        opposition: teams[x * 2 + 1],
-        room: round.availableRooms[x].room,
-        adjudicator: round.availableAdjudicators[x].adjudicator,
+        proposition: teamOne,
+        opposition: teamTwo,
+        room: rooms.dequeue(),
+        adjudicator: adjudicators.dequeue(),
       });
     } else {
       pairs.push({
-        proposition: teams[x * 2 + 1],
-        opposition: teams[x * 2],
-        room: round.availableRooms[x].room,
-        adjudicator: round.availableAdjudicators[x].adjudicator,
+        proposition: teamOne,
+        opposition: teamTwo,
+        room: rooms.dequeue(),
+        adjudicator: adjudicators.dequeue(),
       });
     }
   }

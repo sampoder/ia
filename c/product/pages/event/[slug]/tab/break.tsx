@@ -16,12 +16,13 @@ import {
   Team,
 } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
-import fetch from 'isomorphic-unfetch'
+import fetch from "isomorphic-unfetch";
 import {
   rankTeams,
   DebateWithScores,
 } from "../../../../lib/methods/generate-round";
-import { SetStateAction, Dispatch, useState, useReducer, useEffect } from "react";
+import { SetStateAction, Dispatch, useState, useReducer } from "react";
+import { Break } from "../../../../lib/classes/break";
 
 export default function Availability(props: {
   user: UserType | undefined;
@@ -50,55 +51,16 @@ export default function Availability(props: {
   })[];
 }) {
   let amountOfRounds = props.tournament.breakLevel;
-  const [winners, setWinners]: [
-    (null | Team)[][],
-    Dispatch<SetStateAction<any[][]>>
-  ] = useState(
-    [...new Array(amountOfRounds)].map((_, i) =>
-      [
-        ...new Array(Math.pow(2, amountOfRounds) / 2 / (i != 0 ? i * 2 : 1)),
-      ].map((_, y) => {
-        if (props.tournament.breakStatus == null) {
-          return null;
-        }
-        if (!props.tournament.breakStatus[i]) {
-          return null;
-        }
-        if (!props.tournament.breakStatus[i][y]) {
-          return null;
-        }
-        if (props.tournament.breakStatus[i][y] == "null") {
-          return null;
-        } else {
-          let returnValue = null;
-          props.tournament.participatingTeams.map((team) => {
-            if (team.id == props.tournament.breakStatus[i][y]) {
-              returnValue = team;
-              console.log("i should never run");
-            }
-          });
-          return returnValue;
-        }
-      })
-    )
+  let breakRound = new Break(
+    props.tournament.breakStatus,
+    amountOfRounds,
+    props.tournament
   );
+  const [winners, setWinners]: [
+    (null | TeamType)[][],
+    Dispatch<SetStateAction<(TeamType | null)[][]>>
+  ] = useState(breakRound.status);
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
-
-  async function updateInDB(currentWinners: (null | Team)[][]) {
-    fetch(`/api/event/${props.tournament.slug}/admin/tab/break`, {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        breakStatus: JSON.stringify(
-          currentWinners.map((x) => x.map((y) => y?.id || "null"))
-        ),
-      }),
-    });
-  
-  }
-  let colors = ["red", "green", "orange", "red", "purple"];
   return (
     <>
       <Nav user={props.user} />
@@ -110,39 +72,35 @@ export default function Availability(props: {
         {[...new Array(amountOfRounds)].map((_, index) => (
           <div>
             <b>Round {index + 1}</b>
-            <div style={{ display: "grid", gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: "16px", marginTop: '8px' }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                gap: "16px",
+                marginTop: "8px",
+              }}
+            >
               {[
                 ...new Array(
                   Math.pow(2, amountOfRounds) / 2 / (index != 0 ? index * 2 : 1)
                 ),
               ].map((_, i) => {
-                let propositionTeam =
-                  index != 0 && winners[index - 1] == undefined
-                    ? null
-                    : (index == 0
-                        ? rankTeams(props.tournament.participatingTeams)
-                        : winners[index - 1])[i];
-                let oppositionTeam =
-                  index != 0 && winners[index - 1] == undefined
-                    ? null
-                    : (index == 0
-                        ? rankTeams(props.tournament.participatingTeams)
-                        : winners[index - 1])[
-                        Math.pow(2, amountOfRounds - index) - i - 1
-                      ];
+                let [propositionTeam, oppositionTeam] =
+                  index == 0
+                    ? breakRound.findStartingTeams(i)
+                    : breakRound.findSecondaryTeams(index, i, winners);
                 function setWinner(team: Team | null, loser: Team | null) {
-                  if(props.isOrganising){
-                  let currentWinners = winners;
-                  currentWinners[index][i] = team;
-                  currentWinners.slice(index).map((roundResult, x) => roundResult.map((team,y) => {
-                    if(team?.id == loser?.id){
-                      currentWinners[x][y] = null 
-                    }
-                  }))
-                  setWinners(currentWinners);
-                  updateInDB(currentWinners);
-                  forceUpdate();
-                }
+                  if (props.isOrganising) {
+                    let newWinners = breakRound.setWinner(
+                      team,
+                      loser,
+                      index,
+                      i,
+                      winners
+                    );
+                    setWinners(newWinners);
+                    forceUpdate();
+                  }
                 }
                 return (
                   <div
@@ -150,17 +108,42 @@ export default function Availability(props: {
                       display: "flex",
                       flexDirection: "column",
                       gap: "4px",
-                      background: 'var(--sunken)',
-                      padding: '12px',
-                      borderRadius: '8px'
+                      background: "var(--sunken)",
+                      padding: "12px",
+                      borderRadius: "8px",
                     }}
                   >
-                    <div style={{borderBottom: '1px solid var(--text)', paddingBottom: '4px'}}>
-                      <span onClick={() => setWinner(propositionTeam, oppositionTeam)} style={{fontWeight: propositionTeam?.name == winners[index][i]?.name ? 800 : 400}}>
+                    <div
+                      style={{
+                        borderBottom: "1px solid var(--text)",
+                        paddingBottom: "4px",
+                      }}
+                    >
+                      <span
+                        onClick={() =>
+                          setWinner(propositionTeam, oppositionTeam)
+                        }
+                        style={{
+                          fontWeight:
+                            propositionTeam?.name == winners[index][i]?.name
+                              ? 800
+                              : 400,
+                        }}
+                      >
                         {propositionTeam?.name || "TBD"}
                       </span>
                       {" vs. "}
-                      <span onClick={() => setWinner(oppositionTeam, propositionTeam)} style={{fontWeight: oppositionTeam?.name == winners[index][i]?.name ? 800 : 400}}>
+                      <span
+                        onClick={() =>
+                          setWinner(oppositionTeam, propositionTeam)
+                        }
+                        style={{
+                          fontWeight:
+                            oppositionTeam?.name == winners[index][i]?.name
+                              ? 800
+                              : 400,
+                        }}
+                      >
                         {oppositionTeam?.name || "TBD"}
                       </span>
                     </div>
@@ -176,7 +159,9 @@ export default function Availability(props: {
           </div>
         ))}
         <div className={styles.bar}>
-          <span><b>Winner:</b> {winners[winners.length - 1][0]?.name}</span>
+          <span>
+            <b>Winner:</b> {winners[winners.length - 1][0]?.name}
+          </span>
         </div>
       </div>
     </>
@@ -225,6 +210,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
-  console.log("hi!");
   return { props: { speakers, isOrganising, tournament, user } };
 };

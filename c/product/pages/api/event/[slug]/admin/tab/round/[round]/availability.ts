@@ -4,6 +4,10 @@ import { fetchUser } from "../../../../../../user";
 import { prisma } from "../../../../../../../../lib/prisma";
 import { generateRound } from "../../../../../../../../lib/methods/generate-round";
 
+/* This API route takes the input of the HTML form (in the request body),
+passes it to the generateRound() method and then makes the required database
+updates based on the generateRound() method's return */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -188,6 +192,7 @@ export default async function handler(
                   },
                 },
               },
+              members: true
             },
           },
         },

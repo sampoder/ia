@@ -2,6 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../lib/classes";
 import { fetchUser } from "../../../user";
 
+/* This API route is called within the 
+Configuration section of the Admin Dashboard.
+It takes the input and updates the tournament's DB item
+as needed. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

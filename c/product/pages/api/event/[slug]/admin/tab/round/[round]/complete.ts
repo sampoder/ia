@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../../../../../lib/classes";
 import { fetchUser } from "../../../../../../user";
 import { prisma } from "../../../../../../../../lib/prisma";
-import { getCurrentRound } from "../../../../../../../../lib/methods/get-current-round";
-import { generateRound } from "../../../../../../../../lib/methods/generate-round";
+
+/* This API route marks a route as complete
+and then redirect the user to the relevant page. */
 
 export default async function handler(
   req: NextApiRequest,

@@ -3,6 +3,8 @@ import { Tournament } from "../../../../../../lib/classes";
 import { fetchUser } from "../../../../user";
 import { prisma } from "../../../../../../lib/prisma";
 
+/* This API route sets a round's motion in the DB. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

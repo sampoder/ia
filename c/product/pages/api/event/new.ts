@@ -2,6 +2,8 @@ import { User as UserType } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../lib/classes";
 
+/* This API route is used to start a new tournament. */
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

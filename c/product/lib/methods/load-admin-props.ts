@@ -22,19 +22,6 @@ export const getAdminProps: GetServerSideProps = async (context) => {
         },
       },
     },
-    breaks: {
-      include: {
-        debates: {
-          include: {
-            debate: {
-              include: {
-                scores: true,
-              },
-            },
-          },
-        },
-      },
-    },
     rooms: {
       include: { availableFor: true },
     },

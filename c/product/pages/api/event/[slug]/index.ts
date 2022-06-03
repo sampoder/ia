@@ -1,5 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { Tournament } from "../../../../lib/classes";
+
+/* This file exports a function used to fetch tournament details */
 
 type TournamentInclude = {
   stripeAccount?: boolean;
@@ -7,17 +8,10 @@ type TournamentInclude = {
 
 export async function fetchTournament(
   slug: string,
-  include?: TournamentInclude
+  include?: TournamentInclude,
 ) {
   let tournament = new Tournament();
   tournament.slug = slug;
   await tournament.loadFromDB(include);
   return tournament.dbItem;
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  res.json(await fetchTournament(req.query.slug.toString()));
 }
