@@ -4,6 +4,8 @@ import { getAdminProps } from "../../../../../lib/methods/load-admin-props";
 import Nav from "../../../../../components/nav";
 import Wrapper from "../../../../../components/admin/wrapper";
 
+/* Admin page to send emails to attendees of a tournament. */
+
 export default function AdminSendEmail(props: {
   user: UserType | undefined;
   tournament: TournamentType;

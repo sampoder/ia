@@ -15,6 +15,8 @@ import {
 } from "@prisma/client";
 import { prisma } from "../../../../../../lib/prisma";
 
+/* A page that allows adjudicators to enter the scores for a debate. */
+
 export default function ScoreInput(props: {
   adjudicator: Adjudicator & {
     user: User;

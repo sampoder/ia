@@ -160,7 +160,6 @@ model DebateRound {
   availableRooms        RoomRoundRelationship[] 
   availableTeams        TeamRoundAvailabilityRelationship[]
   availableAdjudicators AdjudicatorRoundAvailabilityRelationship[]
-  motion                String                                     @default("")
   complete              Boolean                                    @default(false)
 }
 

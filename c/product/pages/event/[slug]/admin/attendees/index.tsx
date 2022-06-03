@@ -11,6 +11,8 @@ import Wrapper from "../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* Admin page to view attendees of a tournament. */
+
 function Team(props: {
   team: TeamType & { members: (UserTeamRelationship & { user: UserType })[] };
   tournament: TournamentType;
@@ -47,7 +49,6 @@ export default function AdminAttendees(props: {
       <Nav user={props.user} />
       <Wrapper slug={props.tournament?.slug} name={props.tournament?.name}>
         <>
-          {" "}
           <div>
             <h1 className="adminHeader">Attendees</h1>
             {props.teams.map((team) => (

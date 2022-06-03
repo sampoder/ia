@@ -14,6 +14,8 @@ type TournamentTypeWithStripeAccount = TournamentType & {
   stripeAccount: StripeAccount;
 };
 
+/* Admin page to configure basic details of a tournament. */
+
 export default function AdminConfigure(props: {
   user: UserType | undefined;
   tournament: TournamentTypeWithStripeAccount;

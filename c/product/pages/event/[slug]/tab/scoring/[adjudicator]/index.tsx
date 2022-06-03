@@ -16,6 +16,9 @@ import {
 } from "@prisma/client";
 import styles from "./styles.module.css";
 
+/* The "Adjudicator Dashboard", shows adjudicators their upcoming
+and past debates. */
+
 export default function AdjPrivatePage(props: {
   adjudicator: Adjudicator & {
     user: User;

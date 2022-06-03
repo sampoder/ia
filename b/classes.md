@@ -83,7 +83,6 @@ Debate Round
 - getDebates()
 - getAvailableRooms()
 - getAvailableTeams()
-- getMotions()
 
 Debate
 
@@ -134,7 +133,6 @@ Break
 - tournamentId
 - getBreakingTeams()
 - getDebates()
-- getMotions()
 
 BreakDebate extends Debate
 
@@ -147,8 +145,6 @@ Motion
 - id
 - roundId
 - breakId
-- motion
-- setMotion()
 
 Conflict
 

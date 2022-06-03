@@ -6,6 +6,8 @@ import Link from "next/link";
 import Wrapper from "../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 
+/* Admin page to configure the organising team for a tournament. */
+
 function Organiser(props: {
   tournament: TournamentType;
   organiser: UserType;

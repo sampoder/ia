@@ -12,6 +12,8 @@ import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* Admin page to configure rooms for a tournament. */
+
 function Room(props: { room: RoomType; tournament: TournamentType }) {
   return (
     <div className={styles.team}>

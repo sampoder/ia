@@ -12,6 +12,8 @@ import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
+/* Admin page to view and add new adjudicators for a tournament. */
+
 function Adjudicator(props: {
   tournament: TournamentType;
   adjudicator: AdjudicatorType;

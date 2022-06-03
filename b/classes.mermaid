@@ -70,7 +70,6 @@ classDiagram
     DebateRound : getDebates()
     DebateRound : getAvailableRooms()
     DebateRound : getAvailableTeams()
-    DebateRound : getMotions()
     Tournament *-- DebateRound
     class Debate
     Debate : +String id
@@ -109,5 +108,4 @@ classDiagram
     Break : +String tournamentId
     Break : getBreakingTeams()
     Break : getDebates()
-    Break : getMotions()
     Tournament o-- Break

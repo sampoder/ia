@@ -62,11 +62,6 @@ export default function AdminWrapper(props: {
                 </Link>
               </div>
               <div>
-                <Link href={`/event/${props.slug}/admin/tab/motions`}>
-                  Motions
-                </Link>
-              </div>
-              <div>
                 <Link href={`/event/${props.slug}/admin/tab/adjudicators`}>
                   Adjudicators
                 </Link>

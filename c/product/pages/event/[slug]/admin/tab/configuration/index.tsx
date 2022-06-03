@@ -11,6 +11,8 @@ import Nav from "../../../../../../components/nav";
 import Wrapper from "../../../../../../components/admin/wrapper";
 import styles from "./styles.module.css";
 
+/* Admin page to configure tabulation settings of a tournament. */
+
 export default function TabConfiguration(props: {
   user: UserType | undefined;
   tournament: TournamentType & {

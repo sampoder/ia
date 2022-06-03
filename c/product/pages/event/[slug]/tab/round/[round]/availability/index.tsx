@@ -14,6 +14,8 @@ import {
 } from "@prisma/client";
 import { useRouter } from "next/router";
 
+/* Tabulation page to mark rooms / adjudicators / teams as available for a round. */
+
 export default function Availability(props: {
   user: UserType | undefined;
   tournament: TournamentType & {

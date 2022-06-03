@@ -15,7 +15,7 @@ import {
   RoomDebateRelationship,
   OrganiserTournamentRelationship,
   Score,
-  Team
+  Team,
 } from "@prisma/client";
 import Link from "next/link";
 import { prisma } from "../../../../../../lib/prisma";
@@ -25,6 +25,9 @@ import {
   DebateWithScores,
 } from "../../../../../../lib/methods/generate-round";
 import { useState } from "react";
+
+/* Page that shows the key details about a round, including:
+the draw and the standings. */
 
 export default function Availability(props: {
   user: UserType | undefined;
