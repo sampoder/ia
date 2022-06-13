@@ -114,7 +114,8 @@ export default function Event(props: {
                       <button>Join The Tournament</button>
                     </Link>
                   )}
-                <button className={styles.tabButton}>View Tab</button>
+                  <Link href={`/event/${props.tournament?.slug}/tab`}>
+                <button className={styles.tabButton}>View Tab</button></Link>
                 <Link
                   href={`/api/event/${props.tournament?.slug}/${props.team?.id}/deregister`}
                 >

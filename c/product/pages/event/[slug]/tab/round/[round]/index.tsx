@@ -103,7 +103,7 @@ export default function Availability(props: {
                   </Link>
                 ) : (
                   <Link
-                    href={`/event/${props.tournament.slug}/tab/round/${props.round.id}/complete`}
+                    href={`/api/event/${props.tournament.slug}/admin/tab/round/${props.round.id}/complete`}
                   >
                     <button>
                       Mark This Round As Complete & Generate The Break

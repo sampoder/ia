@@ -68,6 +68,13 @@ export default async function handler(
       roundId: req.query.round.toString(),
     },
   });
+  await prisma.adjudicatorDebateRelationship.deleteMany({
+    where: {
+      debate: {
+        debateRoundId: req.query.round.toString()
+      }
+    }
+  })
   await prisma.roomRoundRelationship.deleteMany({
     where: {
       roundId: req.query.round.toString(),
@@ -209,6 +216,7 @@ export default async function handler(
       },
     },
   });
+  console.log(round)
   if (round == null || !round) {
     return res.send("Invalid ID");
   }
@@ -229,18 +237,18 @@ export default async function handler(
       data: {
         propositionId: pair.proposition.id,
         oppositionId: pair.opposition.id,
-        debateRoundId: round.id,
+        debateRoundId: round.id
       },
     });
     await prisma.adjudicatorDebateRelationship.create({
       data: {
-        adjudicatorId: pair.adjudicator.id,
+        adjudicatorId: pair.adjudicator.adjudicatorId,
         debateId: debate.id,
       },
     });
     await prisma.roomDebateRelationship.create({
       data: {
-        roomId: pair.room.id,
+        roomId: pair.room.roomId,
         debateId: debate.id,
       },
     });

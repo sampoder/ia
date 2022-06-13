@@ -65,7 +65,7 @@ export default function ScoreInput(props: {
                     style={{ flexGrow: 1 }}
                     required
                   >
-                    <option value="" disabled>
+                    <option value="">
                       --Please choose a speaker--
                     </option>
                     {props.debate.proposition.members.map((member) => (
@@ -96,7 +96,7 @@ export default function ScoreInput(props: {
                     style={{ flexGrow: 1 }}
                     required
                   >
-                    <option value="" disabled>
+                    <option value="">
                       --Please choose a speaker--
                     </option>
                     {props.debate.opposition.members.map((member) => (

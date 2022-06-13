@@ -111,5 +111,6 @@ export default async function handler(
       carried: req.body["result"] == "Proposition" ? true : false
     }
   })
+
   res.redirect(`/event/${req.query.slug.toString()}/tab/scoring/${adjudicator?.id}`);
 }

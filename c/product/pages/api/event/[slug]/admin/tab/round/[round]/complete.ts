@@ -41,15 +41,15 @@ export default async function handler(
   });
   if (req.query.nextRound) {
     return res.redirect(
-      "/event/wtp-2/tab/round/" +
+      "/event/"+tournament.slug+"/tab/round/" +
         req.query.nextRound.toString() +
         "/availability"
     );
   }
   if (req.query.standings) {
     return res.redirect(
-      "/event/wtp-2/tab/standings"
+      `/event/${tournament.slug}/tab/break`
     );
   }
-  return res.redirect("/event/wtp-2/tab/breaks");
+  return res.redirect(`/event/${tournament.slug}/tab/break`);
 }

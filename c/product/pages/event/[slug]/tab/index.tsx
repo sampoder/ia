@@ -14,8 +14,8 @@ export default function TabIndex(props: {
       <Nav user={props.user} />
       <div className={styles.holder}>
         <div className={styles.adminBar}>
-          <Link
-            href={`/event/wtp-2/tab/round/${
+          <a
+            href={`/event/${props.tournament?.slug}/tab/round/${
               props.tournament?.rounds
                 .sort((a: DebateRound, b: DebateRound) =>
                   a.sequence > b.sequence ? 1 : b.sequence > a.sequence ? -1 : 0
@@ -24,8 +24,7 @@ export default function TabIndex(props: {
             }/availability`}
           >
             <button>Generate Next Round</button>
-          </Link>
-          <button>Scoring Status</button>
+          </a>
         </div>
         <div className={styles.bar}>
           <button>Draw</button>

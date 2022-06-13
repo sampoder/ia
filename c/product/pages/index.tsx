@@ -28,6 +28,7 @@ export default function Home(props: {
           </div>
           <div className={styles.events}>
             {props.participating.map((tournament) => (
+              tournament.name == "thlrjebg" || tournament.name == "singadeebate" ? <></> :
               <Event tournament={tournament} key={tournament.id} />
             ))}
           </div>
@@ -40,7 +41,7 @@ export default function Home(props: {
           placeholder="Search / filter events"
           onChange={(e) =>
             setQuery(
-              (e.target as HTMLElementEvent<HTMLInputElement>).value.toString()
+              (e.target as unknown as HTMLElementEvent<HTMLInputElement>).value.toString()
             )
           }
         />
@@ -48,6 +49,7 @@ export default function Home(props: {
       <div className={styles.events}>
         {search(props.tournaments ? props.tournaments : [], query)?.map(
           (tournament) => (
+            tournament.name == "thlrjebg" || tournament.name == "singadeebate" ? <></> :
             <Event tournament={tournament} key={tournament.id} />
           )
         )}

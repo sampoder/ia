@@ -33,10 +33,7 @@ export default function EventNew(props: { user: UserType }) {
           <select
             required
             onChange={(e) =>
-              setIsInPerson(
-                (e.target as HTMLElementEvent<HTMLSelectElement>).value ==
-                  "in-person"
-              )
+              setIsInPerson(e.target.value == "in-person")
             }
           >
             <option value="" selected>

@@ -200,11 +200,15 @@ export function rankTeams(teams: TeamWithDebate[]) {
       if (rankedTeams[maxIndex].wins < rankedTeams[y].wins) {
         maxIndex = (y);
       }
-      if (rankedTeams[maxIndex].speakerPoints < rankedTeams[y].speakerPoints) {
-        maxIndex = (y);
-      }
-      if (rankedTeams[maxIndex].drawStrength < rankedTeams[y].drawStrength) {
-        maxIndex = (y);
+      else if (rankedTeams[maxIndex].wins == rankedTeams[y].wins) {
+        if (rankedTeams[maxIndex].speakerPoints < rankedTeams[y].speakerPoints) {
+          maxIndex = (y);
+        }
+        else if (rankedTeams[maxIndex].speakerPoints == rankedTeams[y].speakerPoints) {
+          if (rankedTeams[maxIndex].drawStrength < rankedTeams[y].drawStrength) {
+            maxIndex = (y);
+          }
+        }
       }
     }
     let temp = rankedTeams[maxIndex];

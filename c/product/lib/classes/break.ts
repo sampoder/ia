@@ -41,6 +41,7 @@ export class Break {
       new Stack(breaking.slice(breaking.length / 2, breaking.length));
     /* return teams or continue recursive process */
     if (heat == 0) {
+
       return [top.dequeue(), bottom.pop()];
     } else {
       top.dequeue();
@@ -69,7 +70,9 @@ export class Break {
     this.status = winners;
     let status = this.status;
     /* sets the winner in the 2D array */
-    status[round][heat] = team;
+    console.log(status[round][heat])
+    console.log(team)
+    status[round][heat] = status[round][heat]?.id == team?.id ? null : team;
     /* checks the 2D array to ensure that the loser of the debate is removed from any future rounds
     (handles the edge case of the winner of a past debate changing) */
     status.slice(round).map((roundResult, x) =>

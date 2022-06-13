@@ -4,7 +4,7 @@ of the Stack & Queue abstract data types */
 export class Stack {
   value: any[]
   constructor(value?: any[]) {
-    this.value = value || [];
+    this.value = value?.reverse() || [];
   }
   push(item: any) {
     this.value.unshift(item)
