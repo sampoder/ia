@@ -216,7 +216,6 @@ export default async function handler(
       },
     },
   });
-  console.log(round)
   if (round == null || !round) {
     return res.send("Invalid ID");
   }
@@ -253,5 +252,5 @@ export default async function handler(
       },
     });
   }
-  res.json(pairings);
+  res.redirect(`/event/${tournament.slug}/tab`);
 }
